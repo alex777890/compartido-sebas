@@ -1,0 +1,131 @@
+:root {
+    --navy-base: #0f172a;
+    --navy-light: #1e293b;
+    --accent-blue: #3b82f6;
+    --bg-light: #f8fafc;
+    --border-color: #e2e8f0;
+    --text-primary: #1e293b;
+    --text-muted: #64748b;
+    --white: #ffffff;
+}
+
+body {
+    background-color: var(--bg-light);
+    color: var(--text-primary);
+    font-family: 'Inter', sans-serif;
+    margin: 0;
+}
+
+/* LAYOUT GENERAL */
+.geproc-app { display: flex; flex-direction: column; min-height: 100vh; }
+.main-layout { display: flex; flex: 1; }
+
+/* NAVBAR SUPERIOR */
+.top-navbar {
+    background: var(--navy-base);
+    height: 70px;
+    padding: 0 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+}
+
+.header-content {
+    max-width: 1600px; margin: 0 auto; height: 100%;
+    display: flex; justify-content: space-between; align-items: center;
+}
+
+.brand-section { display: flex; align-items: center; gap: 12px; }
+.logo-img { height: 40px; width: auto; }
+.brand-text { color: var(--white); font-size: 1.4rem; font-weight: 800; margin: 0; letter-spacing: -0.5px; }
+.brand-text .accent { color: var(--accent-blue); }
+
+/* AJUSTE USUARIO CENTRADO */
+.user-section { display: flex; align-items: center; gap: 12px; }
+.user-name { color: white; font-weight: 600; font-size: 0.9rem; display: block; margin: 0; }
+.user-role { color: #94a3b8; font-size: 0.75rem; margin: 0; }
+.user-avatar { width: 40px; height: 40px; background: var(--navy-light); border-radius: 50%; color: white; display: flex; align-items: center; justify-content: center; border: 2px solid var(--accent-blue); }
+.logout-pill { background: rgba(239, 68, 68, 0.2); border: none; color: #ef4444; padding: 8px; border-radius: 8px; transition: 0.3s; cursor: pointer; }
+.logout-pill:hover { background: #ef4444; color: white; }
+
+/* SIDEBAR */
+.sidebar { width: 260px; background: var(--white); border-right: 1px solid var(--border-color); padding: 1.5rem 0; }
+.nav-group { padding: 1rem 0; }
+.nav-label { padding: 0 1.5rem; font-size: 0.7rem; font-weight: 700; color: #94a3b8; letter-spacing: 1px; text-transform: uppercase; }
+.nav-item {
+    display: flex; align-items: center; gap: 12px; padding: 12px 1.5rem;
+    color: var(--text-primary); text-decoration: none; font-weight: 600; transition: 0.2s;
+}
+.nav-item i { width: 20px; font-size: 1.1rem; }
+.nav-item:hover, .nav-item.active { background: #f0f7ff; color: var(--accent-blue); border-right: 4px solid var(--accent-blue); }
+
+/* CONTENIDO PRINCIPAL */
+.content-area { flex: 1; padding: 2.5rem; max-width: 1400px; margin: 0 auto; width: 100%; }
+.section-title { font-size: 2rem; font-weight: 800; color: var(--navy-base); letter-spacing: -1px; margin-bottom: 5px; }
+.section-subtitle { font-size: 1.1rem; color: var(--text-muted); margin-bottom: 2rem; }
+
+/* BOTONES */
+.btn-primary-geproc {
+    background: var(--accent-blue); color: white !important; padding: 12px 24px; border-radius: 12px;
+    font-weight: 700; text-decoration: none; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);
+    transition: 0.3s; display: inline-flex; align-items: center; border: none;
+}
+.btn-primary-geproc:hover { transform: translateY(-3px); background: var(--navy-base); }
+
+/* FILTROS */
+.filter-panel { background: white; padding: 1.5rem; border-radius: 16px; border: 1px solid var(--border-color); }
+.form-select-geproc { width: 100%; padding: 10px 15px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-light); font-weight: 500; }
+.btn-filter-clear { color: #ef4444; font-weight: 600; text-decoration: none; font-size: 0.9rem; }
+
+/* TABS */
+.custom-tabs { background: #e2e8f0; padding: 6px; border-radius: 14px; display: inline-flex; border: none; }
+.custom-tabs .nav-link { color: var(--text-muted); font-weight: 700; border: none !important; padding: 10px 25px; border-radius: 10px; }
+.custom-tabs .nav-link.active { background: var(--white) !important; color: var(--navy-base) !important; box-shadow: 0 4px 10px rgba(0,0,0,0.05); }
+
+/* TABLAS Y CARDS */
+.data-card { background: var(--white); border-radius: 20px; border: 1px solid var(--border-color); overflow: hidden; }
+.card-top-info { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
+.table-custom thead th { background: #f8fafc; padding: 1.2rem 1.5rem; font-size: 0.75rem; text-transform: uppercase; font-weight: 700; color: var(--text-muted); }
+.table-custom tbody td { padding: 1.2rem 1rem; vertical-align: middle; border-bottom: 1px solid #f1f5f9; }
+
+.contract-name-cell { font-weight: 700; color: var(--navy-base); font-size: 0.95rem; }
+.file-icon-box { width: 42px; height: 42px; display: flex; align-items: center; justify-content: center; font-size: 1.2rem; }
+
+/* ACCIONES */
+.action-flex { display: flex; gap: 10px; }
+.act-btn {
+    width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center;
+    transition: 0.3s; border: none; text-decoration: none;
+}
+.act-btn.view { background: #e0f2fe; color: #0284c7; }
+.act-btn.edit { background: #fef3c7; color: #d97706; }
+.act-btn.delete { background: #fee2e2; color: #dc2626; }
+.act-btn:hover { transform: translateY(-2px); filter: brightness(0.95); }
+
+/* PLANTILLAS */
+.template-card { 
+    background: white; padding: 2rem; border-radius: 20px; border: 1px solid var(--border-color); 
+    transition: 0.3s; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.05); 
+}
+.template-card:hover { transform: translateY(-8px); border-color: var(--accent-blue); }
+.file-icon-large { width: 60px; height: 60px; background: #f1f5f9; color: var(--accent-blue); border-radius: 15px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
+.btn-use-template { background: var(--navy-base); color: white; padding: 10px 20px; border-radius: 10px; text-decoration: none; font-weight: 700; flex: 1; text-align: center; }
+
+/* HISTORIAL */
+.month-title { font-size: 1.4rem; font-weight: 800; color: var(--navy-base); border-left: 5px solid var(--accent-blue); padding-left: 15px; margin: 2rem 0 1rem; }
+.badge-area { background: #f1f5f9; padding: 6px 12px; border-radius: 8px; font-weight: 600; font-size: 0.8rem; color: var(--navy-base); }
+
+/* ----- BLOQUE RESPONSIVO (NUEVO) ----- */
+@media (max-width: 991px) {
+    .sidebar { display: none; }
+    .top-navbar { padding: 0 1rem; }
+    .content-area { padding: 1rem; }
+    .custom-tabs { display: flex; overflow-x: auto; white-space: nowrap; }
+}
+
+@media (max-width: 767px) {
+    .header-content { justify-content: space-between; }
+    .brand-text { font-size: 1.1rem; }
+    .section-title { font-size: 1.5rem; }
+    .card-top-info { flex-direction: column; align-items: flex-start; gap: 10px; }
+}
