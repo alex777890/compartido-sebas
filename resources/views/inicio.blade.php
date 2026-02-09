@@ -926,7 +926,7 @@ section h2::after {
     </div>
 
     <nav>
-        <a href="#inicio" class="active">Inicio ALEX le gusta moni</a>
+        <a href="#inicio" class="active">Inicio</a>
         <a href="#funciones">Funciones</a>
         <a href="#beneficios">Beneficios</a>
     </nav>
