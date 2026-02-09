@@ -4,12 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ingresar Horario - {{ $maestro->nombre_completo }}</title>
-    
     <!-- Bootstrap CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-    /* (Mantén todos los estilos CSS que ya tienes) */
+        
     :root {
         --primary: #0744b6ff;
         --secondary: #33CAE6;
@@ -506,7 +505,7 @@
         </div>
     </nav>
     
-    <!-- Segunda barra - Menú con información de usuario y cerrar sesión -->
+    <!-- Segunda barra - Menú -->
     <nav class="navbar navbar-expand-lg navbar-menu">
         <div class="container">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -517,11 +516,11 @@
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('dashboard') ? 'active' : '' }}" href="{{ route('dashboard') }}">Inicio</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('coordinaciones.*') ? 'active' : '' }}" href="{{ route('coordinaciones.index') }}">Coordinaciones</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('maestros.*') ? 'active' : '' }}" href="{{ route('maestros.index') }}">Maestros</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('contratos.*') ? 'active' : '' }}" href="{{ route('contracts.index') }}">Contratos</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('contratos.*') ? 'active' : '' }}" href="{{ route('users.index') }}">Accesos</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('contratos.*') ? 'active' : '' }}" href="">Contratos</a></li>
+                    <li class="nav-item"><a class="nav-link" href="">Accesos</a></li>
                 </ul>
                 
-                <!-- Información de usuario y cerrar sesión -->
+                <!-- Información de usuario -->
                 <div class="user-info-container">
                     <div class="user-info">
                         <span class="user-name">{{ Auth::user()->name }}</span>
@@ -540,7 +539,7 @@
         </div>
     </nav>
 
-    <!-- CUERPO COMPACTO DEL FORMULARIO -->
+    <!-- CUERPO DEL FORMULARIO -->
     <div class="container-fluid py-3">
         <div class="row">
             <div class="col-md-12">
@@ -562,7 +561,6 @@
                         <div class="card-body">
                             <input type="hidden" name="maestro_id" value="{{ $maestro->id }}">
                             
-                            <!-- Mostrar mensajes de éxito/error -->
                             @if(session('success'))
                                 <div class="alert alert-success alert-dismissible fade show">
                                     <i class="fas fa-check-circle me-2"></i>
@@ -626,7 +624,7 @@
                             </div>
 
                             <!-- Contenido cuando SÍ hay periodo seleccionado -->
-                            <div id="con-periodo" class="con-periodo">
+                            <div id="con-periodo" class="con-periodo" style="display: {{ $periodoId ? 'block' : 'none' }};">
                                 <!-- Configuración de Aula y Grupo -->
                                 <div class="row mb-4">
                                     <div class="col-md-12">
@@ -637,34 +635,14 @@
                                             <div class="row g-3">
                                                 <div class="col-md-6">
                                                     <label for="aula-global" class="form-label">Aula (para todas las materias)</label>
-                                                    @php
-                                                        $aulaValue = '';
-                                                        if (isset($horariosExistentes[0])) {
-                                                            if (is_array($horariosExistentes[0])) {
-                                                                $aulaValue = $horariosExistentes[0]['aula'] ?? '';
-                                                            } else {
-                                                                $aulaValue = $horariosExistentes[0]->aula ?? '';
-                                                            }
-                                                        }
-                                                    @endphp
                                                     <input type="text" class="form-control" id="aula-global" 
-                                                           value="{{ $aulaValue }}" 
+                                                           value="{{ isset($horariosExistentes[0]) ? ($horariosExistentes[0]->aula ?? '') : '' }}" 
                                                            placeholder="Ej: AULA 101, LAB-201, VIRTUAL">
                                                 </div>
                                                 <div class="col-md-6">
                                                     <label for="grupo-global" class="form-label">Grupo (para todas las materias)</label>
-                                                    @php
-                                                        $grupoValue = '';
-                                                        if (isset($horariosExistentes[0])) {
-                                                            if (is_array($horariosExistentes[0])) {
-                                                                $grupoValue = $horariosExistentes[0]['grupo'] ?? '';
-                                                            } else {
-                                                                $grupoValue = $horariosExistentes[0]->grupo ?? '';
-                                                            }
-                                                        }
-                                                    @endphp
                                                     <input type="text" class="form-control" id="grupo-global" 
-                                                           value="{{ $grupoValue }}" 
+                                                           value="{{ isset($horariosExistentes[0]) ? ($horariosExistentes[0]->grupo ?? '') : '' }}" 
                                                            placeholder="Ej: GRUPO A, 5TO SEMESTRE, TURNO MATUTINO">
                                                 </div>
                                             </div>
@@ -675,7 +653,7 @@
                                     </div>
                                 </div>
 
-                                <!-- 🔥 NUEVA SECCIÓN: Evidencia Digital del Horario -->
+                                <!-- Evidencia Digital -->
                                 <div class="row mb-4">
                                     <div class="col-md-12">
                                         <div class="evidencia-horario-section">
@@ -714,7 +692,6 @@
                                                         </button>
                                                     </div>
                                                     
-                                                    <!-- Vista previa para imágenes -->
                                                     <div id="image-preview" class="mt-2 text-center d-none">
                                                         <img id="preview-image" class="file-preview" src="" alt="Vista previa">
                                                     </div>
@@ -756,13 +733,14 @@
                                     </div>
                                 </div>
 
-                                <!-- Tabla de Horarios - CORREGIDA -->
+                                <!-- Tabla de Horarios - PHP RENDERIZA SOLO ESTRUCTURA -->
                                 <div class="row mb-4">
                                     <div class="col-md-12">
                                         <div class="card border-0 shadow-sm">
                                             <div class="card-header bg-primary text-white py-2">
                                                 <h6 class="mb-0">
                                                     <i class="fas fa-table me-2"></i> Distribución Horaria Semanal
+                                                    <span id="contador-clases" class="badge bg-secondary ms-2">0 clases</span>
                                                 </h6>
                                             </div>
                                             <div class="card-body p-0">
@@ -802,48 +780,14 @@
                                                                         <span class="badge bg-dark">{{ $hora }}</span>
                                                                     </td>
                                                                     @foreach($diasSemana as $dia)
-                                                                        @php
-                                                                            // 🔥 CORRECCIÓN: Manejar correctamente el tipo de dato
-                                                                            $claseEnEstaHora = null;
-                                                                            $materiaNombre = '';
-                                                                            $colorMateria = 1;
-                                                                            
-                                                                            if (isset($horarioCompleto[$dia]) && is_array($horarioCompleto[$dia])) {
-                                                                                // Buscar la clase en esta hora
-                                                                                $claseEnEstaHora = collect($horarioCompleto[$dia])
-                                                                                    ->firstWhere('horario', $hora);
-                                                                                
-                                                                                // Verificar si es array u objeto
-                                                                                if ($claseEnEstaHora) {
-                                                                                    // 🔥 CORRECCIÓN: Acceder correctamente según el tipo
-                                                                                    if (is_array($claseEnEstaHora)) {
-                                                                                        $materiaNombre = $claseEnEstaHora['materia_nombre'] ?? '';
-                                                                                    } else {
-                                                                                        $materiaNombre = $claseEnEstaHora->materia_nombre ?? '';
-                                                                                    }
-                                                                                    
-                                                                                    // Obtener color de materia
-                                                                                    if (!empty($materiaNombre)) {
-                                                                                        $colorMateria = $materiasColores[$materiaNombre] ?? 1;
-                                                                                    }
-                                                                                }
-                                                                            }
-                                                                            
-                                                                            $tieneClase = !empty($claseEnEstaHora) && !empty($materiaNombre);
-                                                                        @endphp
-                                                                        <td class="hora-cell {{ $tieneClase ? 'ocupada celda-con-materia' : 'vacia' }}" 
+                                                                        <td class="hora-cell vacia" 
                                                                             data-hora="{{ $hora }}" 
                                                                             data-dia="{{ $dia }}"
+                                                                            id="celda-{{ $dia }}-{{ $hora }}"
                                                                             onclick="asignarMateriaACelda(this)">
-                                                                            @if($tieneClase)
-                                                                                <span class="materia-badge color-{{ $colorMateria }}">
-                                                                                    {{ substr($materiaNombre, 0, 15) }}
-                                                                                </span>
-                                                                            @else
-                                                                                <div class="text-muted">
-                                                                                    <small><i class="fas fa-plus-circle me-1"></i> Disponible</small>
-                                                                                </div>
-                                                                            @endif
+                                                                            <div class="text-muted">
+                                                                                <small><i class="fas fa-plus-circle me-1"></i> Disponible</small>
+                                                                            </div>
                                                                         </td>
                                                                     @endforeach
                                                                 </tr>
@@ -861,7 +805,7 @@
                                     </div>
                                 </div>
 
-                                <!-- Resumen de Horas - CORREGIDO -->
+                                <!-- Resumen de Horas -->
                                 <div class="row mb-4">
                                     <div class="col-md-12">
                                         <div class="card resumen-horas border-0 shadow-sm">
@@ -872,67 +816,41 @@
                                             </div>
                                             <div class="card-body">
                                                 <div class="row text-center">
-                                                    @php
-                                                        $horasPorDia = [
-                                                            'Lunes' => 0,
-                                                            'Martes' => 0,
-                                                            'Miercoles' => 0,
-                                                            'Jueves' => 0,
-                                                            'Viernes' => 0
-                                                        ];
-                                                        
-                                                        // 🔥 CORRECCIÓN: Manejar arrays u objetos
-                                                        foreach($horariosExistentes as $horario) {
-                                                            // Determinar si es array u objeto
-                                                            $diaHorario = '';
-                                                            if (is_array($horario)) {
-                                                                $diaHorario = $horario['dia'] ?? '';
-                                                            } else {
-                                                                $diaHorario = $horario->dia ?? '';
-                                                            }
-                                                            
-                                                            if(isset($horasPorDia[$diaHorario])) {
-                                                                $horasPorDia[$diaHorario]++;
-                                                            }
-                                                        }
-                                                        
-                                                        $totalSemanal = array_sum($horasPorDia);
-                                                    @endphp
                                                     <div class="col">
                                                         <div class="horas-dia-container">
                                                             <small class="d-block text-muted">Lunes</small>
-                                                            <div id="horas-lunes" class="horas-totales">{{ $horasPorDia['Lunes'] }}</div>
+                                                            <div id="horas-lunes" class="horas-totales">0</div>
                                                         </div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="horas-dia-container">
                                                             <small class="d-block text-muted">Martes</small>
-                                                            <div id="horas-martes" class="horas-totales">{{ $horasPorDia['Martes'] }}</div>
+                                                            <div id="horas-martes" class="horas-totales">0</div>
                                                         </div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="horas-dia-container">
                                                             <small class="d-block text-muted">Miércoles</small>
-                                                            <div id="horas-miercoles" class="horas-totales">{{ $horasPorDia['Miercoles'] }}</div>
+                                                            <div id="horas-miercoles" class="horas-totales">0</div>
                                                         </div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="horas-dia-container">
                                                             <small class="d-block text-muted">Jueves</small>
-                                                            <div id="horas-jueves" class="horas-totales">{{ $horasPorDia['Jueves'] }}</div>
+                                                            <div id="horas-jueves" class="horas-totales">0</div>
                                                         </div>
                                                     </div>
                                                     <div class="col">
                                                         <div class="horas-dia-container">
                                                             <small class="d-block text-muted">Viernes</small>
-                                                            <div id="horas-viernes" class="horas-totales">{{ $horasPorDia['Viernes'] }}</div>
+                                                            <div id="horas-viernes" class="horas-totales">0</div>
                                                         </div>
                                                     </div>
                                                     <div class="col-12 mt-3">
                                                         <div class="p-3 bg-light rounded">
                                                             <small class="d-block text-muted">Total Semanal de Horas Clase</small>
-                                                            <div id="total-semanal" class="horas-totales {{ $totalSemanal > 0 ? 'text-success' : 'text-danger' }}">
-                                                                {{ $totalSemanal }} <small>horas</small>
+                                                            <div id="total-semanal" class="horas-totales text-danger">
+                                                                0 <small>horas</small>
                                                             </div>
                                                         </div>
                                                     </div>
@@ -942,25 +860,9 @@
                                     </div>
                                 </div>
 
-                                <!-- Campos ocultos para enviar datos - CORREGIDO -->
+                                <!-- Campos ocultos para enviar datos -->
                                 <div id="hidden-fields-container">
-                                    @if(isset($horariosExistentes) && count($horariosExistentes) > 0)
-                                        @foreach($horariosExistentes as $index => $horario)
-                                            @php
-                                                // 🔥 CORRECCIÓN: Manejar tanto arrays como objetos
-                                                $materiaNombre = is_array($horario) ? ($horario['materia_nombre'] ?? '') : ($horario->materia_nombre ?? '');
-                                                $dia = is_array($horario) ? ($horario['dia'] ?? '') : ($horario->dia ?? '');
-                                                $horarioHora = is_array($horario) ? ($horario['horario'] ?? '') : ($horario->horario ?? '');
-                                                $aula = is_array($horario) ? ($horario['aula'] ?? '') : ($horario->aula ?? '');
-                                                $grupo = is_array($horario) ? ($horario['grupo'] ?? '') : ($horario->grupo ?? '');
-                                            @endphp
-                                            <input type="hidden" name="clases[{{ $index }}][materia_nombre]" value="{{ $materiaNombre }}">
-                                            <input type="hidden" name="clases[{{ $index }}][dia]" value="{{ $dia }}">
-                                            <input type="hidden" name="clases[{{ $index }}][horario]" value="{{ $horarioHora }}">
-                                            <input type="hidden" name="clases[{{ $index }}][aula]" value="{{ $aula }}">
-                                            <input type="hidden" name="clases[{{ $index }}][grupo]" value="{{ $grupo }}">
-                                        @endforeach
-                                    @endif
+                                    <!-- Se llena dinámicamente con JavaScript -->
                                 </div>
                             </div>
                         </div>
@@ -988,346 +890,126 @@
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-    // Variables globales - CORREGIDO para manejar arrays y objetos
+    // ========== VARIABLES GLOBALES ==========
     let materiasSeleccionadas = [];
     let horariosSeleccionados = [];
     let siguienteColor = {{ $siguienteColor ?? 1 }};
     let siguienteId = {{ $siguienteId ?? 1 }};
     let materiaActiva = null;
-    const horasDisponibles = ['7-8', '8-9', '9-10', '10-11', '11-12', '12-13', '13-14', '14-15', '15-16', '16-17', '17-18'];
-    const diasSemana = ['Lunes', 'Martes', 'Miercoles', 'Jueves', 'Viernes'];
-    
-    const maestroId = @json($maestro->id);
-    const STORAGE_KEY = `horario_maestro_${maestroId}`;
-    
-    // Inicializar datos desde Laravel - CORREGIDO
-    document.addEventListener('DOMContentLoaded', function() {
-        // Inicializar materias seleccionadas
+
+    // ========== DATOS INICIALES DESDE PHP ==========
+    @if(isset($periodoId) && $periodoId)
         @if(isset($materiasExistentes) && count($materiasExistentes) > 0)
-            @foreach($materiasExistentes as $materia)
-                @php
-                    // Manejar tanto objetos como arrays
-                    $idMateria = is_object($materia) ? ($materia->id ?? $loop->iteration) : ($materia['id'] ?? $loop->iteration);
-                    $nombreMateria = is_object($materia) ? $materia->nombre : $materia['nombre'];
-                    $colorMateria = is_object($materia) ? $materia->color : $materia['color'];
-                @endphp
-                materiasSeleccionadas.push({
-                    id: {{ $idMateria }},
-                    nombre: '{{ $nombreMateria }}',
-                    color: {{ $colorMateria }}
-                });
-            @endforeach
+            materiasSeleccionadas = @json($materiasExistentes);
+            console.log('✅ Materias cargadas desde PHP:', materiasSeleccionadas.length);
         @endif
-    
-        // Inicializar horarios seleccionados
+        
         @if(isset($horariosExistentes) && count($horariosExistentes) > 0)
+            horariosSeleccionados = [];
             @foreach($horariosExistentes as $horario)
                 @php
-                    // Manejar tanto objetos como arrays
-                    $materiaNombre = '';
-                    $dia = '';
-                    $horarioHora = '';
-                    $aula = '';
-                    $grupo = '';
-                    
-                    if (is_array($horario)) {
-                        $materiaNombre = $horario['materia_nombre'] ?? '';
-                        $dia = $horario['dia'] ?? '';
-                        $horarioHora = $horario['horario'] ?? '';
-                        $aula = $horario['aula'] ?? '';
-                        $grupo = $horario['grupo'] ?? '';
-                    } else {
-                        $materiaNombre = $horario->materia_nombre ?? '';
-                        $dia = $horario->dia ?? '';
-                        $horarioHora = $horario->horario ?? '';
-                        $aula = $horario->aula ?? '';
-                        $grupo = $horario->grupo ?? '';
-                    }
-                    
-                    // Buscar la materia correspondiente
+                    // Buscar ID y color de la materia
                     $materiaId = 0;
                     $colorMateria = 1;
-                    foreach($materiasExistentes as $m) {
-                        $nombreM = is_object($m) ? $m->nombre : $m['nombre'];
-                        if ($nombreM == $materiaNombre) {
-                            $materiaId = is_object($m) ? $m->id : $m['id'];
-                            $colorMateria = is_object($m) ? $m->color : $m['color'];
-                            break;
+                    if(isset($materiasExistentes)) {
+                        foreach($materiasExistentes as $materia) {
+                            if ($materia['nombre'] == $horario->materia_nombre) {
+                                $materiaId = $materia['id'];
+                                $colorMateria = $materia['color'];
+                                break;
+                            }
                         }
                     }
                 @endphp
+                
                 horariosSeleccionados.push({
-                    clave: '{{ $materiaId }}_{{ $dia }}_{{ $horarioHora }}',
+                    clave: '{{ $materiaId }}_{{ $horario->dia }}_{{ $horario->horario }}',
                     materia_id: {{ $materiaId }},
-                    materia_nombre: '{{ $materiaNombre }}',
+                    materia_nombre: '{{ addslashes($horario->materia_nombre) }}',
                     materia_color: {{ $colorMateria }},
-                    dia: '{{ $dia }}',
-                    horario: '{{ $horarioHora }}',
-                    aula: '{{ $aula }}',
-                    grupo: '{{ $grupo }}'
+                    dia: '{{ $horario->dia }}',
+                    horario: '{{ $horario->horario }}',
+                    aula: '{{ addslashes($horario->aula ?? '') }}',
+                    grupo: '{{ addslashes($horario->grupo ?? '') }}'
                 });
             @endforeach
+            console.log('✅ Horarios cargados desde PHP:', horariosSeleccionados.length);
+            
+            // Ajustar siguienteId si hay materias
+            if (materiasSeleccionadas.length > 0) {
+                siguienteId = Math.max(...materiasSeleccionadas.map(m => m.id)) + 1;
+            }
         @endif
-    
-        toggleContenidoPeriodo();
-        actualizarListaMaterias();
-        inicializarUploadArchivo();
-        inicializarEventosCeldas();
-        actualizarTablaHorarios();
-        actualizarResumenHoras();
+    @endif
+
+    // ========== FUNCIONES PRINCIPALES ==========
+    function actualizarTablaDesdeDatos() {
+        console.log('🔄 Actualizando tabla con datos cargados...');
         
-        // Cargar de localStorage si existe
-        cargarDeLocalStorage();
-    });
-    
-    // Funciones para manejar la subida de archivos
-    function inicializarUploadArchivo() {
-        const fileInput = document.getElementById('horario_foto');
-        const uploadArea = document.getElementById('file-upload-area');
-        const btnSeleccionar = document.getElementById('btn-seleccionar-archivo');
-        const btnEliminar = document.getElementById('btn-eliminar-archivo');
-        const filePreview = document.getElementById('file-preview');
-        const fileName = document.getElementById('file-name');
-        const fileSize = document.getElementById('file-size');
-        const previewImage = document.getElementById('preview-image');
-        const imagePreview = document.getElementById('image-preview');
-    
-        uploadArea.addEventListener('click', () => fileInput.click());
-        btnSeleccionar.addEventListener('click', () => fileInput.click());
-    
-        uploadArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-            uploadArea.classList.add('dragover');
-        });
-    
-        uploadArea.addEventListener('dragleave', () => {
-            uploadArea.classList.remove('dragover');
-        });
-    
-        uploadArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            uploadArea.classList.remove('dragover');
-            if (e.dataTransfer.files.length) {
-                fileInput.files = e.dataTransfer.files;
-                handleFileSelect(fileInput.files[0]);
-            }
-        });
-    
-        fileInput.addEventListener('change', (e) => {
-            if (e.target.files.length) {
-                handleFileSelect(e.target.files[0]);
-            }
-        });
-    
-        btnEliminar.addEventListener('click', () => {
-            fileInput.value = '';
-            filePreview.classList.add('d-none');
-            imagePreview.classList.add('d-none');
-            uploadArea.classList.remove('d-none');
-        });
-    
-        function handleFileSelect(file) {
-            const maxSize = 5 * 1024 * 1024;
-            if (file.size > maxSize) {
-                mostrarAlerta('⚠️ El archivo es demasiado grande. Máximo 5MB.', 'warning');
-                return;
-            }
-    
-            const validTypes = ['image/jpeg', 'image/png', 'image/gif', 'application/pdf'];
-            if (!validTypes.includes(file.type)) {
-                mostrarAlerta('⚠️ Formato no válido. Use JPG, PNG, GIF o PDF.', 'warning');
-                return;
-            }
-    
-            fileName.textContent = file.name;
-            fileSize.textContent = formatBytes(file.size);
-            filePreview.classList.remove('d-none');
-    
-            if (file.type.startsWith('image/')) {
-                const reader = new FileReader();
-                reader.onload = (e) => {
-                    previewImage.src = e.target.result;
-                    imagePreview.classList.remove('d-none');
-                };
-                reader.readAsDataURL(file);
-            } else {
-                imagePreview.classList.add('d-none');
-            }
-    
-            mostrarAlerta(`✅ Archivo "${file.name}" seleccionado`, 'success');
-        }
-    
-        function formatBytes(bytes, decimals = 2) {
-            if (bytes === 0) return '0 Bytes';
-            const k = 1024;
-            const dm = decimals < 0 ? 0 : decimals;
-            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
-            const i = Math.floor(Math.log(bytes) / Math.log(k));
-            return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i];
-        }
-    }
-    
-    // Inicializar eventos de celdas
-    function inicializarEventosCeldas() {
+        // 1. Primero limpiar TODAS las celdas
         document.querySelectorAll('.hora-cell').forEach(celda => {
-            celda.addEventListener('click', function() {
-                asignarMateriaACelda(this);
-            });
-        });
-    }
-    
-    // Agregar nueva materia
-    document.getElementById('btn-agregar-materia').addEventListener('click', function() {
-        const input = document.getElementById('input-nueva-materia');
-        const nombreMateria = input.value.trim();
-    
-        if (!nombreMateria) {
-            mostrarAlerta('⚠️ Escribe un nombre de materia antes de agregar.', 'warning');
-            return;
-        }
-    
-        const existe = materiasSeleccionadas.some(m => m.nombre.toLowerCase() === nombreMateria.toLowerCase());
-        if (existe) {
-            mostrarAlerta('❌ Esta materia ya está agregada.', 'danger');
-            input.value = '';
-            return;
-        }
-    
-        const colorAsignado = siguienteColor;
-        siguienteColor = (siguienteColor % 8) + 1;
-    
-        const nuevaMateria = {
-            id: siguienteId++,
-            nombre: nombreMateria,
-            color: colorAsignado
-        };
-    
-        materiasSeleccionadas.push(nuevaMateria);
-        materiaActiva = nuevaMateria;
-    
-        input.value = '';
-        actualizarListaMaterias();
-        guardarEnLocalStorage();
-        mostrarAlerta(`✅ Materia "<strong>${nombreMateria}</strong>" agregada correctamente.`, 'success');
-    });
-    
-    // Mostrar/ocultar contenido según periodo
-    function toggleContenidoPeriodo() {
-        const periodoSelect = document.getElementById('periodo_id');
-        const sinPeriodo = document.getElementById('sin-periodo');
-        const conPeriodo = document.getElementById('con-periodo');
-        
-        if (periodoSelect.value) {
-            sinPeriodo.style.display = 'none';
-            conPeriodo.style.display = 'block';
-        } else {
-            sinPeriodo.style.display = 'block';
-            conPeriodo.style.display = 'none';
-        }
-    }
-    
-    // Asignar materia a celda
-    function asignarMateriaACelda(celda) {
-        if (!materiaActiva) {
-            mostrarAlerta('⚠️ Primero selecciona o agrega una materia.', 'warning');
-            return;
-        }
-    
-        const dia = celda.dataset.dia;
-        const horario = celda.dataset.hora;
-        
-        const tieneMateria = celda.classList.contains('ocupada');
-        
-        if (tieneMateria) {
-            if (!confirm(`¿Reemplazar la materia en ${dia} ${horario}?`)) {
-                return;
-            }
-            horariosSeleccionados = horariosSeleccionados.filter(h => 
-                !(h.dia === dia && h.horario === horario)
-            );
-        }
-        
-        actualizarCeldaConMateria(celda, materiaActiva);
-        
-        const aula = document.getElementById('aula-global').value || '';
-        const grupo = document.getElementById('grupo-global').value || '';
-        
-        horariosSeleccionados.push({
-            clave: `${materiaActiva.id}_${dia}_${horario}`,
-            materia_id: materiaActiva.id,
-            materia_nombre: materiaActiva.nombre,
-            materia_color: materiaActiva.color,
-            dia: dia,
-            horario: horario,
-            aula: aula,
-            grupo: grupo
+            celda.innerHTML = `<div class="text-muted"><small><i class="fas fa-plus-circle me-1"></i> Disponible</small></div>`;
+            celda.classList.remove('ocupada', 'celda-con-materia');
+            celda.classList.add('vacia');
+            celda.title = '';
         });
         
-        actualizarResumenHoras();
-        actualizarCamposOcultos();
-        guardarEnLocalStorage();
-        
-        mostrarAlerta(`✅ Materia "<strong>${materiaActiva.nombre}</strong>" asignada a ${dia} ${horario}`, 'success');
-    }
-    
-    // Actualizar celda con materia
-    function actualizarCeldaConMateria(celda, materia) {
-        celda.innerHTML = `<span class="materia-badge color-${materia.color}">${materia.nombre.substring(0,15)}</span>`;
-        celda.classList.remove('vacia');
-        celda.classList.add('ocupada', 'celda-con-materia');
-        celda.title = `${materia.nombre} - ${celda.dataset.dia} ${celda.dataset.hora}`;
-    }
-    
-    // Actualizar tabla completa de horarios
-    function actualizarTablaHorarios() {
-        document.querySelectorAll('.hora-cell').forEach(celda => {
-            const dia = celda.dataset.dia;
-            const horario = celda.dataset.hora;
+        // 2. Llenar con datos existentes
+        horariosSeleccionados.forEach(horario => {
+            const celdaId = `celda-${horario.dia}-${horario.horario}`;
+            const celda = document.getElementById(celdaId);
             
-            const horarioExistente = horariosSeleccionados.find(h => h.dia === dia && h.horario === horario);
-            
-            if (horarioExistente) {
-                const materia = materiasSeleccionadas.find(m => m.id === horarioExistente.materia_id);
+            if (celda) {
+                const materia = materiasSeleccionadas.find(m => m.id === horario.materia_id);
                 if (materia) {
-                    actualizarCeldaConMateria(celda, materia);
+                    celda.innerHTML = `<span class="materia-badge color-${materia.color}">${materia.nombre.substring(0,15)}</span>`;
+                    celda.classList.remove('vacia');
+                    celda.classList.add('ocupada', 'celda-con-materia');
+                    celda.title = `${materia.nombre} - ${horario.dia} ${horario.horario}`;
                 }
-            } else {
-                celda.innerHTML = '<div class="text-muted"><small><i class="fas fa-plus-circle me-1"></i> Disponible</small></div>';
-                celda.classList.remove('ocupada', 'celda-con-materia');
-                celda.classList.add('vacia');
-                celda.title = `Haz clic para asignar materia (${dia} ${horario})`;
             }
         });
+        
+        // 3. Actualizar contador
+        actualizarContadorClases();
+        console.log(`✅ Tabla actualizada: ${horariosSeleccionados.length} clases mostradas`);
     }
-    
-    // Actualizar lista de materias
+
+    function actualizarContadorClases() {
+        const contadorClases = document.getElementById('contador-clases');
+        if (contadorClases) {
+            contadorClases.textContent = `${horariosSeleccionados.length} clases`;
+            contadorClases.className = `badge ${horariosSeleccionados.length > 0 ? 'bg-success' : 'bg-secondary'} ms-2`;
+        }
+    }
+
     function actualizarListaMaterias() {
         const listaContainer = document.getElementById('lista-materias');
         const contador = document.getElementById('contador-materias');
         const sinMaterias = document.getElementById('sin-materias');
-    
+        
         contador.textContent = materiasSeleccionadas.length;
-    
+        
         if (materiasSeleccionadas.length === 0) {
             if (sinMaterias) sinMaterias.style.display = 'block';
-            listaContainer.innerHTML = `<p class="text-muted mb-0 text-center py-3" id="sin-materias"><i class="fas fa-book-open me-1"></i> No hay materias agregadas. Escribe materias para comenzar.</p>`;
+            listaContainer.innerHTML = `<p class="text-muted mb-0 text-center py-3" id="sin-materias"><i class="fas fa-book-open me-1"></i> No hay materias agregadas.</p>`;
             materiaActiva = null;
             return;
         }
-    
+        
         if (sinMaterias) sinMaterias.style.display = 'none';
         listaContainer.innerHTML = '';
-    
+        
         materiasSeleccionadas.sort((a, b) => a.id - b.id).forEach((materia) => {
             const esActiva = materiaActiva && materiaActiva.id === materia.id;
             const horariosMateria = horariosSeleccionados.filter(h => h.materia_id === materia.id).length;
-    
+            
             const div = document.createElement('div');
             div.className = `card materia-item ${esActiva ? 'materia-seleccionada' : ''}`;
             div.style.borderLeftColor = `#${getColorHex(materia.color)}`;
             div.style.marginBottom = '8px';
             div.onclick = () => seleccionarMateria(materia.id);
-    
+            
             div.innerHTML = `
                 <div class="card-body py-2">
                     <div class="d-flex justify-content-between align-items-center">
@@ -1342,67 +1024,61 @@
                     </div>
                 </div>
             `;
-    
+            
             div.querySelector('button').addEventListener('click', (e) => {
                 e.stopPropagation();
                 eliminarMateria(materia.id);
             });
-    
+            
             listaContainer.appendChild(div);
         });
     }
-    
+
     function getColorHex(colorIndex) {
         const colores = ['0744b6', '0d6efd', '198754', '0dcaf0', '6f42c1', 'fd7e14', '20c997', 'e83e8c'];
         return colores[colorIndex - 1] || '0744b6';
     }
-    
+
     function seleccionarMateria(materiaId) {
         materiaActiva = materiasSeleccionadas.find(m => m.id === materiaId);
-        if (!materiaActiva) {
-            mostrarAlerta('❌ Error: Materia no encontrada', 'danger');
-            return;
-        }
+        if (!materiaActiva) return;
+        
         actualizarListaMaterias();
-        mostrarAlerta(`🔵 Materia "<strong>${materiaActiva.nombre}</strong>" seleccionada. Haz clic en las celdas de la tabla para asignarla.`, 'info');
+        mostrarAlerta(`🔵 Materia "<strong>${materiaActiva.nombre}</strong>" seleccionada`, 'info');
     }
-    
-    // Eliminar materia
+
     function eliminarMateria(materiaId) {
         const materia = materiasSeleccionadas.find(m => m.id === materiaId);
         const horariosMateria = horariosSeleccionados.filter(h => h.materia_id === materiaId).length;
         
-        if (!confirm(`¿Eliminar la materia "${materia.nombre}"? Se eliminarán ${horariosMateria} horario(s) asignado(s).`)) return;
-    
+        if (!confirm(`¿Eliminar "${materia.nombre}"? Se eliminarán ${horariosMateria} horario(s).`)) return;
+        
         materiasSeleccionadas = materiasSeleccionadas.filter(m => m.id !== materiaId);
         if (materiaActiva && materiaActiva.id === materiaId) materiaActiva = null;
         
         horariosSeleccionados = horariosSeleccionados.filter(h => h.materia_id !== materiaId);
         
-        actualizarTablaHorarios();
+        // Actualizar todo
+        actualizarTablaDesdeDatos();
         actualizarListaMaterias();
         actualizarResumenHoras();
         actualizarCamposOcultos();
-        guardarEnLocalStorage();
-        mostrarAlerta(`🗑️ Materia "${materia.nombre}" eliminada correctamente`, 'success');
+        
+        mostrarAlerta(`🗑️ "${materia.nombre}" eliminada`, 'success');
     }
-    
-    // Actualizar resumen de horas
+
     function actualizarResumenHoras() {
-        const horasPorDia = { 
-            'Lunes':0, 'Martes':0, 'Miercoles':0, 
-            'Jueves':0, 'Viernes':0 
-        };
+        const horasPorDia = { 'Lunes':0, 'Martes':0, 'Miercoles':0, 'Jueves':0, 'Viernes':0 };
         
         horariosSeleccionados.forEach(h => { 
             if(horasPorDia[h.dia] !== undefined) horasPorDia[h.dia]++; 
         });
-    
-        diasSemana.forEach(dia => {
-            const el = document.getElementById(`horas-${dia.toLowerCase()}`);
-            if(el) el.textContent = horasPorDia[dia];
+        
+        ['lunes', 'martes', 'miercoles', 'jueves', 'viernes'].forEach(dia => {
+            const el = document.getElementById(`horas-${dia}`);
+            if(el) el.textContent = horasPorDia[dia.charAt(0).toUpperCase() + dia.slice(1)];
         });
-    
+        
         const totalHoras = Object.values(horasPorDia).reduce((a,b)=>a+b,0);
         const totalEl = document.getElementById('total-semanal');
         if(totalEl) {
@@ -1410,8 +1086,7 @@
             totalEl.className = `horas-totales ${totalHoras>0?'text-success':'text-danger'}`;
         }
     }
-    
-    // Actualizar campos ocultos para envío
+
     function actualizarCamposOcultos() {
         const container = document.getElementById('hidden-fields-container');
         container.innerHTML = '';
@@ -1426,49 +1101,55 @@
             `;
         });
     }
-    
-    // Guardar en localStorage
-    function guardarEnLocalStorage() {
-        const datos = {
-            materiasSeleccionadas,
-            horariosSeleccionados,
-            siguienteColor,
-            siguienteId,
-            aulaGlobal: document.getElementById('aula-global').value || '',
-            grupoGlobal: document.getElementById('grupo-global').value || '',
-            periodoId: document.getElementById('periodo_id').value || ''
-        };
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(datos));
-    }
-    
-    // Cargar de localStorage
-    function cargarDeLocalStorage() {
-        const datosGuardados = JSON.parse(localStorage.getItem(STORAGE_KEY) || 'null');
-        
-        if (datosGuardados) {
-            const periodoActual = document.getElementById('periodo_id').value;
-            if (!periodoActual || datosGuardados.periodoId === periodoActual) {
-                materiasSeleccionadas = datosGuardados.materiasSeleccionadas || materiasSeleccionadas;
-                horariosSeleccionados = datosGuardados.horariosSeleccionados || horariosSeleccionados;
-                siguienteColor = datosGuardados.siguienteColor || siguienteColor;
-                siguienteId = datosGuardados.siguienteId || siguienteId;
-                
-                if (datosGuardados.aulaGlobal) {
-                    document.getElementById('aula-global').value = datosGuardados.aulaGlobal;
-                }
-                if (datosGuardados.grupoGlobal) {
-                    document.getElementById('grupo-global').value = datosGuardados.grupoGlobal;
-                }
-                
-                actualizarTablaHorarios();
-                actualizarListaMaterias(); 
-                actualizarResumenHoras(); 
-                actualizarCamposOcultos();
-            }
+
+    function asignarMateriaACelda(celda) {
+        if (!materiaActiva) {
+            mostrarAlerta('⚠️ Selecciona una materia primero', 'warning');
+            return;
         }
+        
+        const dia = celda.dataset.dia;
+        const horario = celda.dataset.hora;
+        
+        // Verificar si ya hay materia
+        const tieneMateria = celda.classList.contains('ocupada');
+        if (tieneMateria) {
+            if (!confirm(`¿Reemplazar en ${dia} ${horario}?`)) return;
+            // Eliminar horario existente
+            horariosSeleccionados = horariosSeleccionados.filter(h => 
+                !(h.dia === dia && h.horario === horario)
+            );
+        }
+        
+        // Actualizar visualmente
+        celda.innerHTML = `<span class="materia-badge color-${materiaActiva.color}">${materiaActiva.nombre.substring(0,15)}</span>`;
+        celda.classList.remove('vacia');
+        celda.classList.add('ocupada', 'celda-con-materia');
+        celda.title = `${materiaActiva.nombre} - ${dia} ${horario}`;
+        
+        // Agregar a horarios
+        horariosSeleccionados.push({
+            clave: `${materiaActiva.id}_${dia}_${horario}`,
+            materia_id: materiaActiva.id,
+            materia_nombre: materiaActiva.nombre,
+            materia_color: materiaActiva.color,
+            dia: dia,
+            horario: horario,
+            aula: document.getElementById('aula-global').value || '',
+            grupo: document.getElementById('grupo-global').value || ''
+        });
+        
+        // Actualizar todo
+        actualizarResumenHoras();
+        actualizarCamposOcultos();
+        actualizarContadorClases();
+        
+        mostrarAlerta(`✅ "${materiaActiva.nombre}" asignada a ${dia} ${horario}`, 'success');
     }
-    
+
+    // ========== UTILIDADES ==========
     function mostrarAlerta(mensaje, tipo='info') {
+        // Eliminar alertas anteriores
         document.querySelectorAll('.alert-temporal').forEach(a => a.remove());
         
         const alerta = document.createElement('div');
@@ -1494,16 +1175,59 @@
             }, 5000);
         }
     }
-    
-    // Event Listeners
+
+    function toggleContenidoPeriodo() {
+        const periodoSelect = document.getElementById('periodo_id');
+        const sinPeriodo = document.getElementById('sin-periodo');
+        const conPeriodo = document.getElementById('con-periodo');
+        
+        if (periodoSelect.value) {
+            sinPeriodo.style.display = 'none';
+            conPeriodo.style.display = 'block';
+        } else {
+            sinPeriodo.style.display = 'block';
+            conPeriodo.style.display = 'none';
+        }
+    }
+
+    // ========== EVENT LISTENERS ==========
+    document.getElementById('btn-agregar-materia').addEventListener('click', function() {
+        const input = document.getElementById('input-nueva-materia');
+        const nombreMateria = input.value.trim();
+        
+        if (!nombreMateria) {
+            mostrarAlerta('⚠️ Escribe un nombre', 'warning');
+            return;
+        }
+        
+        if (materiasSeleccionadas.some(m => m.nombre.toLowerCase() === nombreMateria.toLowerCase())) {
+            mostrarAlerta('❌ Ya existe', 'danger');
+            input.value = '';
+            return;
+        }
+        
+        const nuevaMateria = {
+            id: siguienteId++,
+            nombre: nombreMateria,
+            color: siguienteColor
+        };
+        
+        siguienteColor = (siguienteColor % 8) + 1;
+        materiasSeleccionadas.push(nuevaMateria);
+        materiaActiva = nuevaMateria;
+        
+        input.value = '';
+        actualizarListaMaterias();
+        mostrarAlerta(`✅ "${nombreMateria}" agregada`, 'success');
+    });
+
     document.getElementById('input-nueva-materia').addEventListener('keypress', function(e) {
         if(e.key === 'Enter'){
             e.preventDefault(); 
             document.getElementById('btn-agregar-materia').click(); 
         }
     });
-    
-    // Limpiar todo
+
     document.getElementById('btn-limpiar-todo').addEventListener('click', function() {
         if(!confirm('¿Limpiar todas las materias y horarios? Esta acción no se puede deshacer.')) return;
         
@@ -1516,43 +1240,29 @@
         document.getElementById('aula-global').value = '';
         document.getElementById('grupo-global').value = '';
         
-        actualizarTablaHorarios();
+        // Actualizar tabla limpiando todas las celdas
+        actualizarTablaDesdeDatos();
         actualizarListaMaterias(); 
         actualizarResumenHoras(); 
-        actualizarCamposOcultos(); 
-        guardarEnLocalStorage();
+        actualizarCamposOcultos();
         
         mostrarAlerta('🧹 Todos los datos han sido limpiados correctamente','success');
     });
-    
-    // Cambio de periodo
+
     document.getElementById('periodo_id').addEventListener('change', function() {
-        toggleContenidoPeriodo(); 
-        guardarEnLocalStorage();
+        const periodoId = this.value;
         
-        if(this.value){ 
+        if (periodoId) { 
             const url = new URL(window.location.href); 
-            url.searchParams.set('periodo_id', this.value); 
-            window.location.href = url.toString(); 
+            url.searchParams.set('periodo_id', periodoId); 
+            window.location.href = url.toString();
+        } else {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('periodo_id');
+            window.location.href = url.toString();
         }
     });
-    
-    // Cambios en aula y grupo
-    document.getElementById('aula-global').addEventListener('change', function() {
-        horariosSeleccionados.forEach(h => {
-            h.aula = this.value;
-        });
-        guardarEnLocalStorage();
-    });
-    
-    document.getElementById('grupo-global').addEventListener('change', function() {
-        horariosSeleccionados.forEach(h => {
-            h.grupo = this.value;
-        });
-        guardarEnLocalStorage();
-    });
-    
-    // Validación al enviar formulario
+
     document.getElementById('formHorario').addEventListener('submit', function(e){
         const periodoId = document.getElementById('periodo_id').value;
         
@@ -1579,14 +1289,28 @@
             return false; 
         }
         
-        limpiarLocalStorage();
         return true;
     });
-    
-    function limpiarLocalStorage() {
-        localStorage.removeItem(STORAGE_KEY);
-        localStorage.removeItem('ultimo_periodo');
-    }
+
+    // ========== INICIALIZACIÓN ==========
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log('📱 DOM completamente cargado');
+        
+        // A. Mostrar/ocultar contenido según periodo
+        toggleContenidoPeriodo();
+        
+        // B. Actualizar tabla con los datos cargados desde PHP
+        actualizarTablaDesdeDatos();
+        
+        // C. Actualizar otras partes de la interfaz
+        actualizarListaMaterias();
+        actualizarResumenHoras();
+        actualizarCamposOcultos();
+        
+        console.log('🎉 Sistema completamente inicializado');
+        console.log('Materias:', materiasSeleccionadas.length);
+        console.log('Horarios:', horariosSeleccionados.length);
+    });
     </script>
 </body>
 </html>

@@ -552,6 +552,113 @@ class MaestroController extends Controller
         }
     }
 
+    /**
+ * ✅ NUEVO MÉTODO: Mostrar formulario para actualizar datos personales del maestro
+ */
+public function editarMiPerfil()
+{
+    try {
+        \Log::info('=== EDITAR MI PERFIL - MAESTRO ===');
+        
+        // Buscar maestro
+        $maestro = Maestro::where('user_id', auth()->id())
+            ->orWhere('email', auth()->user()->email)
+            ->first();
+
+        if (!$maestro) {
+            return redirect()->route('profesor.completar-perfil')
+                ->with('error', 'No tienes un perfil registrado.');
+        }
+
+        $coordinaciones = Coordinacion::all();
+        
+        return view('dashboard.editar-mi-perfil', compact('maestro', 'coordinaciones'));
+        
+    } catch (\Exception $e) {
+        \Log::error('Error en editarMiPerfil: ' . $e->getMessage());
+        return redirect()->route('profesor.mi-perfil')
+            ->with('error', 'Error al cargar formulario: ' . $e->getMessage());
+    }
+}
+
+/**
+ * ✅ NUEVO MÉTODO: Actualizar datos personales del maestro
+ */
+public function actualizarMiPerfil(Request $request)
+{
+    try {
+        \Log::info('=== ACTUALIZAR MI PERFIL - MAESTRO ===');
+        \Log::info('Datos recibidos:', $request->all());
+        
+        // Buscar maestro
+        $maestro = Maestro::where('user_id', auth()->id())
+            ->orWhere('email', auth()->user()->email)
+            ->first();
+
+        if (!$maestro) {
+            return redirect()->route('profesor.completar-perfil')
+                ->with('error', 'No tienes un perfil registrado.');
+        }
+
+        // ✅ Validación de datos
+        $validated = $request->validate([
+            'nombres' => 'required|string|max:100',
+            'apellido_paterno' => 'required|string|max:50',
+            'apellido_materno' => 'nullable|string|max:50',
+            'fecha_nacimiento' => 'required|date|before:today',
+            'edad' => 'required|integer|min:18|max:100',
+            'sexo' => 'nullable|in:Masculino,Femenino,Otro',
+            'estado_civil' => 'nullable|in:Soltero,Casado,Divorciado,Viudo,Unión Libre',
+            'telefono' => 'nullable|string|max:15',
+            'direccion' => 'nullable|string|max:255',
+            // Los siguientes campos no se pueden cambiar desde el panel del maestro
+            // 'email' => 'required|email|unique:maestros,email,' . $maestro->id,
+            // 'rfc' => 'required|string|size:13|unique:maestros,rfc,' . $maestro->id,
+            // 'curp' => 'required|string|size:18|unique:maestros,curp,' . $maestro->id,
+            // 'maximo_grado_academico' => 'required|in:Licenciatura,Especialidad,Maestría,Doctorado',
+            // 'coordinaciones_id' => 'required|exists:coordinaciones,id',
+        ], [
+            'fecha_nacimiento.before' => 'La fecha de nacimiento no puede ser futura.',
+            'edad.min' => 'La edad mínima debe ser 18 años.',
+            'edad.max' => 'La edad máxima no puede exceder 100 años.',
+        ]);
+
+        \Log::info('Validación pasada correctamente');
+
+        // ✅ Actualizar solo los campos permitidos
+        $maestro->update([
+            'nombres' => $validated['nombres'],
+            'apellido_paterno' => $validated['apellido_paterno'],
+            'apellido_materno' => $validated['apellido_materno'] ?? null,
+            'fecha_nacimiento' => $validated['fecha_nacimiento'],
+            'edad' => $validated['edad'],
+            'sexo' => $validated['sexo'] ?? null,
+            'estado_civil' => $validated['estado_civil'] ?? null,
+            'telefono' => $validated['telefono'] ?? null,
+            'direccion' => $validated['direccion'] ?? null,
+        ]);
+
+        \Log::info('Perfil actualizado exitosamente. ID: ' . $maestro->id);
+        
+        return redirect()->route('profesor.mi-perfil')
+            ->with('success', '¡Tus datos personales han sido actualizados exitosamente!');
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        \Log::error('Error de validación: ' . json_encode($e->errors()));
+        return back()
+            ->withErrors($e->errors())
+            ->withInput()
+            ->with('error', 'Por favor corrige los errores en el formulario.');
+            
+    } catch (\Exception $e) {
+        \Log::error('ERROR en actualizarMiPerfil: ' . $e->getMessage());
+        \Log::error('Trace: ' . $e->getTraceAsString());
+        return back()
+            ->withInput()
+            ->with('error', 'Error al actualizar el perfil: ' . $e->getMessage());
+    }
+}
+
 
 
     //////////////////
@@ -760,6 +867,157 @@ public function dashboard()
         \Log::error('Trace: ' . $e->getTraceAsString());
         return redirect()->route('profesor.completar-perfil')
             ->with('error', 'Error al cargar el dashboard: ' . $e->getMessage());
+    }
+}
+
+/**
+ * ✅ NUEVO MÉTODO: Vista separada para documentos del profesor
+ */
+public function documentos()
+{
+    try {
+        \Log::info('=== VISTA DOCUMENTOS PROFESOR ===');
+        
+        // Buscar maestro
+        $maestro = Maestro::where('user_id', auth()->id())
+            ->orWhere('email', auth()->user()->email)
+            ->with(['documentos.revisadoPor', 'coordinacion'])
+            ->first();
+
+        if (!$maestro) {
+            return redirect()->route('profesor.completar-perfil')
+                ->with('info', 'Por favor, completa tu perfil primero.');
+        }
+
+        // Verificar período
+        $periodoSubida = Periodo::getPeriodoSubidaHabilitada();
+        $hayPeriodoHabilitado = false;
+        
+        if ($periodoSubida) {
+            $hayPeriodoHabilitado = true;
+            $periodoHabilitado = $periodoSubida;
+        } else {
+            $periodoHabilitado = (object) [
+                'id' => null,
+                'nombre' => 'No hay período activo',
+                'activo' => 0,
+                'estado' => 'inactivo'
+            ];
+        }
+
+        // Configurar documentos - SOLO LOS 6 ESPECÍFICOS
+        $tiposDocumentos = [
+            'cst' => [
+                'nombre' => 'Constancia de Situación Fiscal (CST)', 
+                'icono' => 'file-contract',
+                'descripcion' => 'Documento emitido por el SAT que acredita la situación fiscal'
+            ],
+            'iufim' => [
+                'nombre' => 'Documento IUFIM', 
+                'icono' => 'file-invoice',
+                'descripcion' => 'Documento oficial de la institución'
+            ],
+            'comprobante_domicilio' => [
+                'nombre' => 'Comprobante de Domicilio', 
+                'icono' => 'home',
+                'descripcion' => 'Recibo de luz, agua, teléfono o predial vigente'
+            ],
+            'oficio_ingresos' => [
+                'nombre' => 'Oficio de Ingresos', 
+                'icono' => 'money-bill-wave',
+                'descripcion' => 'Documento que comprueba ingresos mensuales'
+            ],
+            'declaracion_anual' => [
+                'nombre' => 'Declaración Anual', 
+                'icono' => 'file-alt',
+                'descripcion' => 'Declaración fiscal anual del ejercicio anterior'
+            ],
+            'comprobante_seguro_social' => [
+                'nombre' => 'Comprobante de Seguro Social', 
+                'icono' => 'shield-alt',
+                'descripcion' => 'Credencial o comprobante de afiliación al IMSS/ISSSTE'
+            ]
+        ];
+        
+        // Cargar documentos del período actual si existe
+        $documentosDelPeriodo = collect([]);
+        if ($hayPeriodoHabilitado) {
+            $documentosDelPeriodo = $maestro->documentos()
+                ->where('periodo_id', $periodoHabilitado->id)
+                ->orderBy('tipo', 'asc')
+                ->with('revisadoPor')
+                ->get();
+        }
+        
+        // Procesar documentos para vista
+        $documentosSubidos = [];
+        foreach ($documentosDelPeriodo as $documento) {
+            $documentosSubidos[$documento->tipo] = $documento;
+        }
+        
+        $documentosParaVista = [];
+        foreach ($tiposDocumentos as $tipo => $info) {
+            $documentoInfo = [
+                'tipo' => $tipo,
+                'nombre' => $info['nombre'],
+                'icono' => $info['icono'],
+                'descripcion' => $info['descripcion'] ?? '',
+                'estado' => 'faltante',
+                'tiene_documento' => false,
+                'documento_id' => null,
+                'observaciones' => null,
+                'fecha_subida' => null,
+            ];
+            
+            if (isset($documentosSubidos[$tipo])) {
+                $doc = $documentosSubidos[$tipo];
+                $documentoInfo['estado'] = $doc->estado;
+                $documentoInfo['tiene_documento'] = true;
+                $documentoInfo['documento_id'] = $doc->id;
+                $documentoInfo['observaciones'] = $doc->observaciones_admin;
+                $documentoInfo['fecha_subida'] = $doc->created_at;
+                $documentoInfo['archivo'] = $doc->nombre_archivo;
+                $documentoInfo['aprobado_por'] = $doc->revisadoPor->name ?? null;
+            }
+            
+            $documentosParaVista[] = $documentoInfo;
+        }
+        
+        // Calcular estadísticas
+        $totalRequeridos = count($tiposDocumentos); // Será siempre 6
+        $totalSubidos = count($documentosSubidos);
+        $faltantes = $totalRequeridos - $totalSubidos;
+        $porcentaje = $totalRequeridos > 0 ? 
+            round(($totalSubidos / $totalRequeridos) * 100) : 0;
+        
+        $documentosAprobados = $documentosDelPeriodo->where('estado', 'aprobado');
+        $documentosRechazados = $documentosDelPeriodo->where('estado', 'rechazado');
+        $documentosPendientes = $documentosDelPeriodo->where('estado', 'pendiente');
+        
+        $estadisticas = [
+            'total_requeridos' => $totalRequeridos,
+            'total_subidos' => $totalSubidos,
+            'aprobados' => $documentosAprobados->count(),
+            'rechazados' => $documentosRechazados->count(),
+            'pendientes' => $documentosPendientes->count(),
+            'porcentaje' => $porcentaje,
+            'faltantes' => $faltantes,
+        ];
+        
+        return view('dashboard.profesor-documentos', compact(
+            'maestro',
+            'periodoHabilitado',
+            'hayPeriodoHabilitado',
+            'documentosParaVista',
+            'estadisticas',
+            'faltantes',
+            'tiposDocumentos'
+        ));
+        
+    } catch (\Exception $e) {
+        \Log::error('ERROR en documentos view: ' . $e->getMessage());
+        return redirect()->route('profesor.dashboard')
+            ->with('error', 'Error al cargar documentos: ' . $e->getMessage());
     }
 }
 

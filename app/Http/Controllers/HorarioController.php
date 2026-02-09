@@ -34,91 +34,98 @@ class HorarioController extends Controller
         return view('horarios.index', compact('maestros'));
     }
 
-    public function mostrarFormulario($maestroId)
-    {
-        $maestro = Maestro::findOrFail($maestroId);
-        $periodos = Periodo::all();
+public function mostrarFormulario($maestroId)
+{
+    $maestro = Maestro::findOrFail($maestroId);
+    $periodos = Periodo::all();
+    
+    $periodoId = request('periodo_id');
+    
+    $periodosConHorario = Horario::where('maestro_id', $maestroId)
+        ->pluck('periodo_id')
+        ->unique()
+        ->toArray();
+    
+    // Variables iniciales
+    $horariosExistentes = collect();
+    $materiasExistentes = [];
+    $horarioCompleto = []; // 🔥 AGREGAR ESTA VARIABLE
+    $materiasColores = [];
+    $siguienteColor = 1;
+    $siguienteId = 1;
+    
+    if ($periodoId) {
+        // Obtener horarios de la base de datos
+        $horariosExistentes = Horario::where('maestro_id', $maestroId)
+            ->where('periodo_id', $periodoId)
+            ->get();
         
-        // Obtener el periodo seleccionado (si existe)
-        $periodoId = request('periodo_id');
-        
-        // Obtener periodos que ya tienen horario para mostrar etiqueta
-        $periodosConHorario = Horario::where('maestro_id', $maestroId)
-            ->pluck('periodo_id')
-            ->unique()
-            ->toArray();
-            
-        
-        // Inicializar todas las variables con valores por defecto
-        $horariosExistentes = [];
-        $horarioCompleto = [];
-        $materiasExistentes = [];
-        $materiasColores = [];
-        $siguienteColor = 1;
-        $siguienteId = 1;
-        $horariosExistentesFormatted = [];
-        
-        if ($periodoId) {
-            $horariosExistentes = Horario::where('maestro_id', $maestroId)
-                ->where('periodo_id', $periodoId)
-                ->get();
-                
-            $horarioCompleto = $this->calculadorHoras->obtenerHorarioCompleto($maestroId, $periodoId);
-            
-            // Preparar materias existentes para JavaScript
+        if ($horariosExistentes->count() > 0) {
+            // Procesar materias únicas
             $materiasUnicas = $horariosExistentes->pluck('materia_nombre')->unique();
             
             foreach ($materiasUnicas as $index => $materiaNombre) {
                 $materiasExistentes[] = [
-                    'id' => $siguienteId++,
+                    'id' => $siguienteId,
                     'nombre' => $materiaNombre,
                     'color' => $siguienteColor
                 ];
                 $materiasColores[$materiaNombre] = $siguienteColor;
                 $siguienteColor = ($siguienteColor % 8) + 1;
+                $siguienteId++;
             }
             
-            // Preparar horarios existentes para JavaScript
-            $horariosExistentesFormatted = [];
+            // 🔥 GENERAR horarioCompleto PARA LA TABLA PHP
+            $horarioCompleto = [];
+            
             foreach ($horariosExistentes as $horario) {
-                // Encontrar el ID de la materia
-                $materiaId = null;
-                foreach ($materiasExistentes as $materia) {
-                    if ($materia['nombre'] === $horario->materia_nombre) {
-                        $materiaId = $materia['id'];
-                        break;
-                    }
+                $dia = $horario->dia;
+                $hora = $horario->horario;
+                $materiaNombre = $horario->materia_nombre;
+                $color = $materiasColores[$materiaNombre] ?? 1;
+                
+                if (!isset($horarioCompleto[$dia])) {
+                    $horarioCompleto[$dia] = [];
                 }
                 
-                if ($materiaId) {
-                    $horariosExistentesFormatted[] = [
-                        'clave' => $materiaId . '_' . $horario->dia . '_' . $horario->horario,
-                        'materia_id' => $materiaId,
-                        'materia_nombre' => $horario->materia_nombre,
-                        'materia_color' => $materiasColores[$horario->materia_nombre],
-                        'dia' => $horario->dia,
-                        'horario' => $horario->horario,
-                        'aula' => $horario->aula,
-                        'grupo' => $horario->grupo
-                    ];
-                }
+                $horarioCompleto[$dia][] = [
+                    'horario' => $hora,
+                    'materia_nombre' => $materiaNombre,
+                    'color' => $color
+                ];
+            }
+            
+            // Ajustar siguienteId si hay materias
+            if (!empty($materiasExistentes)) {
+                $siguienteId = max(array_column($materiasExistentes, 'id')) + 1;
             }
         }
-        
-        return view('maestros.formulario_horas', compact(
-            'maestro', 
-            'periodos', 
-            'periodoId', 
-            'horariosExistentes',
-            'horarioCompleto',
-            'materiasExistentes',
-            'materiasColores',
-            'siguienteColor',
-            'siguienteId',
-            'horariosExistentesFormatted',
-            'periodosConHorario'
-        ));
     }
+    
+    // Comentar el dd después de verificar
+    // dd([
+    //     'periodoId' => $periodoId,
+    //     'horariosCount' => $horariosExistentes->count(),
+    //     'horarios' => $horariosExistentes->toArray(),
+    //     'horarioCompleto' => $horarioCompleto, // 🔥 VERIFICAR ESTE
+    //     'materiasExistentes' => $materiasExistentes,
+    //     'siguienteId' => $siguienteId,
+    //     'siguienteColor' => $siguienteColor
+    // ]);
+    
+    return view('maestros.formulario_horas', compact(
+        'maestro', 
+        'periodos', 
+        'periodoId', 
+        'horariosExistentes',
+        'horarioCompleto', // 🔥 AGREGAR ESTO
+        'materiasExistentes',
+        'materiasColores',
+        'siguienteColor',
+        'siguienteId',
+        'periodosConHorario'
+    ));
+}
 
     public function guardarHorario(Request $request)
 {

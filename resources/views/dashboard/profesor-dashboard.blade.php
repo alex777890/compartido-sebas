@@ -39,6 +39,8 @@
             font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
+        
+
         body {
             background-color: #f5f7fb;
             color: #2d3748;
@@ -46,6 +48,66 @@
             display: flex;
             min-height: 100vh;
             font-size: 14px;
+        }
+                /* Añade estos estilos para el botón de subir documentos */
+        .periodo-actions {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 10px;
+        }
+
+        .btn-subir-documentos {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+        }
+
+        .btn-subir-documentos:hover {
+            background-color: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(7, 68, 182, 0.2);
+        }
+
+        /* Estilo para alertas del sistema */
+        .system-alert {
+            padding: 15px 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: #f8f9fa;
+            border-left: 4px solid var(--primary);
+            animation: slideIn 0.3s ease;
+        }
+
+        .system-alert i {
+            font-size: 20px;
+            color: var(--primary);
+        }
+
+        .system-alert-content h4 {
+            margin: 0 0 5px 0;
+            font-size: 14px;
+            color: var(--primary);
+        }
+
+        .system-alert-content p {
+            margin: 0;
+            font-size: 13px;
+            color: var(--text-muted);
         }
 
         /* SIDEBAR - BLANCO CON LÍNEA AZUL */
@@ -229,9 +291,9 @@
         }
 
         .user-info h4 {
-            font-size: 18px; /* Aumentado de 14px a 18px */
+            font-size: 18px;
             margin-bottom: 2px;
-            font-weight: 700; /* Más negrita */
+            font-weight: 700;
             color: var(--primary);
         }
 
@@ -541,461 +603,164 @@
             line-height: 1.4;
         }
 
-        /* NUEVO DISEÑO COMPACTO PARA DOCUMENTOS */
-        .documentos-unificados {
-            display: grid;
-            grid-template-columns: 1fr;
-            gap: 20px;
-        }
-
-        .documento-unificado-card {
-            background-color: white;
+        /* ALERTAS ESTILIZADAS */
+        .alert {
+            padding: 15px 20px;
             border-radius: 10px;
-            padding: 20px;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.05);
-            border: 1px solid var(--border-color);
-            transition: var(--transition);
-        }
-
-        .documento-unificado-card:hover {
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        /* HEADER COMPACTO DEL DOCUMENTO */
-        .doc-header-unificado {
+            margin-bottom: 20px;
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
+            align-items: flex-start;
+            gap: 15px;
+            border-left: 4px solid transparent;
+            animation: slideIn 0.3s ease;
         }
 
-        .doc-title-container {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            flex: 1;
+        .alert-success {
+            background-color: var(--success-light);
+            border-color: var(--success-color);
+            color: #155724;
         }
 
-        .doc-icon-container {
-            width: 45px;
-            height: 45px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 18px;
-            color: white;
-            flex-shrink: 0;
+        .alert-warning {
+            background-color: var(--warning-light);
+            border-color: var(--warning-color);
+            color: #856404;
         }
 
-        .icon-aprobado {
-            background: linear-gradient(135deg, var(--success-color), #35c04a);
+        .alert-danger {
+            background-color: var(--danger-light);
+            border-color: var(--danger-color);
+            color: #721c24;
         }
 
-        .icon-rechazado {
-            background: linear-gradient(135deg, var(--danger-color), #e25c6c);
+        .alert-info {
+            background-color: var(--info-light);
+            border-color: var(--info-color);
+            color: #0c5460;
         }
 
-        .icon-pendiente {
-            background: linear-gradient(135deg, var(--warning-color), #ffd54f);
+        .alert i {
+            font-size: 20px;
+            margin-top: 2px;
         }
 
-        .icon-faltante {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-        }
-
-        .doc-info-unificado {
-            flex: 1;
-        }
-
-        .doc-name-unificado {
-            font-size: 16px;
-            font-weight: 700;
-            color: #2d3748;
-            margin-bottom: 4px;
-            line-height: 1.2;
-        }
-
-        .doc-description-unificado {
-            color: var(--text-muted);
-            font-size: 13px;
-            line-height: 1.4;
-        }
-
-        .doc-status-badge {
-            padding: 6px 12px;
-            border-radius: 50px;
-            font-size: 12px;
-            font-weight: 600;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
-            margin-left: 10px;
-            flex-shrink: 0;
-        }
-
-        .status-aprobado {
-            background-color: rgba(40, 167, 69, 0.12);
-            color: var(--success-color);
-            border: 1px solid rgba(40, 167, 69, 0.2);
-        }
-
-        .status-rechazado {
-            background-color: rgba(220, 53, 69, 0.12);
-            color: var(--danger-color);
-            border: 1px solid rgba(220, 53, 69, 0.2);
-        }
-
-        .status-pendiente {
-            background-color: rgba(255, 193, 7, 0.12);
-            color: var(--warning-color);
-            border: 1px solid rgba(255, 193, 7, 0.2);
-        }
-
-        /* CONTENIDO COMPACTO DEL DOCUMENTO */
-        .doc-content-unificado {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 15px;
-        }
-
-        @media (max-width: 992px) {
-            .doc-content-unificado {
-                grid-template-columns: 1fr;
-                gap: 15px;
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
             }
         }
 
-        /* ESTADO ACTUAL - COMPACTO CON BOTONES */
-        .doc-estado-actual {
-            background-color: var(--light-bg);
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .doc-estado-actual h5 {
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: var(--primary);
+        /* BOTÓN PARA IR A DOCUMENTOS */
+        .btn-go-documents {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(135deg, var(--primary), var(--primary-light));
+            color: white;
+            border: none;
+            border-radius: 10px;
             font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            box-shadow: 0 4px 15px rgba(7, 68, 182, 0.2);
+        }
+
+        .btn-go-documents:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(7, 68, 182, 0.3);
+            background: linear-gradient(135deg, var(--primary-light), var(--primary));
+        }
+
+        .btn-go-documents:active {
+            transform: translateY(0);
+        }
+
+        .quick-actions {
             display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .estado-info {
-            background: white;
-            border-radius: 6px;
-            padding: 12px;
-            margin-bottom: 10px;
-            border: 1px solid var(--border-color);
-        }
-
-        .info-row {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 8px;
-            font-size: 13px;
-        }
-
-        .info-row:last-child {
-            margin-bottom: 0;
-        }
-
-        .info-row i {
-            color: var(--primary);
-            width: 16px;
-            text-align: center;
-            font-size: 13px;
-        }
-
-        /* BOTONES DE ACCIÓN PARA DOCUMENTOS */
-        .doc-action-buttons {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px;
+            gap: 15px;
+            margin-top: 20px;
             flex-wrap: wrap;
         }
 
-        /* SUBIDA COMPACTA - BOTÓN PEQUEÑO */
-        .doc-subida-archivo {
-            background-color: var(--light-bg);
-            border-radius: 8px;
-            padding: 15px;
-        }
-
-        .doc-subida-archivo h5 {
-            font-size: 14px;
-            margin-bottom: 10px;
-            color: var(--primary);
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .upload-area-mini {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            gap: 10px;
-        }
-
-        .upload-info {
-            flex: 1;
-        }
-
-        .upload-info p {
-            color: var(--text-muted);
-            font-size: 12px;
-            margin-bottom: 4px;
-            line-height: 1.3;
-        }
-
-        .upload-info span {
-            font-size: 11px;
-            color: var(--text-muted);
-            display: block;
-        }
-
-        .upload-btn-container {
-            flex-shrink: 0;
-        }
-
-        /* BOTONES COMPACTOS */
-        .btn {
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 6px;
-            font-size: 13px;
-            white-space: nowrap;
-        }
-
-        .btn-primary {
-            background-color: var(--primary);
-            color: white;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--primary-light);
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(7, 68, 182, 0.2);
-        }
-
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-        }
-
-        .btn-outline:hover {
-            background-color: var(--light-bg);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-success {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(40, 167, 69, 0.2);
-        }
-
-        .btn-warning {
-            background-color: var(--warning-color);
-            color: #333;
-        }
-
-        .btn-warning:hover {
-            background-color: #e0a800;
-            transform: translateY(-1px);
-            box-shadow: 0 3px 8px rgba(255, 193, 7, 0.2);
-        }
-
-        .selected-file-info {
-            margin-top: 10px;
-            padding: 8px 10px;
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
-            color: white;
-            border-radius: 6px;
-            font-size: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .selected-file-info button {
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 0 4px;
-            font-size: 11px;
-        }
-
-        /* BOTÓN DE SUBIR DOCUMENTOS - PEQUEÑO Y A LA DERECHA */
-        .submit-documents-container {
-            display: flex;
-            justify-content: flex-end;
-            margin-top: 25px;
-            padding-top: 20px;
-            border-top: 1px solid var(--light-bg);
-        }
-
-        .submit-documents-btn {
-            padding: 10px 24px;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 14px;
-            cursor: pointer;
-            transition: var(--transition);
-            box-shadow: 0 3px 10px rgba(7, 68, 182, 0.3);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .submit-documents-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(7, 68, 182, 0.4);
-        }
-
-        /* OBSERVACIONES */
-        .observaciones-box {
-            background-color: #fff3cd;
-            border-left: 3px solid var(--warning-color);
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 10px;
-            font-size: 12px;
-        }
-
-        .observaciones-box strong {
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            margin-bottom: 5px;
-            color: #856404;
-            font-size: 12px;
-        }
-
         /* RESPONSIVE */
-        @media (max-width: 1200px) {
-            .sidebar {
-                width: 250px;
-            }
-            .main-content {
-                margin-left: 250px;
-            }
-        }
-
-        @media (max-width: 992px) {
+        @media (max-width: 768px) {
             .sidebar {
                 width: 70px;
             }
-            .sidebar-header h2 span, 
-            .menu-item span, 
-            .menu-item .badge,
+            
+            .sidebar-header h2 span,
+            .sidebar-header p,
+            .menu-item span,
             .sidebar-footer p {
                 display: none;
             }
-            .sidebar-header {
-                padding: 15px 10px;
-            }
+            
             .logo-img-sidebar {
-                width: 50px;
-                margin-bottom: 10px;
+                width: 45px;
             }
+            
+            .sidebar-header h2 {
+                justify-content: center;
+            }
+            
+            .main-content {
+                margin-left: 70px;
+            }
+            
             .menu-item {
                 justify-content: center;
-                padding: 12px;
+                padding: 15px;
             }
+            
             .menu-item i {
                 margin-right: 0;
                 font-size: 18px;
             }
-            .main-content {
-                margin-left: 70px;
+            
+            .user-info h4 {
+                font-size: 16px;
             }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                display: none;
-            }
-            .main-content {
-                margin-left: 0;
-            }
-            .header {
-                height: auto;
-                padding: 15px;
-                flex-direction: column;
-                gap: 15px;
-            }
-            .logo-img {
-                height: 35px;
-            }
+            
             .cards-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
-            .section {
-                padding: 20px;
-            }
-            .doc-header-unificado {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 10px;
-            }
-            .doc-status-badge {
-                margin-left: 0;
-                align-self: flex-start;
-            }
-            .user-info h4 {
-                font-size: 16px; /* Un poco más pequeño en móviles */
-            }
-        }
-
-        @media (max-width: 576px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-            .content-wrapper {
-                padding: 15px;
-            }
-            .section {
-                padding: 15px;
-            }
+            
             .profile-info {
                 grid-template-columns: 1fr;
             }
         }
+
+        @media (max-width: 480px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .periodo-alert {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .periodo-status {
+                align-self: stretch;
+                justify-content: center;
+            }
+            
+            .header {
+                padding: 0 15px;
+            }
+        }
     </style>
 </head>
-<body>
-    <!-- SIDEBAR BLANCO CON LÍNEA AZUL -->
+  <!-- SIDEBAR BLANCO CON LÍNEA AZUL -->
     <div class="sidebar">
         <div class="sidebar-header">
             <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img-sidebar">
@@ -1003,21 +768,23 @@
         </div>
         
         <div class="sidebar-menu">
-            <a href="#dashboard" class="menu-item active">
+            <a href="{{ route('profesor.dashboard') }}" class="menu-item active">
                 <i class="fas fa-tachometer-alt"></i>
                 <span>Inicio</span>
             </a>
-            <a href="#perfil" class="menu-item">
+            <a href=""  class="menu-item">
                 <i class="fas fa-user"></i>
                 <span>Mi Perfil</span>
             </a>
-            <a href="#documentos" class="menu-item">
+            <a href="{{ route('profesor.documentos') }}" class="menu-item">
                 <i class="fas fa-folder"></i>
                 <span>Mis Documentos</span>
+                @if(($faltantes ?? 0) > 0)
+                <span class="badge">{{ $faltantes }}</span>
+                @endif
             </a>
             <a href="{{ route('maestros.grados.create') }}" class="menu-item">
-                <i class="fas fa-chart-bar"></i>
-                
+                <i class="fas fa-graduation-cap"></i>
                 <span>Grados Académicos</span>
             </a>
             <a href="#configuracion" class="menu-item">
@@ -1055,7 +822,7 @@
 
         <!-- CONTENT WRAPPER -->
         <div class="content-wrapper" id="dashboard">
-            <!-- MENSAJES -->
+            <!-- MENSAJES DEL SISTEMA (NO DE DOCUMENTOS) -->
             @if(session('success'))
             <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i> 
@@ -1091,6 +858,17 @@
             </div>
             @endif
 
+            <!-- ALERTA DEL SISTEMA (EJEMPLO) -->
+            @if($hayPeriodoHabilitado && $faltantes > 0)
+            <div class="system-alert">
+                <i class="fas fa-bell"></i>
+                <div class="system-alert-content">
+                    <h4>Recordatorio Importante</h4>
+                    <p>Tienes {{ $faltantes }} documento(s) pendiente(s) de subir para el período actual.</p>
+                </div>
+            </div>
+            @endif
+
             @php
                 // Variables seguras con datos del controller
                 $periodoHabilitado = $periodoHabilitado ?? null;
@@ -1115,12 +893,10 @@
                 }
                 
                 $maestroData = $maestroData ?? $maestro ?? null;
-                $documentosParaVista = $documentosParaVista ?? [];
-                $tiposDocumentos = $tiposDocumentos ?? [];
                 $actividadesRecientes = $actividadesRecientes ?? [];
             @endphp
 
-            <!-- PERIODO HABILITADO -->
+            <!-- PERIODO HABILITADO CON BOTÓN DE SUBIR DOCUMENTOS -->
             <div class="periodo-alert {{ $hayPeriodoHabilitado ? 'success' : 'warning' }}">
                 <div class="periodo-content">
                     <div class="periodo-icon">
@@ -1140,7 +916,7 @@
                         </h3>
                         <p style="margin: 0; font-size: 13px; color: var(--text-muted);">
                             @if($hayPeriodoHabilitado)
-                            <strong>Estado:</strong> Activo para subir documentos
+                            <strong>Estado:</strong> Activo, sube tus documentos para este periodo
                             @if($periodoHabilitado->fecha_limite)
                             • Fecha límite: {{ \Carbon\Carbon::parse($periodoHabilitado->fecha_limite)->format('d/m/Y') }}
                             @endif
@@ -1148,6 +924,7 @@
                             <strong>Espera a que se habilite un período para subir documentos</strong>
                             @endif
                         </p>
+                    
                     </div>
                 </div>
                 <div class="periodo-status {{ $hayPeriodoHabilitado ? 'status-active' : 'status-inactive' }}">
@@ -1168,67 +945,13 @@
                 </div>
             </div>
             @else
-            <!-- ESTADÍSTICAS -->
-            <div class="cards-grid">
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon req">
-                            <i class="fas fa-file-alt"></i>
-                        </div>
-                        <div class="card-title">
-                            <h3>Documentos Requeridos</h3>
-                            <div class="card-value">{{ $totalRequeridos }}</div>
-                        </div>
-                    </div>
-                    <div class="card-footer">Total requerido</div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon sub">
-                            <i class="fas fa-upload"></i>
-                        </div>
-                        <div class="card-title">
-                            <h3>Documentos Subidos</h3>
-                            <div class="card-value">{{ $totalSubidos }}</div>
-                        </div>
-                    </div>
-                    <div class="card-footer">En período actual</div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon fal">
-                            <i class="fas fa-exclamation-circle"></i>
-                        </div>
-                        <div class="card-title">
-                            <h3>Documentos Faltantes</h3>
-                            <div class="card-value">{{ $faltantes }}</div>
-                        </div>
-                    </div>
-                    <div class="card-footer">Por subir</div>
-                </div>
-                
-                <div class="card">
-                    <div class="card-header">
-                        <div class="card-icon pro">
-                            <i class="fas fa-chart-line"></i>
-                        </div>
-                        <div class="card-title">
-                            <h3>Progreso General</h3>
-                            <div class="card-value">{{ $porcentaje }}%</div>
-                        </div>
-                    </div>
-                    <div class="card-footer">Completado</div>
-                </div>
-            </div>
 
             <!-- INFORMACIÓN DEL PERFIL -->
             <div class="section" id="perfil">
                 <div class="section-header">
                     <div class="section-title">
                         <i class="fas fa-user-circle"></i>
-                        <span>Información del Profesor</span>
+                        <span>Información Personal</span>
                     </div>
                 </div>
                 
@@ -1282,6 +1005,16 @@
                             <p style="color: var(--success-color); font-weight: 700;">Activo</p>
                         </div>
                     </div>
+                    
+                    <div class="info-item">
+                        <div class="info-icon">
+                            <i class="fas fa-chart-bar"></i>
+                        </div>
+                        <div class="info-content">
+                            <h4>Progreso de Documentos</h4>
+                            <p style="color: var(--primary); font-weight: 700;">{{ $porcentaje }}% Completado</p>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -1290,8 +1023,8 @@
             <div class="section">
                 <div class="section-header">
                     <div class="section-title">
-                        <i class="fas fa-file-alt me-2"></i>
-                        <span>Estado de documentos</span>
+                        <i class="fas fa-history"></i>
+                        <span>Actividades Recientes</span>
                     </div>
                 </div>
                 
@@ -1313,283 +1046,16 @@
                 </div>
             </div>
             @endif
-
-            <!-- SECCIÓN UNIFICADA: DOCUMENTOS REQUERIDOS Y SUBIDA -->
-            <div class="section" id="documentos">
-                <div class="section-header">
-                    <div class="section-title">
-                        <i class="fas fa-file-alt"></i>
-                        <span>Gestión de Documentos</span>
-                    </div>
-                    <div style="font-size: 13px; color: var(--text-muted);">
-                        {{ count($documentosParaVista) }} documentos
-                    </div>
-                </div>
-                
-                @if(!$hayPeriodoHabilitado)
-                <div style="text-align: center; padding: 30px 20px; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%); border-radius: 10px; border: 2px dashed var(--border-color); margin-bottom: 20px;">
-                    <i class="fas fa-lock" style="font-size: 40px; color: var(--danger-color); margin-bottom: 15px;"></i>
-                    <h3 style="color: var(--danger-color); margin-bottom: 10px; font-size: 18px;">Subida Bloqueada</h3>
-                    <p style="color: var(--text-muted); font-size: 14px; max-width: 500px; margin: 0 auto;">
-                        No hay ningún período académico habilitado para subir documentos.
-                    </p>
-                </div>
-                @endif
-                
-                @if(count($documentosParaVista) > 0)
-                <form action="{{ route('profesor.subir-documentos') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
-                    @csrf
-                    <input type="hidden" name="periodo_id" value="{{ $periodoHabilitado->id ?? '' }}">
-                    
-                    <div class="documentos-unificados">
-                        @foreach($documentosParaVista as $documento)
-                        <div class="documento-unificado-card" id="documento-{{ $documento['tipo'] }}">
-                            <div class="doc-header-unificado">
-                                <div class="doc-title-container">
-                                    <div class="doc-icon-container 
-                                        @if($documento['estado'] == 'aprobado') icon-aprobado
-                                        @elseif($documento['estado'] == 'rechazado') icon-rechazado
-                                        @elseif($documento['estado'] == 'pendiente') icon-pendiente
-                                        @else icon-faltante
-                                        @endif">
-                                        <i class="fas fa-{{ $documento['icono'] }}"></i>
-                                    </div>
-                                    <div class="doc-info-unificado">
-                                        <div class="doc-name-unificado">{{ $documento['nombre'] }}</div>
-                                        <div class="doc-description-unificado">{{ $documento['descripcion'] }}</div>
-                                    </div>
-                                </div>
-                                <div class="doc-status-badge status-{{ $documento['estado'] }}">
-                                    @if($documento['estado'] == 'aprobado')
-                                    <i class="fas fa-check-circle"></i>
-                                    @elseif($documento['estado'] == 'rechazado')
-                                    <i class="fas fa-times-circle"></i>
-                                    @elseif($documento['estado'] == 'pendiente')
-                                    <i class="fas fa-clock"></i>
-                                    @else
-                                    <i class="fas fa-exclamation-circle"></i>
-                                    @endif
-                                    <span>{{ ucfirst($documento['estado']) }}</span>
-                                </div>
-                            </div>
-                            
-                            <div class="doc-content-unificado">
-                                <!-- ESTADO ACTUAL CON BOTONES -->
-                                <div class="doc-estado-actual">
-                                    <h5><i class="fas fa-info-circle"></i> Estado Actual</h5>
-                                    
-                                    @if($documento['tiene_documento'])
-                                    <div class="estado-info">
-                                        <div class="info-row">
-                                            <i class="fas fa-file"></i>
-                                            <span><strong>Archivo:</strong> {{ $documento['archivo'] ?? 'Sin nombre' }}</span>
-                                        </div>
-                                        <div class="info-row">
-                                            <i class="fas fa-calendar"></i>
-                                            <span><strong>Subido:</strong> {{ $documento['fecha_subida'] ? $documento['fecha_subida']->format('d/m/Y H:i') : 'No disponible' }}</span>
-                                        </div>
-                                        @if($documento['estado'] == 'aprobado' && isset($documento['aprobado_por']))
-                                        <div class="info-row">
-                                            <i class="fas fa-user-check"></i>
-                                            <span><strong>Aprobado por:</strong> {{ $documento['aprobado_por'] }}</span>
-                                        </div>
-                                        @endif
-                                    </div>
-                                    
-                                    @if($documento['estado'] == 'rechazado' && $documento['observaciones'])
-                                    <div class="observaciones-box">
-                                        <strong><i class="fas fa-comment-dots"></i> Observaciones:</strong>
-                                        <p style="margin: 0;">{{ $documento['observaciones'] }}</p>
-                                    </div>
-                                    @endif
-                                    
-                                    <!-- BOTONES DE ACCIÓN PARA DOCUMENTOS EXISTENTES -->
-                                    <div class="doc-action-buttons">
-                                        @if($documento['tiene_documento'])
-                                            <button type="button" class="btn btn-outline btn-sm" onclick="verDocumento('{{ $documento['documento_id'] ?? '' }}')">
-                                                <i class="fas fa-eye"></i> Ver
-                                            </button>
-                                            <button type="button" class="btn btn-primary btn-sm" onclick="descargarDocumento('{{ $documento['documento_id'] ?? '' }}')">
-                                                <i class="fas fa-download"></i> Descargar
-                                            </button>
-                                            
-                                            <!-- Mostrar botón Resubir solo para documentos aprobados o rechazados -->
-                                            @if(($documento['estado'] == 'aprobado' || $documento['estado'] == 'rechazado') && $hayPeriodoHabilitado)
-                                            <button type="button" class="btn btn-warning btn-sm" onclick="selectFile('{{ $documento['tipo'] }}')">
-                                                <i class="fas fa-upload"></i> Resubir
-                                            </button>
-                                            @endif
-                                        @else
-                                        <div style="text-align: center; padding: 15px; background: white; border-radius: 6px; border: 2px dashed var(--danger-light);">
-                                            <i class="fas fa-file-exclamation" style="font-size: 28px; color: var(--danger-color); margin-bottom: 10px;"></i>
-                                            <p style="color: var(--danger-color); font-weight: 600; margin: 0 0 8px 0; font-size: 13px;">
-                                                Documento no subido
-                                            </p>
-                                            <p style="color: var(--text-muted); font-size: 12px; margin: 0;">
-                                                Este documento es requerido.
-                                            </p>
-                                        </div>
-                                        @endif
-                                    </div>
-                                    @else
-                                    <div style="text-align: center; padding: 15px; background: white; border-radius: 6px; border: 2px dashed var(--danger-light);">
-                                        <i class="fas fa-file-exclamation" style="font-size: 28px; color: var(--danger-color); margin-bottom: 10px;"></i>
-                                        <p style="color: var(--danger-color); font-weight: 600; margin: 0 0 8px 0; font-size: 13px;">
-                                            Documento no subido
-                                        </p>
-                                        <p style="color: var(--text-muted); font-size: 12px; margin: 0;">
-                                            Este documento es requerido.
-                                        </p>
-                                    </div>
-                                    @endif
-                                </div>
-                                
-                                <!-- SUBIDA DE ARCHIVO COMPACTA -->
-                                @if($hayPeriodoHabilitado)
-                                <div class="doc-subida-archivo">
-                                    <h5><i class="fas fa-cloud-upload-alt"></i> Subir Documento</h5>
-                                    <div class="upload-area-mini">
-                                        <div class="upload-info">
-                                            <p>Selecciona un archivo para {{ $documento['tiene_documento'] ? 'actualizar' : 'subir' }} este documento.</p>
-                                            <span>PDF, Word, JPG o PNG (máx. 10MB)</span>
-                                        </div>
-                                        <div class="upload-btn-container">
-                                            <button type="button" class="btn btn-primary btn-sm" onclick="selectFile('{{ $documento['tipo'] }}')">
-                                                <i class="fas fa-upload"></i> Seleccionar
-                                            </button>
-                                        </div>
-                                    </div>
-                                    
-                                    <input type="file" 
-                                           id="{{ $documento['tipo'] }}" 
-                                           name="{{ $documento['tipo'] }}"
-                                           accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                                           style="display: none;"
-                                           onchange="updateFileName('{{ $documento['tipo'] }}', this)">
-                                    
-                                    <div id="file-name-{{ $documento['tipo'] }}" class="selected-file-info" style="display: none;">
-                                        <span><i class="fas fa-file"></i> <strong id="file-name-text-{{ $documento['tipo'] }}"></strong></span>
-                                        <button type="button" onclick="clearFile('{{ $documento['tipo'] }}')">
-                                            <i class="fas fa-times"></i>
-                                        </button>
-                                    </div>
-                                </div>
-                                @endif
-                            </div>
-                        </div>
-                        @endforeach
-                    </div>
-                    
-                    @if($hayPeriodoHabilitado && count($documentosParaVista) > 0)
-                    <div class="submit-documents-container">
-                        <button type="submit" class="submit-documents-btn" id="submitBtn">
-                            <i class="fas fa-upload"></i> Subir Documentos Seleccionados
-                        </button>
-                    </div>
-                    @endif
-                </form>
-                @else
-                <div style="text-align: center; padding: 30px 20px; background: var(--light-bg); border-radius: 10px;">
-                    <i class="fas fa-folder-open" style="font-size: 40px; color: var(--text-muted); margin-bottom: 15px;"></i>
-                    <h4 style="color: var(--text-muted); margin-bottom: 10px; font-size: 16px;">No hay documentos configurados</h4>
-                    <p style="color: var(--text-muted); max-width: 400px; margin: 0 auto; font-size: 13px;">
-                        No se han configurado documentos para tu coordinación.
-                    </p>
-                </div>
-                @endif
-            </div>
             @endif
         </div>
     </div>
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
-            // Manejar la selección de archivos
-            window.updateFileName = function(tipo, input) {
-                const fileNameDisplay = document.getElementById('file-name-' + tipo);
-                const fileNameText = document.getElementById('file-name-text-' + tipo);
-                
-                if (input.files.length > 0) {
-                    fileNameText.textContent = input.files[0].name;
-                    fileNameDisplay.style.display = 'flex';
-                    
-                    // Resaltar el card
-                    const card = document.getElementById('documento-' + tipo);
-                    if (card) {
-                        card.style.boxShadow = '0 0 0 2px rgba(7, 68, 182, 0.3), 0 5px 15px rgba(7, 68, 182, 0.15)';
-                        card.style.borderColor = 'var(--primary)';
-                        
-                        setTimeout(() => {
-                            card.style.boxShadow = '0 3px 10px rgba(0, 0, 0, 0.05)';
-                            card.style.borderColor = 'var(--border-color)';
-                        }, 2000);
-                    }
-                }
-            };
-            
-            window.clearFile = function(tipo) {
-                const input = document.getElementById(tipo);
-                const fileNameDisplay = document.getElementById('file-name-' + tipo);
-                
-                input.value = '';
-                fileNameDisplay.style.display = 'none';
-            };
-            
-            window.selectFile = function(tipo) {
-                const input = document.getElementById(tipo);
-                if (input) {
-                    input.click();
-                }
-            };
-            
-            // Validar formulario de subida
-            const uploadForm = document.getElementById('uploadForm');
-            if (uploadForm) {
-                uploadForm.addEventListener('submit', function(e) {
-                    const submitBtn = document.getElementById('submitBtn');
-                    const fileInputs = this.querySelectorAll('input[type="file"]');
-                    let hasFile = false;
-                    
-                    fileInputs.forEach(input => {
-                        if (input.files.length > 0) {
-                            hasFile = true;
-                        }
-                    });
-                    
-                    if (!hasFile) {
-                        e.preventDefault();
-                        alert('Por favor, selecciona al menos un documento para subir.');
-                        return false;
-                    }
-                    
-                    if (submitBtn) {
-                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Subiendo...';
-                        submitBtn.disabled = true;
-                    }
-                });
-            }
-            
-            // Funciones para ver y descargar documentos
-            window.verDocumento = function(documentoId) {
-                if (documentoId) {
-                    window.open("{{ url('documentos/ver') }}/" + documentoId, '_blank');
-                } else {
-                    alert('No se puede ver el documento. ID no disponible.');
-                }
-            };
-            
-            window.descargarDocumento = function(documentoId) {
-                if (documentoId) {
-                    window.location.href = "{{ url('documentos/descargar') }}/" + documentoId;
-                } else {
-                    alert('No se puede descargar el documento. ID no disponible.');
-                }
-            };
-            
             // Navegación del sidebar
             document.querySelectorAll('.menu-item').forEach(item => {
                 item.addEventListener('click', function(e) {
-                    if (this.getAttribute('href').startsWith('#')) {
+                    if (this.getAttribute('href') && this.getAttribute('href').startsWith('#')) {
                         e.preventDefault();
                         const targetId = this.getAttribute('href').substring(1);
                         const targetSection = document.getElementById(targetId);
@@ -1605,6 +1071,13 @@
                 });
             });
         });
+        
+        function scrollToSection(sectionId) {
+            const section = document.getElementById(sectionId);
+            if (section) {
+                section.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
     </script>
 </body>
 </html>

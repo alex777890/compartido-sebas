@@ -45,16 +45,14 @@
         </form>
 
         <div class="text-center mt-3">
-            <a href="{{ route('login') }}">Volver al inicio de sesión</a>
+            <a href="{{ route('inicio') }}">Volver</a>
         </div>
     </div>
 
     <div class="login-graphics">
         <div class="graphic-circle circle-1"></div>
         <div class="graphic-circle circle-2"></div>
-        <div class="login-logo">GP</div>
-        <h1>¿Olvidaste algo?</h1>
-        <p>No te preocupes, te ayudaremos a recuperar el acceso a tu cuenta.</p>
+        
     </div>
 </main>
 

@@ -124,10 +124,18 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('coordinaciones', CoordinacionController::class)->middleware('admin');
 
 
-
-    ///////////////////// DASHBOARD DEL PROFESOR
+        ///////////////////// DASHBOARD DE ROL PROFESOR
 Route::get('/profesor/dashboard', [MaestroController::class, 'dashboard'])
     ->name('profesor.dashboard');
+    // Vista separada de documentos
+    Route::get('/documentos', [MaestroController::class, 'documentos'])->name('profesor.documentos');
+        
+        // ✅ NUEVAS RUTAS PARA ACTUALIZAR PERFIL
+    Route::get('/mi-perfil/editar', [MaestroController::class, 'editarMiPerfil'])
+        ->name('editar-mi-perfil');
+    Route::post('/mi-perfil/actualizar', [MaestroController::class, 'actualizarMiPerfil'])
+        ->name('actualizar-mi-perfil');
+
 
         // ===== RUTAS PARA MAESTROCONTROLLER =====
     Route::prefix('profesor')->group(function () {
