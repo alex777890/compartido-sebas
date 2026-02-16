@@ -17,16 +17,28 @@
     --text-muted: #6C757D;
     --card-shadow: 0 5px 15px rgba(15, 126, 230, 0.08);
     --transition: all 0.3s ease;
+    
+    /* Variables de tamaño de fuente para mejor legibilidad */
+    --font-size-base: 1.1rem;      /* Tamaño base aumentado */
+    --font-size-lg: 1.3rem;        /* Texto grande */
+    --font-size-sm: 1rem;           /* Texto pequeño pero aún legible */
+    --font-size-h1: 2.2rem;         /* Títulos principales */
+    --font-size-h2: 1.9rem;         /* Títulos secundarios */
+    --font-size-h3: 1.6rem;         /* Subtítulos */
+    --font-size-h4: 1.4rem;         /* Encabezados de sección */
 }
 
 body { 
     background: white; 
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
     color: #333; 
     line-height: 1.6;
+    font-size: var(--font-size-base); /* Tamaño base aplicado */
 }
 
 /* ========== ESTILOS DE BARRA Y MENÚ DEL PRIMER CSS CON COLORES DEL SEGUNDO ========== */
+
+/* ========== BARRA DE NAVEGACIÓN - VERSIÓN ORIGINAL ========== */
 
 /* Primera barra - Logo y título */
 .navbar-top { 
@@ -144,6 +156,7 @@ body {
 .navbar-menu .user-name {
     font-weight: 500;
     color: rgba(255, 255, 255, 0.9);
+    font-size: 0.95rem;
 }
 
 .navbar-menu .user-avatar {
@@ -177,203 +190,289 @@ body {
 
 .navbar-menu .logout-btn:active {
     background: rgba(255, 255, 255, 0.2);
+}   
+
+.main-content { 
+    padding: 30px 20px;
+    min-height: calc(100vh - 140px);
 }
 
-        .main-content { 
-            padding: 30px 20px;
-            min-height: calc(100vh - 140px);
-        }
-        
-        h1, h2, h3, h4, h5, h6 {
-            font-weight: 600;
-        }
-        
-        h2 { 
-            color: var(--primary);
-            margin-bottom: 1.5rem; 
-            padding-bottom: 0.8rem;
-            position: relative;
-            font-size: 1.5rem;
-        }
-        
-        h2::after {
-            content: '';
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            width: 50px;
-            height: 2px;
-            background: var(--primary);
-        }
-        
-        /* Información de bienvenida */
-        .welcome-section {
-            background: white;
-            border-radius: 6px;
-            padding: 2.5rem 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-        }
-        
-        .welcome-title {
-            color: var(--primary);
-            font-weight: 600;
-            margin-bottom: 1rem;
-        }
-        
-        .welcome-subtitle {
-            color: --card-shadow;
-            font-weight: 500;
-            margin-bottom: 1.5rem;
-        }
-        
-        /* Tarjetas de estadísticas */
-        .stats-card {
-            border: none;
-            border-radius: 6px;
-            box-shadow: var(--card-shadow);
-            margin-bottom: 1.5rem;
-            overflow: hidden;
-            transition: var(--transition);
-            border-top: 3px solid;
-            background: white;
-            border: 1px solid var(--border-color);
-        }
-        
-        .stats-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-        
-        .stats-card-1 { border-top-color: var(--primary); }
-        .stats-card-2 { border-top-color: var(--secondary); }
-        .stats-card-3 { border-top-color: var(--accent); }
-        .stats-card-4 { border-top-color: #1A56A7; }
-        
-        .stats-number {
-            font-size: 2rem;
-            font-weight: 600;
-        }
-        
-        .stats-card-1 .stats-number { color: var(--primary); }
-        .stats-card-2 .stats-number { color: var(--secondary); }
-        .stats-card-3 .stats-number { color: var(--accent); }
-        .stats-card-4 .stats-number { color: #1A56A7; }
-        
-        .stats-icon {
-            font-size: 1.6rem;
-            margin-bottom: 1rem;
-            color: var(--text-muted);
-        }
-        
-        /* Acciones rápidas */
-        .quick-action {
-            background: white;
-            border-radius: 6px;
-            padding: 2rem;
-            margin-bottom: 2rem;
-            border: 1px solid var(--border-color);
-        }
-        
-        /* Botones de acción con contorno en lugar de fondo */
-        .action-btn {
-            background: transparent;
-            border: 2px solid var(--primary);
-            font-weight: 500;
-            transition: var(--transition);
-            color: var(--primary);
-            border-radius: 5px;
-            padding: 1rem;
-            font-size: 0.9rem;
-        }
-        
-        .action-btn:hover {
-            background: rgba(15, 126, 230, 0.05);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(13, 71, 161, 0.1);
-            color: var(--primary);
-        }
-        
-        .action-btn:active {
-            background: rgba(15, 126, 230, 0.1);
-            transform: translateY(0);
-        }
-        
-        /* Tarjetas de módulos */
-        .dashboard-card { 
-            border: 1px solid var(--border-color); 
-            border-radius: 6px; 
-            padding: 2rem 1.5rem; 
-            background: white; 
-            transition: var(--transition); 
-            cursor: pointer; 
-            height: 100%;
-            box-shadow: var(--card-shadow);
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .dashboard-card:hover { 
-            transform: translateY(-5px); 
-            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1); 
-            border-color: var(--border-color);
-        }
-        
-        .dashboard-icon { 
-            font-size: 2rem; 
-            margin-bottom: 1rem; 
-            display: inline-block;
-            color: var(--primary);
-        }
-        
-        .card-1 .dashboard-icon { color: var(--primary); }
-        .card-2 .dashboard-icon { color: var(--secondary); }
-        .card-3 .dashboard-icon { color: var(--accent); }
-        
-        .badge {
-            font-weight: 500;
-            padding: 0.4rem 0.8rem;
-            font-size: 0.8rem;
-        }
-        
-        .badge-primary { background: var(--primary); }
-        .badge-secondary { background: var(--secondary); }
-        .badge-success { background: #2E7D32; }
-        .badge-warning { background: #F57C00; }
-        
-        /* Información adicional */
-        .info-section {
-            background: white;
-            border-radius: 6px;
-            padding: 2rem;
-            margin-top: 2rem;
-            border: 1px solid var(--border-color);
-        }
-        
-        .info-item {
-            display: flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding: 0.8rem;
-            border-radius: 4px;
-            transition: var(--transition);
-        }
-        
-        .info-item:hover {
-            background: rgba(13, 71, 161, 0.03);
-        }
-        
-        .info-icon {
-            width: 40px;
-            height: 40px;
-            background: var(--primary);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin-right: 1rem;
-            color: white;
-        }
+h1, h2, h3, h4, h5, h6 {
+    font-weight: 600;
+    line-height: 1.3;
+}
+
+h1 { font-size: var(--font-size-h1); }
+h2 { font-size: var(--font-size-h2); }
+h3 { font-size: var(--font-size-h3); }
+h4 { font-size: var(--font-size-h4); }
+h5 { font-size: var(--font-size-lg); }
+h6 { font-size: var(--font-size-base); }
+
+h2 { 
+    color: var(--primary);
+    margin-bottom: 1.5rem; 
+    padding-bottom: 0.8rem;
+    position: relative;
+}
+
+h2::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 60px; /* Ligeramente más ancho */
+    height: 3px; /* Más grueso */
+    background: var(--primary);
+}
+
+/* Información de bienvenida */
+.welcome-section {
+    background: white;
+    border-radius: 6px;
+    padding: 3rem 2.5rem; /* Más padding */
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.welcome-title {
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 1.2rem;
+    font-size: var(--font-size-h1);
+}
+
+.welcome-subtitle {
+    color: var(--text-muted);
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+    font-size: var(--font-size-h3);
+}
+
+.welcome-section p {
+    font-size: var(--font-size-lg);
+}
+
+/* Tarjetas de estadísticas - si las agregas después */
+.stats-card {
+    border: none;
+    border-radius: 6px;
+    box-shadow: var(--card-shadow);
+    margin-bottom: 1.5rem;
+    overflow: hidden;
+    transition: var(--transition);
+    border-top: 4px solid; /* Más grueso */
+    background: white;
+    border: 1px solid var(--border-color);
+}
+
+.stats-number {
+    font-size: 2.5rem; /* Aumentado */
+    font-weight: 600;
+}
+
+.stats-icon {
+    font-size: 2rem; /* Aumentado */
+    margin-bottom: 1rem;
+    color: var(--text-muted);
+}
+
+/* Acciones rápidas */
+.quick-action {
+    background: white;
+    border-radius: 6px;
+    padding: 2.5rem; /* Más padding */
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.quick-action h4 {
+    font-size: var(--font-size-h4);
+    margin-bottom: 2rem !important;
+}
+
+/* Botones de acción */
+.action-btn {
+    background: transparent;
+    border: 2px solid var(--primary);
+    font-weight: 500;
+    transition: var(--transition);
+    color: var(--primary);
+    border-radius: 6px;
+    padding: 1.2rem; /* Más padding */
+    font-size: 1.2rem; /* Aumentado significativamente */
+}
+
+.action-btn i {
+    font-size: 2.2rem; /* Iconos más grandes */
+    margin-bottom: 0.8rem;
+}
+
+.action-btn:hover {
+    background: rgba(7, 68, 182, 0.05);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(7, 68, 182, 0.15);
+    color: var(--primary);
+}
+
+/* Tarjetas de módulos */
+.dashboard-card { 
+    border: 1px solid var(--border-color); 
+    border-radius: 6px; 
+    padding: 2.2rem 1.8rem; /* Más padding */ 
+    background: white; 
+    transition: var(--transition); 
+    cursor: pointer; 
+    height: 100%;
+    box-shadow: var(--card-shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.dashboard-card h5 {
+    font-size: var(--font-size-h5);
+    margin-bottom: 1rem;
+}
+
+.dashboard-card p {
+    font-size: var(--font-size-base);
+    line-height: 1.5;
+    color: var(--text-muted);
+}
+
+.dashboard-icon { 
+    font-size: 2.5rem; /* Aumentado */ 
+    margin-bottom: 1.2rem; 
+    display: inline-block;
+    color: var(--primary);
+}
+
+.badge {
+    font-weight: 500;
+    padding: 0.5rem 1rem; /* Más padding */
+    font-size: 0.95rem; /* Aumentado */
+    border-radius: 4px;
+}
+
+/* Información adicional */
+.info-section {
+    background: white;
+    border-radius: 6px;
+    padding: 2.5rem; /* Más padding */
+    margin-top: 2rem;
+    border: 1px solid var(--border-color);
+}
+
+.info-section h4 {
+    font-size: var(--font-size-h4);
+    margin-bottom: 2rem !important;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 1.2rem;
+    padding: 1rem; /* Más padding */
+    border-radius: 6px;
+    transition: var(--transition);
+}
+
+.info-item h6 {
+    font-size: var(--font-size-lg);
+    margin-bottom: 0.3rem;
+}
+
+.info-item p {
+    font-size: var(--font-size-base);
+}
+
+.info-icon {
+    width: 50px; /* Más grande */
+    height: 50px; /* Más grande */
+    background: var(--primary);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.2rem;
+    color: white;
+    font-size: 1.3rem; /* Icono más grande */
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    :root {
+        --font-size-base: 1rem;
+        --font-size-h1: 1.9rem;
+        --font-size-h2: 1.6rem;
+        --font-size-h3: 1.4rem;
+        --font-size-h4: 1.2rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.3rem;
+    }
+    
+    .navbar-menu .nav-link {
+        padding: 0.6rem 1.2rem !important;
+        font-size: 1rem;
+    }
+    
+    .main-content {
+        padding: 20px 15px;
+    }
+    
+    .welcome-section {
+        padding: 2rem 1.5rem;
+    }
+    
+    .action-btn {
+        padding: 1rem;
+        font-size: 1rem;
+    }
+    
+    .action-btn i {
+        font-size: 1.8rem;
+    }
+    
+    .dashboard-card {
+        padding: 1.8rem 1.2rem;
+    }
+    
+    .logo-img {
+        height: 45px;
+    }
+}
+
+@media (max-width: 576px) {
+    :root {
+        --font-size-base: 0.95rem;
+        --font-size-h1: 1.7rem;
+        --font-size-h2: 1.4rem;
+    }
+    
+    .navbar-brand {
+        font-size: 1.1rem;
+    }
+    
+    .logo-img {
+        height: 40px;
+    }
+    
+    .dashboard-icon {
+        font-size: 2rem;
+    }
+    
+    .stats-number {
+        font-size: 2rem;
+    }
+    
+    .info-icon {
+        width: 40px;
+        height: 40px;
+        font-size: 1rem;
+    }
+}
         
         /* Responsive adjustments */
         @media (max-width: 768px) {
@@ -505,13 +604,13 @@ body {
                     <h4 class="mb-4">Acciones Rápidas</h4>
                     <div class="row">
                         <div class="col-md-4 mb-3">
-                            <button class="btn action-btn w-100 py-3" onclick="window.location.href='{{ route('maestros.create') }}'">
+                            <button class="btn action-btn w-100 py-3" onclick="window.location.href='{{ route('users.index') }}'">
                                 <i class="fas fa-user-plus fa-2x mb-2"></i><br>
                                 Agregar Maestro
                             </button>
                         </div>
                         <div class="col-md-4 mb-3">
-                            <button class="btn action-btn w-100 py-3" onclick="window.location.href=''">
+                            <button class="btn action-btn w-100 py-3" onclick="window.location.href='{{ route('contracts.index') }}'">
                                 <i class="fas fa-file-contract fa-2x mb-2"></i><br>
                                 Nuevo Contrato
                             </button>
