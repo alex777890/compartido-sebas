@@ -606,7 +606,7 @@ h2::after {
                         <div class="col-md-4 mb-3">
                             <button class="btn action-btn w-100 py-3" onclick="window.location.href='{{ route('users.index') }}'">
                                 <i class="fas fa-user-plus fa-2x mb-2"></i><br>
-                                Agregar Maestro
+                                Agregar usuarios
                             </button>
                         </div>
                         <div class="col-md-4 mb-3">

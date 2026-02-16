@@ -500,13 +500,7 @@ h2::after {
                             </div>
                         </div>
 
-                        <div class="col-md-4 mb-4">
-                            <div class="feature-card" onclick="window.location.href='{{ route('maestros.create') }}'">
-                                <div class="feature-icon"><i class="fas fa-user-plus"></i></div>
-                                <h5>Agregar Nuevos</h5>
-                                <p class="text-muted">Registra nuevos maestros en el sistema.</p>
-                            </div>
-                        </div>
+                        
 
                         <div class="col-md-4 mb-4">
                             <div class="feature-card">
