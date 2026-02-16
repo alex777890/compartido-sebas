@@ -1024,4 +1024,106 @@ public function maestrosDetalle(Request $request)
     }
 }
 
+public function cambiarEstadoMaestro(Request $request, $maestroId)
+{
+    try {
+        // Validar que la petición sea AJAX
+        if (!$request->ajax()) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Esta acción solo está disponible vía AJAX'
+            ], 400);
+        }
+
+        // Obtener usuario autenticado
+        $user = Auth::user();
+        
+        if (!$user) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Usuario no autenticado'
+            ], 401);
+        }
+
+        // Obtener coordinación del usuario
+        $coordinacionId = $user->coordinaciones_id;
+        
+        if (!$coordinacionId) {
+            return response()->json([
+                'success' => false,
+                'message' => 'No tienes una coordinación asignada'
+            ], 403);
+        }
+
+        // Buscar el maestro y verificar que pertenezca a la coordinación del usuario
+        $maestro = Maestro::where('id', $maestroId)
+            ->where('coordinaciones_id', $coordinacionId)
+            ->first();
+
+        if (!$maestro) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Maestro no encontrado en tu coordinación'
+            ], 404);
+        }
+
+        // Validar el nuevo estado (debe ser 0 o 1)
+        $request->validate([
+            'activo' => 'required|in:0,1'
+        ]);
+
+        // Guardar estado anterior para el log
+        $estadoAnterior = $maestro->activo;
+        $nuevoEstado = (int)$request->activo;
+
+        // Actualizar el estado
+        $maestro->activo = $nuevoEstado;
+        $maestro->save();
+
+        // Registrar en log
+        Log::info("Estado de maestro cambiado", [
+            'maestro_id' => $maestro->id,
+            'maestro_nombre' => $maestro->nombres . ' ' . $maestro->apellido_paterno,
+            'coordinacion_id' => $coordinacionId,
+            'usuario_id' => $user->id,
+            'estado_anterior' => $estadoAnterior,
+            'estado_nuevo' => $nuevoEstado
+        ]);
+
+        // Preparar mensaje según el nuevo estado
+        $mensaje = $nuevoEstado ? 
+            'Maestro activado correctamente' : 
+            'Maestro desactivado correctamente';
+
+        // Retornar respuesta exitosa
+        return response()->json([
+            'success' => true,
+            'message' => $mensaje,
+            'data' => [
+                'maestro_id' => $maestro->id,
+                'activo' => $maestro->activo,
+                'nombre_completo' => $maestro->nombres . ' ' . $maestro->apellido_paterno,
+                'estado_texto' => $maestro->activo ? 'Activo' : 'Inactivo',
+                'badge_class' => $maestro->activo ? 'status-active' : 'status-inactive',
+                'icono' => $maestro->activo ? 'fa-check-circle' : 'fa-times-circle'
+            ]
+        ]);
+
+    } catch (\Illuminate\Validation\ValidationException $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error de validación',
+            'errors' => $e->errors()
+        ], 422);
+    } catch (\Exception $e) {
+        Log::error('Error al cambiar estado del maestro: ' . $e->getMessage());
+        Log::error('Archivo: ' . $e->getFile() . ' Línea: ' . $e->getLine());
+        
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al cambiar el estado: ' . $e->getMessage()
+        ], 500);
+    }
+}
+
 }

@@ -912,7 +912,7 @@
                     <a href="{{ route('maestros.grados.create') }}" class="nav-link active">
                         <i class="fas fa-graduation-cap"></i> Grados
                     </a>
-                    <a href="{{ route('profesor.dashboard') }}#perfil" class="nav-link">
+                    <a href="{{ route('editar-mi-perfil') }}" class="nav-link">
                         <i class="fas fa-user"></i> Perfil
                     </a>
                 </div>
@@ -1198,15 +1198,21 @@
                                     @endif
                                     
                                     @if($grado->documento)
-                                        <div class="grado-info-compact">
-                                            <i class="fas fa-file"></i>
-                                            <span>
-                                                <a href="{{ Storage::url($grado->documento) }}" target="_blank" class="text-primary">
-                                                    Ver archivo <i class="fas fa-external-link-alt ms-1" style="font-size: 10px;"></i>
-                                                </a>
-                                            </span>
-                                        </div>
-                                    @endif
+    <div class="grado-info-compact">
+        <i class="fas fa-file"></i>
+        <span>
+            <a href="{{ route('maestros.grados.show-document', $grado->id) }}" target="_blank" class="text-primary">
+                <i class="fas fa-eye"></i> Ver archivo
+            </a>
+            <a href="{{ route('maestros.grados.download-document', $grado->id) }}" class="text-primary ms-2" title="Descargar documento">
+                <i class="fas fa-download"></i>
+            </a>
+            @if($grado->nombre_documento)
+                <small class="text-muted d-block mt-1">{{ Str::limit($grado->nombre_documento, 30) }}</small>
+            @endif
+        </span>
+    </div>
+@endif
                                     
                                     @if($grado->observaciones)
                                         <div class="grado-info-compact">

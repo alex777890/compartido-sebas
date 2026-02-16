@@ -122,7 +122,9 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('admin');
     
     Route::resource('coordinaciones', CoordinacionController::class)->middleware('admin');
-
+        // ✅ NUEVA RUTA PARA CAMBIAR ESTADO (AGREGA ESTA LÍNEA)
+    Route::post('/maestros/{maestroId}/cambiar-estado', [CoordinacionController::class, 'cambiarEstadoMaestro'])
+         ->name('maestros.cambiar-estado');
 
         ///////////////////// DASHBOARD DE ROL PROFESOR
 Route::get('/profesor/dashboard', [MaestroController::class, 'dashboard'])
@@ -133,8 +135,9 @@ Route::get('/profesor/dashboard', [MaestroController::class, 'dashboard'])
         // ✅ NUEVAS RUTAS PARA ACTUALIZAR PERFIL
     Route::get('/mi-perfil/editar', [MaestroController::class, 'editarMiPerfil'])
         ->name('editar-mi-perfil');
-    Route::post('/mi-perfil/actualizar', [MaestroController::class, 'actualizarMiPerfil'])
-        ->name('dashboard.editar-mi-perfil');
+    // Por esto:
+Route::post('/mi-perfil/actualizar', [MaestroController::class, 'actualizarMiPerfil'])
+    ->name('profesor.actualizar-perfil');
 
 
         // ===== RUTAS PARA MAESTROCONTROLLER =====
@@ -213,24 +216,29 @@ Route::get('maestros/{maestroId}/historial-documentos',
     Route::get('/documentos/{documento}/descargar', [DocumentoMaestroController::class, 'descargarDocumento'])
         ->name('documentos.descargar');
 
-        //////////////////////////////////////////////===== =====
+// ===== RUTAS PARA GRADOACADEMICOCONTROLLER =====
+Route::get('/grados-academicos/create/{maestro_id}', [GradoAcademicoController::class, 'create'])
+    ->name('grados-academicos.create');
 
+Route::post('/grados-academicos/store', [GradoAcademicoController::class, 'store'])
+    ->name('grados-academicos.store');
 
-    // ===== RUTAS PARA GRADOACADEMICOCONTROLLER =====
-    Route::get('/grados-academicos/create/{maestro_id}', [GradoAcademicoController::class, 'create'])
-        ->name('grados-academicos.create');
+Route::get('/grados-academicos/edit/{id}', [GradoAcademicoController::class, 'edit'])
+    ->name('grados-academicos.edit');
+
+Route::put('/grados-academicos/update/{id}', [GradoAcademicoController::class, 'update'])
+    ->name('grados-academicos.update');  // Esta ruta estaba faltando
+
+Route::delete('/grados-academicos/destroy/{id}', [GradoAcademicoController::class, 'destroy'])
+    ->name('grados-academicos.destroy');
+
+// NUEVAS RUTAS PARA DOCUMENTOS
+Route::get('/grados-academicos/download/{id}', [GradoAcademicoController::class, 'download'])
+    ->name('grados-academicos.download');
+
+Route::get('/grados-academicos/show-document/{id}', [GradoAcademicoController::class, 'showDocument'])
+    ->name('grados-academicos.show-document');
     
-    Route::post('/grados-academicos/store', [GradoAcademicoController::class, 'store'])
-        ->name('grados-academicos.store');
-    
-    Route::get('/grados-academicos/edit/{id}', [GradoAcademicoController::class, 'edit'])
-        ->name('grados-academicos.edit');
-    
-    Route::delete('/grados-academicos/destroy/{id}', [GradoAcademicoController::class, 'destroy'])
-        ->name('grados-academicos.destroy');
-    
-    Route::get('/grados-academicos/{id}/documento', [GradoAcademicoController::class, 'showDocument'])
-        ->name('grados-academicos.show-document');
     // ===== RUTAS PARA GRADOACADEMICOCONTROLLER MAESTROS =====
 Route::middleware(['auth'])->group(function () {
     // Grupo de rutas para maestros - NOTA: usamos 'maestro' en singular en la URL pero 'maestros.' en el nombre
@@ -245,11 +253,11 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/grados/{id}', [GradoAcademicoController::class, 'destroyMaestro'])->name('grados.destroy');
         
         // Rutas adicionales para documentos
-        Route::get('/grados/{id}/descargar', [GradoAcademicoController::class, 'download'])->name('grados.download');
-        Route::get('/grados/{id}/ver', [GradoAcademicoController::class, 'showDocument'])->name('grados.show');
+    Route::get('/grados/{id}/ver-documento', [GradoAcademicoController::class, 'showDocumentMaestro'])->name('grados.show-document');
+        Route::get('/grados/{id}/descargar-documento', [GradoAcademicoController::class, 'downloadDocumentMaestro'])->name('grados.download-document');
     });
+    
 });
-
     // ===== =====================================================
 
     // ===== RUTAS PARA HORARIO CONTROLLER =====

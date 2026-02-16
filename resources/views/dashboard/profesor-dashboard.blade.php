@@ -918,7 +918,7 @@
                     <a href="{{ route('maestros.grados.create') }}" class="nav-link">
                         <i class="fas fa-graduation-cap"></i> Grados
                     </a>
-                    <a href="#perfil" class="nav-link" onclick="scrollToSection('perfil')">
+                    <a href="{{ route('editar-mi-perfil') }}" class="nav-link" onclick="scrollToSection('perfil')">
                         <i class="fas fa-user"></i> Perfil
                     </a>
                 </div>

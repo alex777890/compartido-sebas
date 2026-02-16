@@ -465,4 +465,85 @@ class GradoAcademicoController extends Controller
                              ->with('error', 'Grado académico no encontrado o no tienes permisos para eliminarlo.');
         }
     }
+    /**
+ * Muestra el documento de un grado académico (para maestros)
+ */
+public function showDocumentMaestro($id)
+{
+    try {
+        // Obtener el maestro autenticado
+        $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
+        
+        // Buscar el grado académico que pertenezca a este maestro
+        $grado = GradoAcademico::where('maestro_id', $maestro->id)
+                              ->findOrFail($id);
+        
+        if (!$grado->documento) {
+            return redirect()->back()->with('error', 'No hay documento disponible.');
+        }
+        
+        if (!Storage::disk('public')->exists($grado->documento)) {
+            return redirect()->back()->with('error', 'El documento no se encuentra en el servidor.');
+        }
+        
+        $filePath = Storage::disk('public')->path($grado->documento);
+        $mimeType = Storage::disk('public')->mimeType($grado->documento);
+        
+        return response()->file($filePath, [
+            'Content-Type' => $mimeType,
+            'Content-Disposition' => 'inline; filename="' . ($grado->nombre_documento ?? 'documento') . '"'
+        ]);
+        
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        return redirect()->route('maestros.grados.index')
+                         ->with('error', 'Documento no encontrado o no tienes permisos para verlo.');
+    } catch (\Exception $e) {
+        Log::error('Error al mostrar documento:', [
+            'grado_id' => $id,
+            'error' => $e->getMessage()
+        ]);
+        
+        return redirect()->route('maestros.grados.index')
+                         ->with('error', 'Error al mostrar el documento.');
+    }
+}
+
+/**
+ * Descarga el documento de un grado académico (para maestros)
+ */
+public function downloadDocumentMaestro($id)
+{
+    try {
+        // Obtener el maestro autenticado
+        $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
+        
+        // Buscar el grado académico que pertenezca a este maestro
+        $grado = GradoAcademico::where('maestro_id', $maestro->id)
+                              ->findOrFail($id);
+        
+        if (!$grado->documento) {
+            return redirect()->back()->with('error', 'No hay documento disponible para descargar.');
+        }
+        
+        if (!Storage::disk('public')->exists($grado->documento)) {
+            return redirect()->back()->with('error', 'El documento no se encuentra en el servidor.');
+        }
+        
+        $nombreDescarga = $grado->nombre_documento ?? 'documento_' . $grado->id . '.pdf';
+        
+        return Storage::disk('public')->download($grado->documento, $nombreDescarga);
+        
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        return redirect()->route('maestros.grados.index')
+                         ->with('error', 'Documento no encontrado o no tienes permisos para descargarlo.');
+    } catch (\Exception $e) {
+        Log::error('Error al descargar documento:', [
+            'grado_id' => $id,
+            'error' => $e->getMessage()
+        ]);
+        
+        return redirect()->route('maestros.grados.index')
+                         ->with('error', 'Error al descargar el documento.');
+    }
+}
 }

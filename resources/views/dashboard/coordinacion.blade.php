@@ -1224,42 +1224,6 @@
                     </div>
                 </div>
             </div>
-
-            <!-- Acciones Rápidas -->
-            <div class="quick-actions">
-                <div class="section-title">
-                    <h2>Acciones Rápidas</h2>
-                    <div class="date-display">
-                        <i class="fas fa-bolt"></i>
-                        Acceso directo
-                    </div>
-                </div>
-                <div class="actions-grid">
-                    <a href="{{ route('maestros.create') }}?coordinaciones_id={{ $coordinacion->id }}" class="action-btn">
-                        <i class="fas fa-user-plus"></i>
-                        <span>Nuevo Maestro</span>
-                        <span class="action-desc">Registrar nuevo personal</span>
-                    </a>
-                    
-                    <a href="{{ route('coordinaciones.estadisticas', $coordinacion->id) }}" class="action-btn">
-                        <i class="fas fa-chart-pie"></i>
-                        <span>Estadísticas</span>
-                        <span class="action-desc">Ver reportes completos</span>
-                    </a>
-                    
-                    <a href="{{ route('coordinaciones.show', $coordinacion->id) }}" class="action-btn">
-                        <i class="fas fa-chalkboard-teacher"></i>
-                        <span>Coordinación</span>
-                        <span class="action-desc">Detalles de coordinación</span>
-                    </a>
-                    
-                    <a href="{{ route('maestros.index') }}?coordinaciones_id={{ $coordinacion->id }}" class="action-btn">
-                        <i class="fas fa-search"></i>
-                        <span>Buscar Maestros</span>
-                        <span class="action-desc">Búsqueda avanzada</span>
-                    </a>
-                </div>
-            </div>
         @endif 
             
             

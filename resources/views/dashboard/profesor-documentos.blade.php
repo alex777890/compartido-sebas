@@ -60,7 +60,6 @@
         }
 
         /* ===== MENÚ DE LA PRIMERA VISTA ===== */
-        /* HEADER SUPERIOR MEJORADO Y MÁS GRANDE */
         .header {
             height: 90px;
             background-color: white;
@@ -114,7 +113,6 @@
             white-space: nowrap;
         }
 
-        /* HOVER CON AZUL MUY CLARO */
         .nav-link:hover {
             background-color: #e8f0fe;
             color: var(--primary);
@@ -122,7 +120,6 @@
             box-shadow: 0 4px 12px rgba(7, 68, 182, 0.12);
         }
 
-        /* ESTILO PARA EL ENLACE ACTIVO - SIN LÍNEA AZUL INFERIOR */
         .nav-link.active {
             background-color: #e8f0fe;
             color: var(--primary);
@@ -142,7 +139,6 @@
             gap: 30px;
         }
 
-        /* LETRERO DE BIENVENIDA - COMPACTO Y ELEGANTE */
         .welcome-message {
             display: flex;
             align-items: center;
@@ -222,7 +218,6 @@
             white-space: nowrap;
         }
 
-        /* BOTÓN DE CERRAR SESIÓN - SIN CONTORNO AZUL, TOTALMENTE BLANCO */
         .logout-button {
             display: flex;
             align-items: center;
@@ -255,7 +250,7 @@
             max-width: 100%;
         }
 
-        /* ===== ESTILOS DEL DASHBOARD APLICADOS A LA VISTA DOCUMENTOS ===== */
+        /* ===== ESTILOS DEL DASHBOARD ===== */
         
         /* ALERTAS DEL SISTEMA */
         .system-alert {
@@ -300,7 +295,7 @@
             }
         }
 
-        /* PERIODO ALERT - MÁS COMPACTO */
+        /* PERIODO ALERT */
         .periodo-alert {
             display: flex;
             align-items: center;
@@ -366,7 +361,7 @@
             color: white;
         }
 
-        /* CARD GRID - MÁS COMPACTO */
+        /* CARD GRID */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -456,7 +451,7 @@
             font-weight: 500;
         }
 
-        /* SECTION STYLES - MÁS COMPACTO */
+        /* SECTION STYLES */
         .section {
             background-color: white;
             border-radius: 16px;
@@ -493,14 +488,25 @@
             font-size: 22px;
         }
 
-        /* PANEL DE CONTROL SUPERIOR */
+        /* ===== PANEL DE CONTROL MODIFICADO ===== */
+        /* TÍTULO EN CUADRO BLANCO - MÁS PEQUEÑO */
         .control-panel {
+            background: white;
+            border-radius: 16px;
+            padding: 20px 30px;
+            margin-bottom: 35px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 35px;
             flex-wrap: wrap;
             gap: 25px;
+            transition: var(--transition);
+        }
+
+        .control-panel:hover {
+            box-shadow: var(--card-shadow-hover);
         }
 
         .panel-title-section {
@@ -508,17 +514,28 @@
             min-width: 300px;
         }
 
-        .main-title {
-            font-size: 34px;
-            font-weight: 800;
-            color: #1e293b;
-            margin-bottom: 10px;
+        /* TÍTULO MÁS PEQUEÑO (24px) */
+        .panel-title-section .subtitle {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary);
+            margin: 0;
+            line-height: 1.3;
+            letter-spacing: -0.3px;
+            position: relative;
+            display: inline-block;
+            text-transform: none;
         }
 
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 17px;
-            line-height: 1.6;
+        .panel-title-section .subtitle::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
         }
 
         .action-buttons {
@@ -527,7 +544,7 @@
             align-items: center;
         }
 
-        /* BOTÓN VOLVER AL PANEL - MÁS PEQUEÑO */
+        /* BOTÓN VOLVER */
         .btn-back {
             display: inline-flex;
             align-items: center;
@@ -604,7 +621,7 @@
             margin-bottom: 4px;
         }
 
-        /* PANEL DE PERIODO - REDUCIDO */
+        /* PANEL DE PERIODO */
         .periodo-panel {
             background: white;
             border-radius: 16px;
@@ -698,7 +715,7 @@
             color: white;
         }
 
-        /* BARRA DE PROGRESO GENERAL - MÁS COMPACTA */
+        /* BARRA DE PROGRESO GENERAL */
         .progress-overview {
             background: var(--light-bg);
             border-radius: 10px;
@@ -853,34 +870,37 @@
             margin: 0;
         }
 
-        /* SECCIÓN DE ENVÍO SUPERIOR */
-        .submit-section-top {
-            margin-bottom: 25px;
-            text-align: right;
+        /* ===== BOTÓN DE ENVÍO MODIFICADO ===== */
+        /* BOTÓN DE ENVÍO A LA DERECHA (NO CENTRADO) */
+        .submit-section-wrapper {
             display: flex;
             justify-content: flex-end;
-            align-items: center;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            padding: 0 5px;
         }
 
         .submit-button {
-            padding: 14px 40px;
+            padding: 12px 35px;
             background: var(--gradient-primary);
             color: white;
             border: none;
-            border-radius: 10px;
-            font-weight: 700;
+            border-radius: 50px;
+            font-weight: 600;
             font-size: 16px;
             cursor: pointer;
             transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 12px;
-            box-shadow: 0 4px 12px rgba(7, 68, 182, 0.2);
+            box-shadow: 0 8px 20px rgba(7, 68, 182, 0.3);
+            letter-spacing: 0.5px;
+            border: 1px solid rgba(255,255,255,0.2);
         }
 
         .submit-button:hover {
             transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(7, 68, 182, 0.3);
+            box-shadow: 0 12px 28px rgba(7, 68, 182, 0.4);
             background: linear-gradient(135deg, #1d4ed8 0%, #0744b6ff 100%);
         }
 
@@ -888,14 +908,20 @@
             font-size: 16px;
         }
 
-        /* TABLA DE DOCUMENTOS - MÁS COMPACTA PERO ATRACTIVA */
+        .submit-button:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* TABLA DE DOCUMENTOS */
         .documents-table-container {
             background: white;
             border-radius: 14px;
             overflow: hidden;
             box-shadow: var(--card-shadow);
             border: 2px solid var(--border-color);
-            margin-bottom: 35px;
+            margin-bottom: 10px;
             max-width: 100%;
             overflow-x: auto;
             transition: var(--transition);
@@ -950,7 +976,7 @@
             gap: 15px;
         }
 
-        /* TABLA PRINCIPAL - MÁS COMPACTA Y ATRACTIVA */
+        /* TABLA PRINCIPAL */
         .documents-table {
             width: 100%;
             border-collapse: collapse;
@@ -1014,7 +1040,7 @@
             font-size: 15px;
         }
 
-        /* COLUMNAS ESPECÍFICAS - MÁS COMPACTAS */
+        /* COLUMNAS ESPECÍFICAS */
         .document-name-cell {
             min-width: 280px;
             position: sticky;
@@ -1212,7 +1238,7 @@
             font-size: 13px;
         }
 
-        /* ACCIONES */
+        /* ACCIONES - OCULTAR BOTONES SEGÚN ESTADO */
         .actions-cell {
             min-width: 180px;
             width: 180px;
@@ -1277,125 +1303,318 @@
             box-shadow: 0 4px 8px rgba(16, 185, 129, 0.2);
         }
 
+        /* OCULTAR BOTÓN UPLOAD COMPLETAMENTE - SOLO USAREMOS SELECT */
         .btn-upload {
-            background: #3b82f6;
-            color: white;
-            border: 1px solid #3b82f6;
+            display: none !important;
         }
 
-        .btn-upload:hover {
-            background: #2563eb;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(59, 130, 246, 0.2);
+        /* CLASES PARA DOCUMENTOS */
+        .has-document .btn-upload,
+        .no-document .btn-view,
+        .no-document .btn-download,
+        .no-document .btn-update {
+            display: none;
         }
 
-        /* ÁREA DE SUBIDA */
+        /* ===== ÁREA DE SUBIDA MODIFICADA ===== */
+        /* SOLO UN BOTÓN DE SELECCIONAR POR FILA - SIN BOTÓN SUBIR */
         .upload-cell {
-            min-width: 220px;
-            width: 220px;
+            min-width: 280px;
+            width: 280px;
         }
 
         .upload-container {
             position: relative;
+            width: 100%;
         }
 
-        .file-input-wrapper {
+        /* CONTENEDOR PRINCIPAL DE SUBIDA - UN SOLO BOTÓN */
+        .upload-main-wrapper {
             display: flex;
-            align-items: center;
+            flex-direction: column;
             gap: 10px;
         }
 
-        .file-input-btn {
-            padding: 7px 12px;
-            background: #f8fafc;
-            color: #475569;
-            border: 1px solid var(--border-color);
-            border-radius: 6px;
+        /* BOTÓN ÚNICO DE SELECCIONAR */
+        .file-select-btn {
+            padding: 10px 18px;
+            background: white;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+            border-radius: 8px;
             font-size: 13px;
+            font-weight: 600;
             cursor: pointer;
             transition: var(--transition);
-            display: flex;
+            display: inline-flex;
             align-items: center;
-            gap: 5px;
-            white-space: nowrap;
+            gap: 10px;
+            width: fit-content;
+            box-shadow: 0 2px 5px rgba(7, 68, 182, 0.1);
         }
 
-        .file-input-btn:hover {
-            background: #e2e8f0;
+        .file-select-btn:hover {
+            background: var(--primary);
+            color: white;
             transform: translateY(-2px);
-            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 6px 15px rgba(7, 68, 182, 0.3);
+        }
+
+        .file-select-btn i {
+            font-size: 14px;
+        }
+
+        /* INDICADOR DE ARCHIVO SELECCIONADO */
+        .file-selected-indicator {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 15px;
+            background: linear-gradient(135deg, #f0f9ff 0%, #e6f2ff 100%);
+            border: 1px solid #b8d6ff;
+            border-radius: 8px;
+            margin-top: 5px;
+            animation: fadeIn 0.3s ease;
+            width: 100%;
+            box-shadow: 0 2px 8px rgba(7, 68, 182, 0.1);
+        }
+
+        .file-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .file-info i {
+            color: var(--primary);
+            font-size: 16px;
+        }
+
+        .file-name-display {
+            font-size: 13px;
+            color: var(--primary);
+            font-weight: 600;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            max-width: 160px;
+        }
+
+        .file-remove-btn {
+            background: rgba(239, 68, 68, 0.1);
+            border: none;
+            color: var(--danger-color);
+            cursor: pointer;
+            padding: 5px 8px;
+            font-size: 12px;
+            transition: var(--transition);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 500;
+        }
+
+        .file-remove-btn:hover {
+            background: var(--danger-color);
+            color: white;
+            transform: scale(1.05);
         }
 
         input[type="file"] {
             display: none;
         }
 
-        .file-name {
-            flex: 1;
+        /* INFORMACIÓN DE ARCHIVO ACTUAL - SIN BOTONES */
+        .file-current-info {
             font-size: 13px;
             color: var(--text-muted);
-            white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 160px;
-        }
-
-        .file-selected {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            white-space: nowrap;
+            max-width: 100%;
             padding: 8px 12px;
-            background: #eff6ff;
-            border: 1px solid #bfdbfe;
-            border-radius: 6px;
-            margin-top: 8px;
-            animation: fadeIn 0.3s ease;
-        }
-
-        .file-selected-info {
+            background: #f8fafc;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
-            gap: 8px;
-            flex: 1;
-            min-width: 0;
+            gap: 10px;
         }
 
-        .file-selected-icon {
-            color: #3b82f6;
-            font-size: 13px;
-            flex-shrink: 0;
+        .file-current-info i {
+            color: var(--success-color);
+            font-size: 14px;
         }
 
-        .file-selected-name {
-            font-size: 13px;
-            color: #1e40af;
+        .file-current-info span {
             font-weight: 500;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-            max-width: 140px;
+            color: #1e293b;
         }
 
-        .file-remove {
-            background: none;
-            border: none;
-            color: #ef4444;
-            cursor: pointer;
-            padding: 4px;
-            font-size: 12px;
-            flex-shrink: 0;
-            transition: var(--transition);
+        /* ESTADO CUANDO YA TIENE DOCUMENTO SUBIDO - SIN BOTONES */
+        tr.has-document .upload-main-wrapper .file-select-btn,
+        tr.has-document .upload-main-wrapper .file-selected-indicator {
+            display: none;
         }
 
-        .file-remove:hover {
-            color: #dc2626;
-            transform: scale(1.1);
+        tr.has-document .upload-main-wrapper .file-current-info {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+
+        tr.has-document .upload-main-wrapper .file-current-info i {
+            color: #10b981;
         }
 
         @keyframes fadeIn {
             from {
                 opacity: 0;
                 transform: translateY(-5px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* MODAL PROFESIONAL PARA CONFIRMACIÓN */
+        .custom-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .custom-modal {
+            background: white;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            animation: slideUp 0.3s ease;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .modal-header i {
+            font-size: 28px;
+        }
+
+        .modal-header h3 {
+            font-size: 20px;
+            font-weight: 600;
+            margin: 0;
+        }
+
+        .modal-body {
+            padding: 25px;
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .file-list {
+            list-style: none;
+            padding: 0;
+            margin: 0 0 20px 0;
+        }
+
+        .file-list-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            background: #f8fafc;
+            border-radius: 10px;
+            margin-bottom: 8px;
+            border-left: 4px solid var(--primary);
+        }
+
+        .file-list-item i {
+            color: var(--primary);
+            font-size: 18px;
+        }
+
+        .file-details {
+            flex: 1;
+        }
+
+        .file-name-modal {
+            font-weight: 600;
+            color: #1e293b;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .file-size-modal {
+            font-size: 12px;
+            color: var(--text-muted);
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            background: #f8fafc;
+            display: flex;
+            justify-content: flex-end;
+            gap: 12px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .modal-btn {
+            padding: 10px 25px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .modal-btn-cancel {
+            background: white;
+            color: #64748b;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-btn-cancel:hover {
+            background: #f1f5f9;
+            transform: translateY(-2px);
+        }
+
+        .modal-btn-confirm {
+            background: var(--gradient-primary);
+            color: white;
+            box-shadow: 0 4px 12px rgba(7, 68, 182, 0.2);
+        }
+
+        .modal-btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(7, 68, 182, 0.3);
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
             }
             to {
                 opacity: 1;
@@ -1488,7 +1707,7 @@
             line-height: 1.6;
         }
 
-        /* PROGRESS BAR INDIVIDUAL PARA CADA DOCUMENTO */
+        /* PROGRESS BAR INDIVIDUAL */
         .document-progress {
             margin-top: 10px;
         }
@@ -1536,17 +1755,6 @@
             background: var(--gradient-primary);
         }
 
-        /* CLASES PARA DOCUMENTOS */
-        .has-document .btn-upload {
-            display: none;
-        }
-
-        .no-document .btn-view,
-        .no-document .btn-download,
-        .no-document .btn-update {
-            display: none;
-        }
-
         /* RESPONSIVE */
         @media (max-width: 1200px) {
             .header {
@@ -1584,10 +1792,6 @@
             .documents-table {
                 min-width: 1000px;
             }
-            
-            .submit-section-top {
-                justify-content: center;
-            }
         }
 
         @media (max-width: 992px) {
@@ -1595,12 +1799,8 @@
                 grid-template-columns: repeat(2, 1fr);
             }
             
-            .main-title {
-                font-size: 28px;
-            }
-            
-            .subtitle {
-                font-size: 15px;
+            .panel-title-section .subtitle {
+                font-size: 22px;
             }
             
             .control-panel {
@@ -1742,13 +1942,13 @@
                 font-size: 14px;
             }
             
-            .file-input-wrapper {
-                flex-direction: column;
-                align-items: stretch;
+            .upload-main-wrapper {
+                align-items: flex-start;
             }
             
-            .file-input-btn {
+            .file-select-btn {
                 width: 100%;
+                justify-content: center;
             }
             
             .periodo-panel {
@@ -1760,9 +1960,8 @@
                 font-size: 14px;
             }
             
-            .submit-section-top {
-                justify-content: center;
-                margin-bottom: 20px;
+            .submit-section-wrapper {
+                justify-content: flex-end;
             }
             
             .submit-button {
@@ -1784,10 +1983,8 @@
                 font-size: 18px;
             }
             
-            .btn-go-documents {
-                width: 100%;
-                justify-content: center;
-                padding: 10px 20px;
+            .panel-title-section .subtitle {
+                font-size: 20px;
             }
             
             .logout-button {
@@ -1828,6 +2025,10 @@
             .logo-img-header {
                 height: 50px;
             }
+            
+            .file-selected-indicator {
+                flex-wrap: wrap;
+            }
         }
 
         @media (min-width: 769px) and (max-width: 1200px) {
@@ -1844,7 +2045,7 @@
             }
             
             .upload-cell {
-                min-width: 200px;
+                min-width: 260px;
             }
         }
     </style>
@@ -1852,7 +2053,7 @@
 <body>
     <!-- MAIN CONTENT -->
     <div class="main-content">
-        <!-- HEADER SUPERIOR MÁS GRANDE Y ATTRACTIVO -->
+        <!-- HEADER SUPERIOR -->
         <div class="header">
             <div class="header-left">
                 <div class="header-logo">
@@ -1868,7 +2069,7 @@
                     <a href="{{ route('maestros.grados.create') }}" class="nav-link">
                         <i class="fas fa-graduation-cap"></i> Grados
                     </a>
-                    <a href="{{ route('profesor.dashboard') }}#perfil" class="nav-link">
+                    <a href="{{ route('editar-mi-perfil') }}" class="nav-link">
                         <i class="fas fa-user"></i> Perfil
                     </a>
                 </div>
@@ -1950,10 +2151,10 @@
                 $tiposDocumentos = $tiposDocumentos ?? [];
             @endphp
 
-            <!-- PANEL DE CONTROL -->
+            <!-- PANEL DE CONTROL - TÍTULO MÁS PEQUEÑO -->
             <div class="control-panel">
                 <div class="panel-title-section">
-                    <p class="subtitle">Sube tus documentos de acuerdo al periodo habilitado</p>
+                    <p class="subtitle">Carga de documentos</p>
                 </div>
                 <div class="action-buttons">
                     <a href="{{ route('profesor.dashboard') }}" class="btn-back">
@@ -1963,7 +2164,7 @@
                 </div>
             </div>
 
-            <!-- PANEL DE PERÍODO REDISEÑADO - MÁS COMPACTO -->
+            <!-- PANEL DE PERÍODO -->
             <div class="periodo-panel">
                 <div class="periodo-header">
                     <div class="periodo-title">
@@ -1986,7 +2187,7 @@
                                 @if($hayPeriodoHabilitado)
                                 Sistema de carga de documentos habilitado
                                 @else
-                                Sistema de carga temporalmente deshabilitado
+                                El sistema se activará automáticamente cuando se habilite un nuevo período para que puedas subir tus documentos.
                                 @endif
                             </p>
                         </div>
@@ -2000,7 +2201,7 @@
                     </div>
                 </div>
                 
-                <!-- BARRA DE PROGRESO GENERAL - MÁS COMPACTA -->
+                <!-- BARRA DE PROGRESO GENERAL -->
                 @if($hayPeriodoHabilitado)
                 <div class="progress-overview">
                     <div class="progress-header">
@@ -2073,35 +2274,11 @@
                 </div>
             </div>
             @else
-
-                @if(!$hayPeriodoHabilitado)
-                <!-- PANEL SIN PERÍODO HABILITADO -->
-                <div class="no-period-panel">
-                    <div class="no-period-icon">
-                        <i class="fas fa-lock"></i>
-                    </div>
-                    <h3 class="no-period-title">Sistema Temporalmente Deshabilitado</h3>
-                    <p class="no-period-text">
-                        No hay ningún período académico habilitado para la carga de documentos.
-                        El sistema se activará automáticamente cuando se habilite un nuevo período.
-                    </p>
-                </div>
-                @endif
-                
                 @if(count($documentosParaVista) > 0)
-                <!-- FORMULARIO DE SUBIDA - CORREGIDO -->
+                <!-- FORMULARIO DE SUBIDA - SOLO BOTÓN SELECCIONAR -->
                 <form action="{{ route('profesor.subir-documentos') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
                     @csrf
                     <input type="hidden" name="periodo_id" value="{{ $periodoHabilitado->id ?? '' }}">
-                    
-                    <!-- BOTÓN DE ENVÍO ARRIBA DE LA TABLA -->
-                    @if($hayPeriodoHabilitado)
-                    <div class="submit-section-top">
-                        <button type="submit" class="submit-button" id="submitBtn">
-                            <i class="fas fa-paper-plane"></i> Enviar Documentos Seleccionados
-                        </button>
-                    </div>
-                    @endif
                     
                     <!-- TABLA DE DOCUMENTOS -->
                     <div class="documents-table-container">
@@ -2287,35 +2464,18 @@
                                             @endif
                                             @else
                                             @if($hayPeriodoHabilitado)
-                                            <button type="button" class="action-btn btn-upload" onclick="selectFile('{{ $tipoDocumento }}')">
-                                                <i class="fas fa-upload"></i> Subir
-                                            </button>
+                                            <!-- EL BOTÓN UPLOAD ESTÁ OCULTO POR CSS, SOLO USAMOS SELECT -->
+                                            <button type="button" class="action-btn btn-upload" style="display: none;">Subir</button>
                                             @endif
                                             @endif
                                         </div>
                                     </td>
                                     
-                                    <!-- SUBIR ARCHIVO - CORREGIDO: ID ÚNICO Y NAME CORRECTO -->
+                                    <!-- SUBIR ARCHIVO - SOLO BOTÓN SELECCIONAR -->
                                     <td class="upload-cell" data-label="Subir Archivo">
                                         @if($hayPeriodoHabilitado)
                                         <div class="upload-container">
-                                            <div class="file-input-wrapper">
-                                                <button type="button" class="file-input-btn" onclick="selectFile('{{ $tipoDocumento }}')">
-                                                    <i class="fas fa-paperclip"></i> Seleccionar
-                                                </button>
-                                                <div class="file-name" id="file-name-preview-{{ $tipoDocumento }}" title="{{ $documento['archivo'] ?? '' }}">
-                                                    @if($tieneDocumento)
-                                                        @php
-                                                            $archivo = $documento['archivo'] ?? 'Documento subido';
-                                                            echo strlen($archivo) > 25 ? substr($archivo, 0, 25) . '...' : $archivo;
-                                                        @endphp
-                                                    @else
-                                                        Ningún archivo seleccionado
-                                                    @endif
-                                                </div>
-                                            </div>
-                                            
-                                            <!-- ✅ CORREGIDO: ID con prefijo 'file-' para evitar conflictos, NAME es el tipo de documento -->
+                                            <!-- INPUT OCULTO -->
                                             <input type="file" 
                                                    id="file-{{ $tipoDocumento }}" 
                                                    name="{{ $tipoDocumento }}"
@@ -2324,14 +2484,36 @@
                                                    data-tipo="{{ $tipoDocumento }}"
                                                    onchange="handleFileSelect('{{ $tipoDocumento }}', this)">
                                             
-                                            <div id="file-selected-{{ $tipoDocumento }}" class="file-selected" style="display: none;">
-                                                <div class="file-selected-info">
-                                                    <i class="fas fa-file file-selected-icon"></i>
-                                                    <span class="file-selected-name" id="file-selected-name-{{ $tipoDocumento }}"></span>
-                                                </div>
-                                                <button type="button" class="file-remove" onclick="clearFile('{{ $tipoDocumento }}')">
-                                                    <i class="fas fa-times"></i>
+                                            <div class="upload-main-wrapper">
+                                                @if(!$tieneDocumento)
+                                                <!-- BOTÓN SELECCIONAR - SOLO SI NO TIENE DOCUMENTO -->
+                                                <button type="button" class="file-select-btn" onclick="selectFile('{{ $tipoDocumento }}')">
+                                                    <i class="fas fa-paperclip"></i> Seleccionar archivo
                                                 </button>
+                                                
+                                                <!-- INDICADOR DE ARCHIVO SELECCIONADO -->
+                                                <div id="file-selected-{{ $tipoDocumento }}" class="file-selected-indicator" style="display: none;">
+                                                    <div class="file-info">
+                                                        <i class="fas fa-file-pdf"></i>
+                                                        <span class="file-name-display" id="file-selected-name-{{ $tipoDocumento }}"></span>
+                                                    </div>
+                                                    <button type="button" class="file-remove-btn" onclick="clearFile('{{ $tipoDocumento }}')">
+                                                        <i class="fas fa-times"></i> Quitar
+                                                    </button>
+                                                </div>
+                                                
+                                                <!-- PREVIEW INICIAL -->
+                                                <div class="file-current-info" id="file-name-preview-{{ $tipoDocumento }}">
+                                                    <i class="fas fa-info-circle" style="color: #94a3b8;"></i>
+                                                    <span>Ningún archivo seleccionado</span>
+                                                </div>
+                                                @else
+                                                <!-- SI YA TIENE DOCUMENTO, SOLO MOSTRAR NOMBRE DEL ARCHIVO (SIN BOTONES) -->
+                                                <div class="file-current-info" id="file-name-preview-{{ $tipoDocumento }}">
+                                                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
+                                                    <span>Archivo: {{ strlen($documento['archivo'] ?? '') > 30 ? substr($documento['archivo'] ?? '', 0, 30) . '...' : ($documento['archivo'] ?? 'Documento subido') }}</span>
+                                                </div>
+                                                @endif
                                             </div>
                                         </div>
                                         @else
@@ -2345,6 +2527,15 @@
                             </tbody>
                         </table>
                     </div>
+                    
+                    <!-- BOTÓN DE ENVÍO A LA DERECHA (DEBAJO DE LA TABLA) -->
+                    @if($hayPeriodoHabilitado)
+                    <div class="submit-section-wrapper">
+                        <button type="button" class="submit-button" id="submitBtn" onclick="showSubmitModal()">
+                            <i class="fas fa-paper-plane"></i> Enviar Documentos Seleccionados
+                        </button>
+                    </div>
+                    @endif
                 </form>
                 @else
                 <!-- SIN DOCUMENTOS CONFIGURADOS -->
@@ -2363,14 +2554,39 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT CORREGIDO -->
+    <!-- MODAL PROFESIONAL PARA CONFIRMACIÓN DE ENVÍO -->
+    <div id="submitModal" class="custom-modal-overlay" style="display: none;">
+        <div class="custom-modal">
+            <div class="modal-header">
+                <i class="fas fa-paper-plane"></i>
+                <h3>Confirmar envío de documentos</h3>
+            </div>
+            <div class="modal-body">
+                <p style="margin-bottom: 15px; color: #475569;">Los siguientes documentos serán enviados para revisión:</p>
+                <ul id="modalFileList" class="file-list"></ul>
+                <p style="color: #64748b; font-size: 14px; margin-top: 10px;">
+                    <i class="fas fa-info-circle" style="color: var(--primary);"></i>
+                    Una vez enviados, los documentos quedarán pendientes de revisión por el administrador.
+                </p>
+            </div>
+            <div class="modal-footer">
+                <button class="modal-btn modal-btn-cancel" onclick="closeSubmitModal()">Cancelar</button>
+                <button class="modal-btn modal-btn-confirm" onclick="submitForm()">Confirmar envío</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT -->
     <script>
+        // Variables globales
+        let currentSelectedFiles = [];
+        
         // Función para mostrar observaciones completas
         function alertObservacionCompleta(observacion) {
             alert("Observaciones completas:\n\n" + observacion);
         }
         
-        // ✅ FUNCIÓN PRINCIPAL PARA MANEJAR SELECCIÓN DE ARCHIVOS
+        // Función para manejar selección de archivos
         window.handleFileSelect = function(tipo, input) {
             const fileSelected = document.getElementById('file-selected-' + tipo);
             const fileSelectedName = document.getElementById('file-selected-name-' + tipo);
@@ -2383,26 +2599,21 @@
                 // Actualizar UI
                 fileSelectedName.textContent = file.name;
                 fileSelected.style.display = 'flex';
-                fileNamePreview.textContent = 'Archivo: ' + (file.name.length > 25 ? file.name.substring(0, 25) + '...' : file.name);
+                fileNamePreview.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> <span>Nuevo archivo: ${file.name.length > 30 ? file.name.substring(0, 30) + '...' : file.name}</span>`;
                 
-                // Resaltar la fila
+                // Resaltar fila
                 if (row) {
                     row.style.backgroundColor = '#eff6ff';
                     row.style.borderLeft = '3px solid #3b82f6';
-                    
-                    // Cambiar clase para mostrar botones correctos
                     row.classList.remove('no-document');
                     row.classList.add('has-document');
                 }
                 
-                // DEBUG: Mostrar en consola
-                console.log('✅ Archivo seleccionado para ' + tipo + ':', file.name);
-                console.log('   Name del input:', input.name);
-                console.log('   Tamaño:', (file.size / 1024).toFixed(2), 'KB');
+                showToast(`Archivo "${file.name}" seleccionado`, 'success');
             }
         };
         
-        // ✅ FUNCIÓN PARA LIMPIAR ARCHIVO SELECCIONADO
+        // Función para limpiar archivo seleccionado
         window.clearFile = function(tipo) {
             const input = document.getElementById('file-' + tipo);
             const fileSelected = document.getElementById('file-selected-' + tipo);
@@ -2418,55 +2629,107 @@
             }
             
             if (fileNamePreview) {
-                fileNamePreview.textContent = 'Ningún archivo seleccionado';
+                fileNamePreview.innerHTML = `<i class="fas fa-info-circle" style="color: #94a3b8;"></i> <span>Ningún archivo seleccionado</span>`;
             }
             
-            // Quitar resaltado de la fila
             if (row) {
                 row.style.backgroundColor = '';
                 row.style.borderLeft = '';
-                
-                // Verificar si realmente no tiene documento
-                if (!row.classList.contains('has-document') || !row.dataset.documentoId) {
-                    row.classList.add('no-document');
-                    row.classList.remove('has-document');
-                }
+                row.classList.remove('has-document');
+                row.classList.add('no-document');
             }
             
-            console.log('🗑️ Archivo eliminado para ' + tipo);
+            showToast('Archivo removido', 'info');
         };
         
-        // ✅ FUNCIÓN PARA ABRIR SELECTOR DE ARCHIVOS
+        // Abrir selector de archivos
         window.selectFile = function(tipo) {
             const input = document.getElementById('file-' + tipo);
             if (input) {
-                console.log('📁 Abriendo selector para:', tipo);
                 input.click();
-            } else {
-                console.error('❌ No se encontró input para:', tipo);
             }
         };
         
-        // ✅ FUNCIONES PARA VER Y DESCARGAR DOCUMENTOS
+        // Ver documento
         window.verDocumento = function(documentoId) {
             if (documentoId) {
                 window.open("{{ url('documentos/ver') }}/" + documentoId, '_blank');
             } else {
-                showToast('No se puede ver el documento. ID no disponible.', 'error');
+                showToast('ID de documento no disponible', 'error');
             }
         };
         
+        // Descargar documento
         window.descargarDocumento = function(documentoId) {
             if (documentoId) {
                 window.location.href = "{{ url('documentos/descargar') }}/" + documentoId;
             } else {
-                showToast('No se puede descargar el documento. ID no disponible.', 'error');
+                showToast('ID de documento no disponible', 'error');
             }
         };
         
-        // ✅ FUNCIÓN PARA MOSTRAR TOASTS
+        // Mostrar modal de confirmación
+        window.showSubmitModal = function() {
+            const uploadForm = document.getElementById('uploadForm');
+            const fileInputs = uploadForm.querySelectorAll('input[type="file"]');
+            let hasFile = false;
+            currentSelectedFiles = [];
+            
+            fileInputs.forEach(input => {
+                if (input.files.length > 0) {
+                    hasFile = true;
+                    currentSelectedFiles.push({
+                        tipo: input.name,
+                        archivo: input.files[0].name,
+                        tamaño: (input.files[0].size / 1024).toFixed(2) + ' KB'
+                    });
+                }
+            });
+            
+            if (!hasFile) {
+                showToast('Selecciona al menos un documento', 'warning');
+                return;
+            }
+            
+            const modalList = document.getElementById('modalFileList');
+            modalList.innerHTML = '';
+            
+            currentSelectedFiles.forEach(file => {
+                const li = document.createElement('li');
+                li.className = 'file-list-item';
+                li.innerHTML = `
+                    <i class="fas fa-file-pdf"></i>
+                    <div class="file-details">
+                        <div class="file-name-modal">${file.archivo}</div>
+                        <div class="file-size-modal">${file.tamaño}</div>
+                    </div>
+                `;
+                modalList.appendChild(li);
+            });
+            
+            document.getElementById('submitModal').style.display = 'flex';
+        };
+        
+        window.closeSubmitModal = function() {
+            document.getElementById('submitModal').style.display = 'none';
+        };
+        
+        window.submitForm = function() {
+            const submitBtn = document.getElementById('submitBtn');
+            const uploadForm = document.getElementById('uploadForm');
+            
+            if (submitBtn) {
+                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
+                submitBtn.disabled = true;
+            }
+            
+            closeSubmitModal();
+            showToast('Enviando documentos...', 'info');
+            uploadForm.submit();
+        };
+        
+        // Mostrar toasts
         function showToast(message, type = 'info') {
-            // Eliminar toasts anteriores
             const oldToasts = document.querySelectorAll('.custom-toast');
             oldToasts.forEach(toast => toast.remove());
             
@@ -2481,7 +2744,7 @@
                 color: white;
                 border-radius: 10px;
                 box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                z-index: 9999;
+                z-index: 10001;
                 animation: slideInRight 0.3s ease;
                 max-width: 350px;
                 font-size: 14px;
@@ -2511,99 +2774,42 @@
             }, 5000);
         }
         
-        // ✅ INICIALIZACIÓN CUANDO EL DOM ESTÁ LISTO
+        // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
-            console.log('🚀 Vista de documentos inicializada');
-            
-            // Validar formulario de subida
-            const uploadForm = document.getElementById('uploadForm');
-            if (uploadForm) {
-                uploadForm.addEventListener('submit', function(e) {
-                    const submitBtn = document.getElementById('submitBtn');
-                    const fileInputs = this.querySelectorAll('input[type="file"]');
-                    let hasFile = false;
-                    let selectedFiles = [];
-                    
-                    fileInputs.forEach(input => {
-                        if (input.files.length > 0) {
-                            hasFile = true;
-                            selectedFiles.push({
-                                tipo: input.name,
-                                archivo: input.files[0].name,
-                                tamaño: (input.files[0].size / 1024).toFixed(2) + ' KB'
-                            });
-                        }
-                    });
-                    
-                    console.log('📤 Archivos seleccionados para envío:', selectedFiles);
-                    
-                    if (!hasFile) {
-                        e.preventDefault();
-                        showToast('Por favor, selecciona al menos un documento para enviar.', 'warning');
-                        return false;
-                    }
-                    
-                    if (submitBtn) {
-                        submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-                        submitBtn.disabled = true;
-                    }
-                    
-                    showToast('Enviando documentos...', 'info');
-                    return true;
-                });
-            }
-            
             // Validar tamaño de archivo
             const fileInputs = document.querySelectorAll('input[type="file"]');
             fileInputs.forEach(input => {
                 input.addEventListener('change', function() {
                     const maxSize = 10 * 1024 * 1024; // 10MB
                     if (this.files[0] && this.files[0].size > maxSize) {
-                        showToast('El archivo es demasiado grande. Máximo 10MB.', 'error');
+                        showToast('Máximo 10MB', 'error');
                         this.value = '';
-                        const tipo = this.dataset.tipo || this.id.replace('file-', '');
+                        const tipo = this.dataset.tipo;
                         const fileSelected = document.getElementById('file-selected-' + tipo);
                         const fileNamePreview = document.getElementById('file-name-preview-' + tipo);
-                        if (fileSelected) {
-                            fileSelected.style.display = 'none';
-                        }
-                        if (fileNamePreview) {
-                            fileNamePreview.textContent = 'Ningún archivo seleccionado';
-                        }
+                        if (fileSelected) fileSelected.style.display = 'none';
+                        if (fileNamePreview) fileNamePreview.innerHTML = `<i class="fas fa-info-circle" style="color: #94a3b8;"></i> <span>Ningún archivo seleccionado</span>`;
                     }
                 });
             });
             
-            // DEBUG: Verificar inputs de archivo
-            const allFileInputs = document.querySelectorAll('input[type="file"]');
-            console.log('📋 Inputs de archivo encontrados:', allFileInputs.length);
-            allFileInputs.forEach(input => {
-                console.log(`   - ID: ${input.id}, Name: ${input.name}, Tipo: ${input.dataset.tipo}`);
+            // Cerrar modal al hacer clic fuera
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('submitModal');
+                if (event.target === modal) closeSubmitModal();
             });
         });
         
-        // ✅ AÑADIR ESTILOS PARA ANIMACIONES
+        // Estilos para animaciones
         const style = document.createElement('style');
         style.textContent = `
             @keyframes slideInRight {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
             }
             @keyframes slideOutRight {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
             }
         `;
         document.head.appendChild(style);

@@ -858,114 +858,130 @@
         </div>
 
         <!-- LISTA DE GRADOS ACADÉMICOS -->
-        <div class="mt-4">
-            <h6 class="mb-3 text-primary">
-                <i class="fas fa-list-alt me-2"></i>
-                Grados Académicos Registrados
-            </h6>
-            
-            @if($maestro->gradosAcademicos && $maestro->gradosAcademicos->count() > 0)
-                <div class="table-responsive">
-                    <table class="table table-hover">
-                        <thead>
-                            <tr>
-                                <th>Nivel</th>
-                                <th>Título</th>
-                                <th>Institución</th>
-                                <th>Año Obtención</th>
-                                <th>Cédula Profesional</th>
-                                <th>Documento</th>
-                                <th>Acciones</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            @foreach($maestro->gradosAcademicos as $grado)
-                                <tr>
-                                    <td>
-                                        @php
-                                            // Determinar la clase CSS basada en el nivel
-                                            $badgeClass = 'bg-success'; // Por defecto para Licenciatura
-                                            if ($grado->nivel == 'Doctorado') {
-                                                $badgeClass = 'bg-danger';
-                                            } elseif ($grado->nivel == 'Maestría') {
-                                                $badgeClass = 'bg-warning';
-                                            } elseif ($grado->nivel == 'Especialidad') {
-                                                $badgeClass = 'bg-info';
-                                            }
-                                        @endphp
-                                        <span class="badge {{ $badgeClass }}">
-                                            {{ $grado->nivel }}
-                                        </span>
-                                    </td>
-                                    <td>{{ $grado->nombre_titulo }}</td>
-                                    <td>{{ $grado->institucion ?? 'No especificada' }}</td>
-                                    <td>{{ $grado->ano_obtencion ?? 'N/A' }}</td>
-                                    <td>
-                                        @if($grado->cedula_profesional)
-                                            <span class="badge bg-primary">{{ $grado->cedula_profesional }}</span>
-                                            @if($grado->fecha_expedicion_cedula)
-                                                <small class="text-muted d-block">Exp: {{ \Carbon\Carbon::parse($grado->fecha_expedicion_cedula)->format('d/m/Y') }}</small>
-                                            @endif
-                                        @else
-                                            <span class="text-muted">Sin cédula</span>
-                                        @endif
-                                    </td>
-                                    <td>
-                                        <div class="btn-group" role="group">
-                                            <form action="{{ route('grados-academicos.destroy', $grado->id) }}" 
-                                                  method="POST" 
-                                                  class="d-inline"
-                                                  onsubmit="return confirm('¿Estás seguro de eliminar este grado académico?');">
-                                                @csrf
-                                                @method('DELETE')
-                                                <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
-                
-                <!-- Estadísticas adicionales -->
-                <div class="row mt-3">
-                    <div class="col-md-12">
-                        <div class="alert alert-info">
-                            <div class="d-flex justify-content-between align-items-center">
-                                <div>
-                                    <i class="fas fa-chart-pie me-2"></i>
-                                    <strong>Resumen Total:</strong> 
-                                    {{ $maestro->gradosAcademicos->count() }} grado(s) académico(s) registrado(s)
+<div class="mt-4">
+    <h6 class="mb-3 text-primary">
+        <i class="fas fa-list-alt me-2"></i>
+        Grados Académicos Registrados
+    </h6>
+    
+    @if($maestro->gradosAcademicos && $maestro->gradosAcademicos->count() > 0)
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Nivel</th>
+                        <th>Título</th>
+                        <th>Institución</th>
+                        <th>Año Obtención</th>
+                        <th>Cédula Profesional</th>
+                        <th>Documento</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach($maestro->gradosAcademicos as $grado)
+                        <tr>
+                            <td>
+                                @php
+                                    $badgeClass = 'bg-success';
+                                    if ($grado->nivel == 'Doctorado') {
+                                        $badgeClass = 'bg-danger';
+                                    } elseif ($grado->nivel == 'Maestría') {
+                                        $badgeClass = 'bg-warning';
+                                    } elseif ($grado->nivel == 'Especialidad') {
+                                        $badgeClass = 'bg-info';
+                                    }
+                                @endphp
+                                <span class="badge {{ $badgeClass }}">
+                                    {{ $grado->nivel }}
+                                </span>
+                            </td>
+                            <td>{{ $grado->nombre_titulo }}</td>
+                            <td>{{ $grado->institucion ?? 'No especificada' }}</td>
+                            <td>{{ $grado->ano_obtencion ?? 'N/A' }}</td>
+                            <td>
+                                @if($grado->cedula_profesional)
+                                    <span class="badge bg-primary">{{ $grado->cedula_profesional }}</span>
+                                    @if($grado->fecha_expedicion_cedula)
+                                        <small class="text-muted d-block">Exp: {{ \Carbon\Carbon::parse($grado->fecha_expedicion_cedula)->format('d/m/Y') }}</small>
+                                    @endif
+                                @else
+                                    <span class="text-muted">Sin cédula</span>
+                                @endif
+                            </td>
+                            <td>
+                                @if($grado->documento)
+                                    <div class="btn-group" role="group">
+                                        <a href="{{ route('grados-academicos.show-document', $grado->id) }}" 
+                                           class="btn btn-sm btn-outline-info" 
+                                           target="_blank"
+                                           title="Ver documento">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                        <a href="{{ route('grados-academicos.download', $grado->id) }}" 
+                                           class="btn btn-sm btn-outline-success"
+                                           title="Descargar documento">
+                                            <i class="fas fa-download"></i>
+                                        </a>
+                                    </div>
+                                @else
+                                    <span class="badge bg-secondary">Sin documento</span>
+                                @endif
+                            </td>
+                            <td>
+                                <div class="btn-group" role="group">
+                                    <form action="{{ route('grados-academicos.destroy', $grado->id) }}" 
+                                          method="POST" 
+                                          class="d-inline"
+                                          onsubmit="return confirm('¿Estás seguro de eliminar este grado académico?');">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </form>
                                 </div>
-                                <div>
-                                    @php
-                                        $gradosConCedula = $maestro->gradosAcademicos->whereNotNull('cedula_profesional')->count();
-                                        $gradosConDocumento = $maestro->gradosAcademicos->whereNotNull('documento')->count();
-                                    @endphp
-                                    <small class="text-muted">
-                                        Con cédula: {{ $gradosConCedula }} | 
-                                        Con documento: {{ $gradosConDocumento }}
-                                    </small>
-                                </div>
-                            </div>
+                            </td>
+                        </tr>
+                    @endforeach
+                </tbody>
+            </table>
+        </div>
+        
+        <!-- Estadísticas adicionales -->
+        <div class="row mt-3">
+            <div class="col-md-12">
+                <div class="alert alert-info">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <div>
+                            <i class="fas fa-chart-pie me-2"></i>
+                            <strong>Resumen Total:</strong> 
+                            {{ $maestro->gradosAcademicos->count() }} grado(s) académico(s) registrado(s)
+                        </div>
+                        <div>
+                            @php
+                                $gradosConCedula = $maestro->gradosAcademicos->whereNotNull('cedula_profesional')->count();
+                                $gradosConDocumento = $maestro->gradosAcademicos->whereNotNull('documento')->count();
+                            @endphp
+                            <small class="text-muted">
+                                Con cédula: {{ $gradosConCedula }} | 
+                                Con documento: {{ $gradosConDocumento }}
+                            </small>
                         </div>
                     </div>
                 </div>
-            @else
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle me-2"></i>
-                    No se han registrado grados académicos para este maestro.
-                    <a href="{{ route('grados-academicos.create', $maestro->id) }}" class="alert-link ms-2">
-                        Agregar primer grado académico
-                    </a>
-                </div>
-            @endif
+            </div>
         </div>
-        <!-- FIN LISTA DE GRADOS ACADÉMICOS -->
-    </div>
+    @else
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle me-2"></i>
+            No se han registrado grados académicos para este maestro.
+            <a href="{{ route('grados-academicos.create', $maestro->id) }}" class="alert-link ms-2">
+                Agregar primer grado académico
+            </a>
+        </div>
+    @endif
+</div>
 </div>
 
             <!-- Sección de Antigüedad -->

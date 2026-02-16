@@ -789,17 +789,26 @@
                                             </div>
                                             @endif
                                         </td>
-                                        <td>
-                                            @if($maestro->activo ?? false)
-                                                <span class="status-badge status-active">
-                                                    <i class="fas fa-check-circle"></i> Activo
-                                                </span>
-                                            @else
-                                                <span class="status-badge status-inactive">
-                                                    <i class="fas fa-times-circle"></i> Inactivo
-                                                </span>
-                                            @endif
-                                        </td>
+                                        <!-- En la tabla, en la columna de Estado (columna 6) -->
+<td>
+    @if($maestro->activo ?? false)
+        <button type="button" 
+                class="status-badge status-active toggle-estado-btn"
+                data-maestro-id="{{ $maestro->id }}"
+                data-estado-actual="1"
+                title="Haz clic para cambiar estado">
+            <i class="fas fa-check-circle"></i> Activo
+        </button>
+    @else
+        <button type="button" 
+                class="status-badge status-inactive toggle-estado-btn"
+                data-maestro-id="{{ $maestro->id }}"
+                data-estado-actual="0"
+                title="Haz clic para cambiar estado">
+            <i class="fas fa-times-circle"></i> Inactivo
+        </button>
+    @endif
+</td>
                                         <td>
                                             <div class="action-icons">
                                                 <a href="#" class="icon-btn" title="Asignar Horario">
@@ -862,11 +871,256 @@
     <a href="{{ route('maestros.create') }}?coordinaciones_id={{ $coordinacion->id ?? '' }}" class="fab">
         <i class="fas fa-plus"></i>
     </a>
+<script>
+    function toggleFilters() {
+        alert('Funcionalidad de filtros avanzados');
+    }
+</script>
 
-    <script>
-        function toggleFilters() {
-            alert('Funcionalidad de filtros avanzados');
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('✅ Script de cambio de estado cargado');
+    
+    // Obtener el token CSRF para las peticiones
+    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+    
+    if (!csrfToken) {
+        console.error('❌ No se encontró el token CSRF');
+        return;
+    }
+    
+    console.log('✅ Token CSRF encontrado');
+
+    // Función para depurar la URL
+    function construirUrl(maestroId) {
+        // Construir URL relativa
+        return `/coordinacion/maestros/${maestroId}/cambiar-estado`;
+    }
+
+    // Seleccionar todos los botones de cambio de estado
+    const botonesEstado = document.querySelectorAll('.toggle-estado-btn');
+    console.log(`✅ Se encontraron ${botonesEstado.length} botones de estado`);
+    
+    botonesEstado.forEach((boton, index) => {
+        console.log(`Botón ${index + 1}:`, boton);
+        
+        boton.addEventListener('click', function(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            
+            const maestroId = this.dataset.maestroId;
+            const estadoActual = parseInt(this.dataset.estadoActual);
+            const nuevoEstado = estadoActual === 1 ? 0 : 1;
+            
+            // Obtener nombre del maestro de manera más robusta
+            const fila = this.closest('tr');
+            const nombreElement = fila?.querySelector('.maestro-name h4');
+            const nombreMaestro = nombreElement?.textContent?.trim() || 'este maestro';
+            
+            console.log('📝 Datos:', { maestroId, estadoActual, nuevoEstado, nombreMaestro });
+            
+            // Mostrar confirmación
+            const accion = nuevoEstado === 1 ? 'activar' : 'desactivar';
+            
+            if (!confirm(`¿Estás seguro de que deseas ${accion} a ${nombreMaestro}?`)) {
+                return;
+            }
+            
+            // Cambiar estado del botón (deshabilitar mientras se procesa)
+            const botonOriginal = this;
+            const textoOriginal = this.innerHTML;
+            this.disabled = true;
+            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+            
+            const url = construirUrl(maestroId);
+            console.log('🌐 Haciendo fetch a:', url);
+            
+            // Hacer la petición AJAX
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'X-CSRF-TOKEN': csrfToken,
+                    'Accept': 'application/json',
+                    'X-Requested-With': 'XMLHttpRequest'
+                },
+                body: JSON.stringify({
+                    activo: nuevoEstado
+                })
+            })
+            .then(async response => {
+                console.log('📥 Respuesta recibida:', response.status);
+                
+                // Intentar parsear la respuesta como JSON
+                const contentType = response.headers.get('content-type');
+                if (contentType && contentType.includes('application/json')) {
+                    const data = await response.json();
+                    
+                    if (!response.ok) {
+                        throw new Error(data.message || `Error ${response.status}`);
+                    }
+                    
+                    return data;
+                } else {
+                    // Si no es JSON, puede ser un error HTML
+                    const text = await response.text();
+                    console.error('Respuesta no JSON:', text.substring(0, 200));
+                    throw new Error('Respuesta del servidor no válida');
+                }
+            })
+            .then(data => {
+                console.log('✅ Datos recibidos:', data);
+                
+                if (data.success) {
+                    // Actualizar el botón con el nuevo estado
+                    botonOriginal.className = `status-badge ${data.data.badge_class} toggle-estado-btn`;
+                    botonOriginal.innerHTML = `<i class="fas ${data.data.icono}"></i> ${data.data.estado_texto}`;
+                    botonOriginal.dataset.estadoActual = data.data.activo;
+                    botonOriginal.disabled = false;
+                    
+                    // Mostrar mensaje de éxito
+                    mostrarNotificacion(data.message, 'success');
+                } else {
+                    throw new Error(data.message || 'Error al cambiar estado');
+                }
+            })
+            .catch(error => {
+                console.error('❌ Error:', error);
+                
+                // Restaurar botón original en caso de error
+                botonOriginal.disabled = false;
+                botonOriginal.innerHTML = textoOriginal;
+                
+                // Mostrar mensaje de error
+                mostrarNotificacion(error.message || 'Error al cambiar el estado del maestro', 'error');
+            });
+        });
+    });
+    
+    // Función para mostrar notificaciones
+    function mostrarNotificacion(mensaje, tipo) {
+        console.log(`🔔 Notificación ${tipo}:`, mensaje);
+        
+        // Verificar si ya existe un contenedor de notificaciones
+        let contenedor = document.querySelector('.notificacion-contenedor');
+        
+        if (!contenedor) {
+            contenedor = document.createElement('div');
+            contenedor.className = 'notificacion-contenedor';
+            contenedor.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 9999;
+            `;
+            document.body.appendChild(contenedor);
         }
-    </script>
+        
+        // Crear notificación
+        const notificacion = document.createElement('div');
+        notificacion.className = `notificacion notificacion-${tipo}`;
+        notificacion.style.cssText = `
+            background-color: ${tipo === 'success' ? '#10b981' : '#ef4444'};
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: slideIn 0.3s ease;
+            font-size: 0.9rem;
+            min-width: 250px;
+            max-width: 400px;
+        `;
+        
+        notificacion.innerHTML = `
+            <i class="fas ${tipo === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}" style="font-size: 1.2rem;"></i>
+            <span style="flex: 1;">${mensaje}</span>
+            <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; opacity: 0.8;">
+                <i class="fas fa-times"></i>
+            </button>
+        `;
+        
+        contenedor.appendChild(notificacion);
+        
+        // Eliminar después de 4 segundos
+        setTimeout(() => {
+            if (notificacion.parentNode) {
+                notificacion.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => {
+                    if (notificacion.parentNode) {
+                        notificacion.remove();
+                        if (contenedor.children.length === 0) {
+                            contenedor.remove();
+                        }
+                    }
+                }, 300);
+            }
+        }, 4000);
+    }
+    
+    // Agregar estilos para las animaciones si no existen
+    if (!document.getElementById('estilos-notificaciones')) {
+        const style = document.createElement('style');
+        style.id = 'estilos-notificaciones';
+        style.textContent = `
+            @keyframes slideIn {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            
+            @keyframes slideOut {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+            
+            .toggle-estado-btn {
+                cursor: pointer !important;
+                transition: all 0.3s ease !important;
+                border: none !important;
+                width: 100% !important;
+                text-align: left !important;
+                background: transparent !important;
+            }
+            
+            .toggle-estado-btn:hover {
+                transform: scale(1.02);
+                filter: brightness(0.95);
+            }
+            
+            .toggle-estado-btn:disabled {
+                opacity: 0.7;
+                cursor: not-allowed !important;
+            }
+            
+            .status-active, .status-inactive {
+                display: inline-flex !important;
+                align-items: center !important;
+                gap: 5px !important;
+                padding: 5px 10px !important;
+                border-radius: 15px !important;
+                font-size: 0.75rem !important;
+                font-weight: 700 !important;
+                white-space: nowrap !important;
+            }
+        `;
+        document.head.appendChild(style);
+    }
+});
+</script>
 </body>
 </html>

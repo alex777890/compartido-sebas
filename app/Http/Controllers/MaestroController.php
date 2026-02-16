@@ -640,8 +640,9 @@ public function actualizarMiPerfil(Request $request)
 
         \Log::info('Perfil actualizado exitosamente. ID: ' . $maestro->id);
         
-        return redirect()->route('dashboard.editar-mi-perfil')
-            ->with('success', '¡Tus datos personales han sido actualizados exitosamente!');
+// POR ESTO:
+return redirect()->route('editar-mi-perfil')
+    ->with('success', '¡Tus datos personales han sido actualizados exitosamente!');
 
     } catch (\Illuminate\Validation\ValidationException $e) {
         \Log::error('Error de validación: ' . json_encode($e->errors()));
