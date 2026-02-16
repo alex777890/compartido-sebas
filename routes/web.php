@@ -134,7 +134,7 @@ Route::get('/profesor/dashboard', [MaestroController::class, 'dashboard'])
     Route::get('/mi-perfil/editar', [MaestroController::class, 'editarMiPerfil'])
         ->name('editar-mi-perfil');
     Route::post('/mi-perfil/actualizar', [MaestroController::class, 'actualizarMiPerfil'])
-        ->name('actualizar-mi-perfil');
+        ->name('dashboard.editar-mi-perfil');
 
 
         // ===== RUTAS PARA MAESTROCONTROLLER =====
@@ -232,23 +232,22 @@ Route::get('maestros/{maestroId}/historial-documentos',
     Route::get('/grados-academicos/{id}/documento', [GradoAcademicoController::class, 'showDocument'])
         ->name('grados-academicos.show-document');
     // ===== RUTAS PARA GRADOACADEMICOCONTROLLER MAESTROS =====
-         // Rutas para maestros - grados académicos
 Route::middleware(['auth'])->group(function () {
+    // Grupo de rutas para maestros - NOTA: usamos 'maestro' en singular en la URL pero 'maestros.' en el nombre
     Route::prefix('maestro')->name('maestros.')->group(function () {
+        
         // Grados académicos
         Route::get('/grados', [GradoAcademicoController::class, 'indexMaestro'])->name('grados.index');
-        Route::get('/grados/create', [GradoAcademicoController::class, 'createMaestro'])->name('grados.create');
-        Route::post('/grados', [GradoAcademicoController::class, 'store'])->name('grados.store');
-        Route::get('/grados/{id}/edit', [GradoAcademicoController::class, 'editMaestro'])->name('grados.edit');
-        Route::put('/grados/{id}', [GradoAcademicoController::class, 'update'])->name('grados.update');
+        Route::get('/grados/crear', [GradoAcademicoController::class, 'createMaestro'])->name('grados.create');
+        Route::post('/grados', [GradoAcademicoController::class, 'storeMaestro'])->name('grados.store'); // Cambiado a storeMaestro
+        Route::get('/grados/{id}/editar', [GradoAcademicoController::class, 'editMaestro'])->name('grados.edit');
+        Route::put('/grados/{id}', [GradoAcademicoController::class, 'updateMaestro'])->name('grados.update'); // Cambiado a updateMaestro
         Route::delete('/grados/{id}', [GradoAcademicoController::class, 'destroyMaestro'])->name('grados.destroy');
-        Route::get('/grados/{id}/download', [GradoAcademicoController::class, 'download'])->name('grados.download');
-        Route::get('/grados/{id}/show', [GradoAcademicoController::class, 'showDocument'])->name('grados.show');
+        
+        // Rutas adicionales para documentos
+        Route::get('/grados/{id}/descargar', [GradoAcademicoController::class, 'download'])->name('grados.download');
+        Route::get('/grados/{id}/ver', [GradoAcademicoController::class, 'showDocument'])->name('grados.show');
     });
-    // RUTAS PARA GRADOS ACADÉMICOS
-Route::resource('grados-academicos', GradoAcademicoController::class)->except(['index', 'show']);
-Route::get('grados-academicos/{id}/download', [GradoAcademicoController::class, 'download'])->name('grados-academicos.download');
-Route::get('grados-academicos/{id}/show-document', [GradoAcademicoController::class, 'showDocument'])->name('grados-academicos.show-document');
 });
 
     // ===== =====================================================

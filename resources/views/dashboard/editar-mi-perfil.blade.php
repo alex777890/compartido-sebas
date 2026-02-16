@@ -751,14 +751,6 @@
                 <i class="fas fa-tachometer-alt"></i>
                 <span>Inicio</span>
             </a>
-            <a href="{{ route('profesor.editar-mi-perfil') }}" class="menu-item active">
-                <i class="fas fa-user-edit"></i>
-                <span>Editar Perfil</span>
-            </a>
-            <a href="{{ route('profesor.mi-perfil') }}" class="menu-item">
-                <i class="fas fa-user"></i>
-                <span>Mi Perfil</span>
-            </a>
             <a href="{{ route('profesor.documentos') }}" class="menu-item">
                 <i class="fas fa-folder"></i>
                 <span>Mis Documentos</span>
@@ -849,7 +841,7 @@
                 </div>
 
                 <div class="profile-content">
-                    <form action="{{ route('profesor.actualizar-mi-perfil') }}" method="POST" id="profileForm">
+                    <form action="{{ route('dashboard.editar-mi-perfil') }}" method="POST" id="profileForm">
                         @csrf
                         
                         <!-- Información Personal -->

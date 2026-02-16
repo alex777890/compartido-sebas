@@ -640,7 +640,7 @@ public function actualizarMiPerfil(Request $request)
 
         \Log::info('Perfil actualizado exitosamente. ID: ' . $maestro->id);
         
-        return redirect()->route('profesor.mi-perfil')
+        return redirect()->route('dashboard.editar-mi-perfil')
             ->with('success', '¡Tus datos personales han sido actualizados exitosamente!');
 
     } catch (\Illuminate\Validation\ValidationException $e) {
@@ -869,9 +869,8 @@ public function dashboard()
             ->with('error', 'Error al cargar el dashboard: ' . $e->getMessage());
     }
 }
-
 /**
- * ✅ NUEVO MÉTODO: Vista separada para documentos del profesor
+ * ✅ VISTA DOCUMENTOS PROFESOR - CORREGIDA PARA 6 DOCUMENTOS FIJOS
  */
 public function documentos()
 {
@@ -901,11 +900,12 @@ public function documentos()
                 'id' => null,
                 'nombre' => 'No hay período activo',
                 'activo' => 0,
-                'estado' => 'inactivo'
+                'estado' => 'inactivo',
+                'fecha_limite' => null
             ];
         }
 
-        // Configurar documentos - SOLO LOS 6 ESPECÍFICOS
+        // ✅ CONFIGURAR DOCUMENTOS - SOLO LOS 6 ESPECÍFICOS (SIN FILTRO POR COORDINACIÓN)
         $tiposDocumentos = [
             'cst' => [
                 'nombre' => 'Constancia de Situación Fiscal (CST)', 
@@ -967,6 +967,8 @@ public function documentos()
                 'documento_id' => null,
                 'observaciones' => null,
                 'fecha_subida' => null,
+                'archivo' => null,
+                'aprobado_por' => null
             ];
             
             if (isset($documentosSubidos[$tipo])) {
@@ -984,11 +986,10 @@ public function documentos()
         }
         
         // Calcular estadísticas
-        $totalRequeridos = count($tiposDocumentos); // Será siempre 6
+        $totalRequeridos = count($tiposDocumentos);
         $totalSubidos = count($documentosSubidos);
         $faltantes = $totalRequeridos - $totalSubidos;
-        $porcentaje = $totalRequeridos > 0 ? 
-            round(($totalSubidos / $totalRequeridos) * 100) : 0;
+        $porcentaje = $totalRequeridos > 0 ? round(($totalSubidos / $totalRequeridos) * 100) : 0;
         
         $documentosAprobados = $documentosDelPeriodo->where('estado', 'aprobado');
         $documentosRechazados = $documentosDelPeriodo->where('estado', 'rechazado');
@@ -1004,6 +1005,9 @@ public function documentos()
             'faltantes' => $faltantes,
         ];
         
+        \Log::info("✅ Documentos cargados: " . count($documentosParaVista) . " documentos");
+        \Log::info("📊 Estadísticas: " . json_encode($estadisticas));
+        
         return view('dashboard.profesor-documentos', compact(
             'maestro',
             'periodoHabilitado',
@@ -1015,21 +1019,23 @@ public function documentos()
         ));
         
     } catch (\Exception $e) {
-        \Log::error('ERROR en documentos view: ' . $e->getMessage());
+        \Log::error('❌ ERROR en documentos view: ' . $e->getMessage());
+        \Log::error('Trace: ' . $e->getTraceAsString());
         return redirect()->route('profesor.dashboard')
             ->with('error', 'Error al cargar documentos: ' . $e->getMessage());
     }
 }
 
-
 /**
- * ✅ NUEVO MÉTODO: Para subir documentos desde el dashboard del profesor
+ * ✅ SUBIR DOCUMENTOS - CORREGIDO PARA PROCESAR LOS 6 DOCUMENTOS FIJOS
  */
 public function subirDocumentos(Request $request)
 {
     try {
-        \Log::info('=== SUBIDA DE DOCUMENTOS DESDE MAESTRO CONTROLLER ===');
+        \Log::info('=== SUBIDA DE DOCUMENTOS ===');
         \Log::info('Usuario autenticado: ' . auth()->user()->email);
+        \Log::info('Request data:', $request->all());
+        \Log::info('Files:', $_FILES);
 
         // Buscar maestro
         $maestro = Maestro::where('user_id', auth()->id())
@@ -1037,81 +1043,76 @@ public function subirDocumentos(Request $request)
             ->first();
 
         if (!$maestro) {
+            \Log::error('❌ Maestro no encontrado');
             return redirect()->route('profesor.completar-perfil')
                 ->with('error', 'No tienes un perfil de maestro asociado.')
                 ->withInput();
         }
 
-        \Log::info("Maestro encontrado: {$maestro->nombres}, ID: {$maestro->id}");
+        \Log::info("✅ Maestro encontrado: {$maestro->nombres}, ID: {$maestro->id}");
 
-        // ✅ OBTENER PERÍODO (MISMO MÉTODO QUE EN DASHBOARD)
+        // ✅ OBTENER PERÍODO HABILITADO
         $periodoSubida = Periodo::getPeriodoSubidaHabilitada();
         
         if (!$periodoSubida) {
-            \Log::info('No se encontró período habilitado. Buscando último período...');
+            \Log::warning('⚠️ No hay período habilitado, buscando último período...');
             $periodoSubida = Periodo::latest()->first();
         }
         
         if (!$periodoSubida) {
-            \Log::error('❌ NO SE ENCONTRÓ NINGÚN PERÍODO VÁLIDO');
+            \Log::error('❌ No se encontró ningún período');
             return redirect()->back()
                 ->with('error', 'No hay ningún período habilitado para subir documentos.')
                 ->withInput();
         }
 
-        \Log::info("✅ Subiendo documentos al período: {$periodoSubida->nombre} (ID: {$periodoSubida->id})");
+        \Log::info("📅 Período: {$periodoSubida->nombre} (ID: {$periodoSubida->id})");
 
-        // ✅ TIPOS DE DOCUMENTOS PERMITIDOS (MISMO QUE EN DASHBOARD)
-        $coordinacionId = $maestro->coordinaciones_id ?? 1;
-        
-        $documentosPorCoordinacion = [
-            1 => ['cst', 'iufim', 'comprobante_domicilio', 'curriculum', 'cedula_profesional', 'titulo'],
-            2 => ['cst', 'iufim', 'oficio_ingresos', 'declaracion_anual', 'curriculum', 'cedula_profesional'],
-            3 => ['cst', 'iufim', 'comprobante_seguro_social', 'comprobante_domicilio', 'curriculum', 'titulo'],
-            4 => ['cst', 'iufim', 'comprobante_domicilio', 'curriculum', 'cedula_profesional'],
-            5 => ['cst', 'iufim', 'oficio_ingresos', 'curriculum', 'titulo'],
-            6 => ['cst', 'iufim', 'comprobante_seguro_social', 'curriculum', 'cedula_profesional'],
-            7 => ['cst', 'iufim', 'comprobante_domicilio', 'curriculum', 'cedula_profesional', 'titulo'],
-        ];
-        
-        $tiposPermitidos = $documentosPorCoordinacion[$coordinacionId] ?? [
-            'cst', 'iufim', 'comprobante_domicilio', 
-            'curriculum', 'cedula_profesional', 'titulo'
+        // ✅ TIPOS DE DOCUMENTOS FIJOS - LOS MISMOS 6 DE LA VISTA
+        $tiposPermitidos = [
+            'cst',
+            'iufim',
+            'comprobante_domicilio',
+            'oficio_ingresos',
+            'declaracion_anual',
+            'comprobante_seguro_social'
         ];
 
-        \Log::info("Tipos permitidos para coordinación {$coordinacionId}: " . implode(', ', $tiposPermitidos));
+        \Log::info("📋 Tipos de documentos permitidos: " . implode(', ', $tiposPermitidos));
 
         // ✅ VALIDACIÓN DE ARCHIVOS
         $reglas = [];
-        $mensajes = [];
-        
         foreach ($tiposPermitidos as $tipo) {
-            $reglas[$tipo] = 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240'; // 10MB
+            $reglas[$tipo] = 'nullable|file|mimes:pdf,doc,docx,jpg,jpeg,png|max:10240';
         }
         
-        $validator = Validator::make($request->all(), $reglas, $mensajes);
+        $validator = Validator::make($request->all(), $reglas);
 
         if ($validator->fails()) {
-            \Log::error('Validación fallida: ', $validator->errors()->toArray());
+            \Log::error('❌ Validación fallida:', $validator->errors()->toArray());
             return redirect()->back()
                 ->withErrors($validator)
                 ->withInput()
                 ->with('error', 'Error en la validación de archivos');
         }
 
-        // ✅ PROCESAR ARCHIVOS
+        // ✅ CONTADORES
         $documentosSubidos = 0;
         $documentosActualizados = 0;
-        
+        $documentosProcesados = [];
+        $errores = [];
+
         DB::beginTransaction();
 
         try {
             foreach ($tiposPermitidos as $tipo) {
-                if ($request->hasFile($tipo)) {
+                if ($request->hasFile($tipo) && $request->file($tipo)->isValid()) {
                     $archivo = $request->file($tipo);
                     
-                    \Log::info("Procesando archivo tipo: {$tipo}");
-                    \Log::info("Nombre: {$archivo->getClientOriginalName()}, Tamaño: {$archivo->getSize()} bytes");
+                    \Log::info("📁 Procesando: {$tipo}");
+                    \Log::info("   - Nombre original: {$archivo->getClientOriginalName()}");
+                    \Log::info("   - Tamaño: " . round($archivo->getSize() / 1024, 2) . " KB");
+                    \Log::info("   - MIME: {$archivo->getMimeType()}");
 
                     // ✅ VERIFICAR SI YA EXISTE EN ESTE PERÍODO
                     $documentoExistente = DocumentoMaestro::where('maestro_id', $maestro->id)
@@ -1119,33 +1120,42 @@ public function subirDocumentos(Request $request)
                         ->where('periodo_id', $periodoSubida->id)
                         ->first();
 
-                    // ✅ SUBIR ARCHIVO
+                    // ✅ CREAR DIRECTORIO SI NO EXISTE
                     $directorio = "documentos_maestros/{$maestro->id}";
                     if (!Storage::disk('public')->exists($directorio)) {
                         Storage::disk('public')->makeDirectory($directorio);
-                        \Log::info("Directorio creado: {$directorio}");
+                        \Log::info("   📂 Directorio creado: {$directorio}");
                     }
 
+                    // ✅ GENERAR NOMBRE ÚNICO
                     $extension = $archivo->getClientOriginalExtension();
-                    $nombreArchivo = $tipo . '_' . time() . '_' . uniqid() . '.' . $extension;
-                    $ruta = "{$directorio}/{$nombreArchivo}";
+                    $timestamp = time();
+                    $uniqueId = uniqid();
+                    $nombreArchivo = "{$tipo}_{$timestamp}_{$uniqueId}.{$extension}";
+                    
+                    // ✅ GUARDAR ARCHIVO
+                    $path = $archivo->storeAs($directorio, $nombreArchivo, 'public');
+                    
+                    if (!$path) {
+                        throw new \Exception("No se pudo guardar el archivo {$tipo}");
+                    }
 
-                    $path = $archivo->storeAs("public/{$directorio}", $nombreArchivo);
-                    $rutaArchivo = str_replace('public/', '', $path);
-
-                    \Log::info("Archivo guardado en: {$rutaArchivo}");
+                    \Log::info("   💾 Guardado en: {$path}");
 
                     if ($documentoExistente) {
-                        // ✅ ELIMINAR ARCHIVO ANTERIOR SI EXISTE
-                        if ($documentoExistente->ruta_archivo && Storage::disk('public')->exists($documentoExistente->ruta_archivo)) {
-                            Storage::disk('public')->delete($documentoExistente->ruta_archivo);
-                            \Log::info("Archivo anterior eliminado: {$documentoExistente->ruta_archivo}");
+                        // ✅ ELIMINAR ARCHIVO ANTERIOR
+                        if ($documentoExistente->ruta_archivo) {
+                            $rutaAnterior = str_replace('storage/', '', $documentoExistente->ruta_archivo);
+                            if (Storage::disk('public')->exists($rutaAnterior)) {
+                                Storage::disk('public')->delete($rutaAnterior);
+                                \Log::info("   🗑️ Archivo anterior eliminado: {$rutaAnterior}");
+                            }
                         }
 
                         // ✅ ACTUALIZAR DOCUMENTO EXISTENTE
                         $documentoExistente->update([
                             'nombre_archivo' => $archivo->getClientOriginalName(),
-                            'ruta_archivo' => $rutaArchivo,
+                            'ruta_archivo' => $path,
                             'mime_type' => $archivo->getMimeType(),
                             'tamanio' => $archivo->getSize(),
                             'estado' => 'pendiente',
@@ -1156,8 +1166,9 @@ public function subirDocumentos(Request $request)
                         ]);
 
                         $documentosActualizados++;
-                        \Log::info("✅ Documento {$tipo} ACTUALIZADO exitosamente");
-
+                        $documentosProcesados[] = "{$tipo}: Actualizado";
+                        \Log::info("   ✅ {$tipo} ACTUALIZADO");
+                        
                     } else {
                         // ✅ CREAR NUEVO DOCUMENTO
                         DocumentoMaestro::create([
@@ -1165,7 +1176,7 @@ public function subirDocumentos(Request $request)
                             'periodo_id' => $periodoSubida->id,
                             'tipo' => $tipo,
                             'nombre_archivo' => $archivo->getClientOriginalName(),
-                            'ruta_archivo' => $rutaArchivo,
+                            'ruta_archivo' => $path,
                             'mime_type' => $archivo->getMimeType(),
                             'tamanio' => $archivo->getSize(),
                             'estado' => 'pendiente',
@@ -1174,28 +1185,31 @@ public function subirDocumentos(Request $request)
                         ]);
 
                         $documentosSubidos++;
-                        \Log::info("✅ Documento {$tipo} CREADO exitosamente");
+                        $documentosProcesados[] = "{$tipo}: Nuevo";
+                        \Log::info("   ✅ {$tipo} CREADO");
                     }
                 }
             }
 
             DB::commit();
 
-            // ✅ MENSAJE DE ÉXITO
+            // ✅ CONSTRUIR MENSAJE DE ÉXITO
             $mensaje = '';
             if ($documentosSubidos > 0 && $documentosActualizados > 0) {
-                $mensaje = "Se subieron {$documentosSubidos} documento(s) nuevo(s) y se actualizaron {$documentosActualizados} documento(s).";
+                $mensaje = "✅ Se subieron {$documentosSubidos} documento(s) nuevo(s) y se actualizaron {$documentosActualizados} documento(s).";
             } elseif ($documentosSubidos > 0) {
-                $mensaje = "Se subieron {$documentosSubidos} documento(s) correctamente.";
+                $mensaje = "✅ Se subieron {$documentosSubidos} documento(s) correctamente.";
             } elseif ($documentosActualizados > 0) {
-                $mensaje = "Se actualizaron {$documentosActualizados} documento(s) correctamente.";
+                $mensaje = "✅ Se actualizaron {$documentosActualizados} documento(s) correctamente.";
             } else {
-                $mensaje = "No se seleccionaron documentos para subir.";
+                $mensaje = "⚠️ No se seleccionaron documentos para subir.";
             }
 
-            \Log::info("✅ Subida completada: {$mensaje}");
+            \Log::info("🎉 Subida completada: {$mensaje}");
+            \Log::info("📋 Documentos procesados:", $documentosProcesados);
 
-            return redirect()->route('profesor.dashboard')
+            // ✅ REDIRECCIONAR A LA VISTA DE DOCUMENTOS (NO AL DASHBOARD)
+            return redirect()->route('profesor.documentos')
                 ->with('success', $mensaje);
 
         } catch (\Exception $e) {
@@ -1209,11 +1223,11 @@ public function subirDocumentos(Request $request)
         }
 
     } catch (\Exception $e) {
-        \Log::error('❌ ERROR CRÍTICO en subirDocumentos: ' . $e->getMessage());
+        \Log::error('❌ ERROR CRÍTICO: ' . $e->getMessage());
         \Log::error('Trace: ' . $e->getTraceAsString());
         
         return redirect()->back()
-            ->with('error', 'Error crítico: ' . $e->getMessage())
+            ->with('error', 'Error crítico al procesar la solicitud: ' . $e->getMessage())
             ->withInput();
     }
 }

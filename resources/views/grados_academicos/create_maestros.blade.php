@@ -4,14 +4,15 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Grados Académicos - Sistema GEPROC</title>
-    <!-- Bootstrap 5 CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
-                :root {
+        :root {
             --primary: #0744b6ff;
             --primary-light: #3a6bd3;
+            --primary-soft: #e8f0fe;
             --secondary: #33CAE6;
             --accent: #28a745;
             --light-bg: #F8F9FA;
@@ -19,20 +20,27 @@
             --sidebar-bg: #ffffff;
             --border-color: #E9ECEF;
             --text-muted: #6C757D;
-            --card-shadow: 0 5px 20px rgba(7, 68, 182, 0.12);
-            --card-shadow-hover: 0 10px 30px rgba(7, 68, 182, 0.2);
+            --card-shadow: 0 5px 20px rgba(7, 68, 182, 0.08);
+            --card-shadow-hover: 0 10px 30px rgba(7, 68, 182, 0.12);
             --transition: all 0.3s ease;
-            --success-color: #28a745;
-            --success-light: #d4edda;
-            --warning-color: #FFC107;
-            --warning-light: #fff3cd;
-            --danger-color: #dc3545;
-            --danger-light: #f8d7da;
-            --info-color: #17a2b8;
-            --info-light: #d1ecf1;
+            
+            /* Nuevos colores para tarjetas - Solo 3 colores principales */
+            --green-color: #10b981;
+            --green-light: #d1fae5;
+            --green-dark: #059669;
+            
+            --blue-color: #3b82f6;
+            --blue-light: #dbeafe;
+            --blue-dark: #2563eb;
+            
+            --orange-color: #f97316;
+            --orange-light: #ffedd5;
+            --orange-dark: #ea580c;
+            
             --border-radius: 12px;
             --sidebar-width: 280px;
-            --header-height: 70px;
+            --header-height: 80px;
+            --gradient-primary: linear-gradient(135deg, #0744b6ff 0%, #3a6bd3 100%);
         }
 
         * {
@@ -43,866 +51,880 @@
         }
 
         body {
-            background-color: #f5f7fb;
+            background: linear-gradient(135deg, #f5f7fb 0%, #f0f4f8 100%);
             color: #2d3748;
             line-height: 1.6;
-            display: flex;
             min-height: 100vh;
-            font-size: 14px;
+            font-size: 15px;
         }
 
-        /* SIDEBAR - BLANCO CON LÍNEA AZUL */
-        .sidebar {
-            width: var(--sidebar-width);
-            background: var(--sidebar-bg);
-            color: #2d3748;
-            position: fixed;
-            height: 100vh;
-            overflow-y: auto;
-            box-shadow: 5px 0 15px rgba(0, 0, 0, 0.05);
-            z-index: 100;
-            transition: var(--transition);
-            border-right: 3px solid var(--primary);
-        }
-
-        .sidebar-header {
-            padding: 20px 15px;
-            text-align: center;
-            border-bottom: 1px solid var(--border-color);
-        }
-
-        .logo-img-sidebar {
-            width: 120px;
-            height: auto;
-            margin-bottom: 15px;
-        }
-
-        .sidebar-header h2 {
-            font-size: 20px;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            font-weight: 600;
-            color: var(--primary);
-        }
-
-        .sidebar-header p {
-            font-size: 12px;
-            color: var(--text-muted);
-        }
-
-        .sidebar-menu {
-            padding: 15px 0;
-        }
-
-        .menu-item {
-            display: flex;
-            align-items: center;
-            padding: 12px 20px;
-            color: #4a5568;
-            text-decoration: none;
-            transition: var(--transition);
-            border-left: 4px solid transparent;
-            font-size: 13.5px;
-        }
-
-        .menu-item:hover, .menu-item.active {
-            background-color: rgba(7, 68, 182, 0.08);
-            color: var(--primary);
-            border-left-color: var(--primary);
-        }
-
-        .menu-item i {
-            width: 20px;
-            font-size: 16px;
-            margin-right: 12px;
-            color: var(--primary);
-        }
-
-        .menu-item span {
-            font-weight: 500;
-        }
-
-        .menu-item .badge {
-            margin-left: auto;
-            background-color: var(--secondary);
-            color: white;
-            border-radius: 50px;
-            padding: 2px 8px;
-            font-size: 11px;
-            font-weight: bold;
-            min-width: 20px;
-            text-align: center;
-        }
-
-        .sidebar-footer {
-            position: absolute;
-            bottom: 0;
-            width: 100%;
-            padding: 15px;
-            text-align: center;
-            border-top: 1px solid var(--border-color);
-        }
-
-                .logout-btn {
-            width: 100%;
-            padding: 12px;
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--primary);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .logout-btn:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-            box-shadow: 0 5px 10px rgba(7, 68, 182, 0.15);
-        }
-
-        /* MAIN CONTENT */
-        .main-content {
-            flex: 1;
-            margin-left: var(--sidebar-width);
-            padding: 0;
-            transition: var(--transition);
-        }
-
-        /* HEADER - CON NOMBRE MÁS GRANDE */
+        /* ===== MENÚ DE LA PRIMERA VISTA - EXACTAMENTE IGUAL ===== */
         .header {
-            height: 70px;
+            height: 90px;
             background-color: white;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 3px 20px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 0 25px;
+            padding: 0 40px;
             position: sticky;
             top: 0;
-            z-index: 99;
+            z-index: 100;
+            border-bottom: 4px solid var(--primary);
         }
 
-        .logo-container {
+        .header-left {
             display: flex;
             align-items: center;
+            gap: 40px;
         }
 
-        .logo-img {
-            height: 45px;
+        .header-logo {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo-img-header {
+            height: 65px;
             width: auto;
             max-width: 180px;
             object-fit: contain;
         }
 
-        .user-profile {
+        .header-nav {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link {
+            padding: 15px 22px;
+            color: #4a5568;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 16px;
+            border-radius: 10px;
+            transition: var(--transition);
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 6px 12px;
-            background-color: var(--light-bg);
-            border-radius: 50px;
-            cursor: pointer;
-            transition: var(--transition);
+            white-space: nowrap;
         }
 
-        .user-profile:hover {
-            background-color: #e9ecef;
+        .nav-link:hover {
+            background-color: #e8f0fe;
+            color: var(--primary);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(7, 68, 182, 0.12);
         }
 
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
+        .nav-link.active {
+            background-color: #e8f0fe;
+            color: var(--primary);
+            box-shadow: 0 8px 16px rgba(7, 68, 182, 0.15);
+            border-radius: 10px;
+            position: relative;
+            font-weight: 700;
+        }
+
+        .nav-link i {
             font-size: 16px;
         }
 
-        .user-info h4 {
-            font-size: 18px;
-            margin-bottom: 2px;
-            font-weight: 700;
-            color: var(--primary);
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 30px;
         }
 
-        .user-info p {
-            font-size: 12px;
-            color: var(--text-muted);
+        .logout-button {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 28px;
+            background-color: white;
+            color: #4a5568;
+            border: none;
+            border-radius: 50px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
-        /* Content Area */
+        .logout-button:hover {
+            background-color: #fee2e2;
+            color: var(--orange-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.15);
+        }
+
+        .logout-button i {
+            font-size: 16px;
+        }
+
+        /* ===== MAIN CONTENT ===== */
+        .main-content {
+            flex: 1;
+            transition: var(--transition);
+        }
+
         .content-wrapper {
-            padding: 20px;
-            min-height: calc(100vh - var(--header-height));
+            padding: 30px 35px;
+            max-width: 100%;
         }
 
-        /* Dashboard Cards */
+        /* ===== ESTILOS DEL CUERPO MEJORADOS - MÁS SOBRIOS ===== */
         .dashboard-card {
             background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            margin-bottom: 1.5rem;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 25px;
             box-shadow: var(--card-shadow);
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             transition: var(--transition);
         }
 
         .dashboard-card:hover {
-            transform: translateY(-2px);
             box-shadow: var(--card-shadow-hover);
         }
 
-        .card-title {
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin-bottom: 1rem;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .card-title i {
-            font-size: 1.2rem;
-        }
-
-        /* Stats Cards */
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin-bottom: 2rem;
-        }
-
-        .stat-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.25rem;
-            box-shadow: var(--card-shadow);
-            border-top: 4px solid var(--primary);
-            text-align: center;
-            transition: var(--transition);
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: var(--card-shadow-hover);
-        }
-
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 15px;
-            font-size: 1.5rem;
-            color: white;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-        }
-
-        .stat-value {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-            line-height: 1;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            font-weight: 500;
-        }
-
-        /* Grado Card */
-        .grado-card {
-            background: white;
-            border-radius: 10px;
-            padding: 1.25rem;
-            margin-bottom: 1rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            border-left: 4px solid var(--primary);
-            transition: var(--transition);
-        }
-
-        .grado-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-        }
-
-        .grado-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-        }
-
-        .grado-title {
-            font-weight: 700;
-            color: var(--primary);
-            font-size: 1rem;
-            margin-bottom: 5px;
-        }
-
-        .grado-nivel {
-            display: inline-block;
-            padding: 3px 10px;
-            background-color: rgba(7, 68, 182, 0.1);
-            color: var(--primary);
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        .grado-info {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-bottom: 5px;
-        }
-
-        .grado-info i {
-            width: 16px;
-            margin-right: 5px;
-            color: var(--primary);
-        }
-
-        /* Form Styles */
-        .form-card {
-            background: white;
-            border-radius: var(--border-radius);
-            padding: 1.5rem;
-            box-shadow: var(--card-shadow);
-            border: 1px solid var(--border-color);
-            margin-bottom: 2rem;
-        }
-
-        .form-header {
-            border-bottom: 2px solid var(--light-bg);
-            padding-bottom: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .form-title {
-            color: var(--primary);
-            font-weight: 600;
-            font-size: 1.1rem;
-            margin: 0;
-        }
-
-        .form-control:focus, .form-select:focus {
-            border-color: var(--primary);
-            box-shadow: 0 0 0 0.25rem rgba(7, 68, 182, 0.15);
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            border: none;
-            padding: 0.5rem 1.5rem;
-            font-weight: 600;
-            transition: var(--transition);
-            border-radius: 8px;
-            font-size: 0.9rem;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 5px 15px rgba(7, 68, 182, 0.3);
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
-        }
-
-        .btn-sm {
-            padding: 0.3rem 0.8rem;
-            font-size: 0.8rem;
-        }
-
-        .btn-outline {
-            background-color: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-muted);
-            padding: 0.3rem 0.8rem;
-            font-size: 0.8rem;
-            border-radius: 6px;
-        }
-
-        .btn-outline:hover {
-            background-color: var(--light-bg);
-            border-color: var(--primary);
-            color: var(--primary);
-        }
-
-        .btn-danger {
-            background-color: var(--danger-color);
-            border: none;
-            color: white;
-            padding: 0.3rem 0.8rem;
-            font-size: 0.8rem;
-            border-radius: 6px;
-        }
-
-        .btn-danger:hover {
-            background-color: #c82333;
-            transform: translateY(-1px);
-        }
-
-        .btn-success {
-            background-color: var(--success-color);
-            border: none;
-            color: white;
-            padding: 0.5rem 1.5rem;
-            font-size: 0.9rem;
-            border-radius: 8px;
-        }
-
-        .btn-success:hover {
-            background-color: #218838;
-            transform: translateY(-1px);
-        }
-
-        .form-label {
-            font-weight: 600;
-            color: #495057;
-            margin-bottom: 0.5rem;
-            font-size: 0.9rem;
-        }
-
-        .required::after {
-            content: " *";
-            color: var(--danger-color);
-        }
-
-        /* Alert Styles */
-        .alert {
-            border-radius: 8px;
-            border: none;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            margin-bottom: 1.5rem;
-        }
-
-        .alert-success {
-            background-color: var(--success-light);
-            color: #155724;
-            border-left: 4px solid var(--success-color);
-        }
-
-        .alert-danger {
-            background-color: var(--danger-light);
-            color: #721c24;
-            border-left: 4px solid var(--danger-color);
-        }
-
-        .alert-warning {
-            background-color: var(--warning-light);
-            color: #856404;
-            border-left: 4px solid var(--warning-color);
-        }
-
-        /* File Preview */
-        .file-preview {
-            background: linear-gradient(135deg, var(--primary-light), var(--primary));
-            color: white;
-            border-radius: 6px;
-            padding: 8px 12px;
-            margin-top: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            animation: fadeIn 0.3s ease;
-            font-size: 0.85rem;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(-5px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        /* Badge */
-        .badge-primary {
-            background-color: var(--primary);
-            color: white;
-            font-size: 0.8rem;
-            padding: 0.4rem 0.8rem;
-            border-radius: 50px;
-            font-weight: 600;
-        }
-
-        /* Action Buttons */
-        .action-buttons {
-            display: flex;
-            gap: 5px;
-            margin-top: 10px;
-        }
-
-        /* Toggle Form Button */
-        .toggle-form-btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            width: 100%;
-            padding: 0.8rem;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            margin-bottom: 1.5rem;
-        }
-
-        .toggle-form-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(7, 68, 182, 0.3);
-        }
-
-        /* Responsive */
-        @media (max-width: 1200px) {
-            .sidebar {
-                width: 250px;
-            }
-            .main-content {
-                margin-left: 250px;
-            }
-        }
-
-        @media (max-width: 992px) {
-            .sidebar {
-                width: 70px;
-            }
-            .sidebar-header h2 span, 
-            .menu-item span, 
-            .menu-item .badge,
-            .sidebar-footer p {
-                display: none;
-            }
-            .sidebar-header {
-                padding: 15px 10px;
-            }
-            .logo-img-sidebar {
-                width: 50px;
-                margin-bottom: 10px;
-            }
-            .menu-item {
-                justify-content: center;
-                padding: 12px;
-            }
-            .menu-item i {
-                margin-right: 0;
-                font-size: 18px;
-            }
-            .main-content {
-                margin-left: 70px;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .sidebar {
-                display: none;
-            }
-            .main-content {
-                margin-left: 0;
-            }
-            .header {
-                height: auto;
-                padding: 15px;
-                flex-direction: column;
-                gap: 15px;
-            }
-            .content-wrapper {
-                padding: 15px;
-            }
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-        }
-
-        @media (max-width: 576px) {
-            .content-wrapper {
-                padding: 10px;
-            }
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            .btn-primary, .btn-success {
-                padding: 0.4rem 1rem;
-                font-size: 0.85rem;
-            }
-        }
-        
-        /* Botón mejorado - Más compacto y atractivo */
-        .btn-add-grado {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 0.6rem 1.2rem;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            text-decoration: none;
-            font-size: 0.85rem;
-        }
-        
-        .btn-add-grado:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(7, 68, 182, 0.3);
-            color: white;
-        }
-        
-        /* Header de la tarjeta principal mejorado */
         .card-header-flex {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
-            gap: 1rem;
+            gap: 20px;
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid var(--light-bg);
         }
-        
-        /* Tarjetas de grados más compactas */
-        .grado-card-compact {
+
+        .card-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 24px;
+            color: var(--primary);
+            font-weight: 700;
+            margin: 0;
+        }
+
+        .card-title i {
+            font-size: 28px;
+            color: var(--primary);
+        }
+
+        /* ===== BOTÓN AGREGAR - ESTILO MÁS SOBRIO ===== */
+        .btn-add-grado {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 14px 28px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            box-shadow: 0 5px 15px rgba(7, 68, 182, 0.25);
+            text-decoration: none;
+            letter-spacing: 0.3px;
+        }
+
+        .btn-add-grado:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(7, 68, 182, 0.35);
+            color: white;
+        }
+
+        .btn-add-grado i {
+            font-size: 16px;
+        }
+
+        /* ===== ESTADÍSTICAS - COLORES SUAVES ===== */
+        .stats-compact {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card-compact {
             background: white;
-            border-radius: 8px;
-            padding: 1rem;
-            margin-bottom: 0.75rem;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.04);
-            border-left: 3px solid var(--primary);
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card-compact::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+
+        /* Colores diferentes para cada estadística */
+        .stat-card-compact:nth-child(1)::before {
+            background: var(--gradient-primary);
+        }
+        .stat-card-compact:nth-child(2)::before {
+            background: var(--orange-color);
+        }
+        .stat-card-compact:nth-child(3)::before {
+            background: var(--blue-color);
+        }
+        .stat-card-compact:nth-child(4)::before {
+            background: var(--green-color);
+        }
+
+        .stat-card-compact:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .stat-icon-compact {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 15px;
+            font-size: 22px;
+            color: white;
+        }
+
+        .stat-card-compact:nth-child(1) .stat-icon-compact {
+            background: var(--gradient-primary);
+        }
+        .stat-card-compact:nth-child(2) .stat-icon-compact {
+            background: var(--orange-color);
+        }
+        .stat-card-compact:nth-child(3) .stat-icon-compact {
+            background: var(--blue-color);
+        }
+        .stat-card-compact:nth-child(4) .stat-icon-compact {
+            background: var(--green-color);
+        }
+
+        .stat-value-compact {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1;
+            margin-bottom: 5px;
+        }
+
+        .stat-label-compact {
+            color: var(--text-muted);
+            font-size: 14px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        /* ===== FORM CARD - ESTILO MÁS LIMPIO ===== */
+        .form-card {
+            background: white;
+            border-radius: 16px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--border-color);
             transition: var(--transition);
         }
-        
+
+        .form-card:hover {
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .form-header {
+            border-bottom: 2px solid var(--light-bg);
+            padding-bottom: 18px;
+            margin-bottom: 25px;
+        }
+
+        .form-title {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 20px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .form-title i {
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .form-label {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .required::after {
+            content: " *";
+            color: var(--orange-dark);
+            font-weight: 700;
+        }
+
+        .form-control, .form-select {
+            border: 2px solid var(--border-color);
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 14px;
+            transition: var(--transition);
+            background: white;
+        }
+
+        .form-control:focus, .form-select:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 4px rgba(7, 68, 182, 0.08);
+            outline: none;
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--green-color) 0%, var(--green-dark) 100%);
+            border: none;
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 10px;
+            color: white;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            box-shadow: 0 5px 15px rgba(16, 185, 129, 0.2);
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(16, 185, 129, 0.3);
+            color: white;
+        }
+
+        .btn-outline {
+            background: white;
+            border: 2px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 12px 28px;
+            font-weight: 600;
+            font-size: 15px;
+            border-radius: 10px;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-outline:hover {
+            background: var(--light-bg);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
+        /* ===== FILE PREVIEW ===== */
+        .file-preview {
+            background: var(--green-light);
+            border: 2px solid var(--green-color);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            animation: slideIn 0.3s ease;
+            color: var(--green-dark);
+            font-weight: 600;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .btn-outline-light {
+            background: white;
+            border: 1.5px solid var(--green-light);
+            color: var(--green-dark);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            transition: var(--transition);
+            font-weight: 600;
+        }
+
+        .btn-outline-light:hover {
+            background: var(--green-color);
+            color: white;
+            border-color: var(--green-color);
+        }
+
+        /* ===== SECCIÓN DE GRADOS ===== */
+        .grados-container {
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid var(--light-bg);
+        }
+
+        .section-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .section-title i {
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        /* ===== GRADO CARD - MÁS PEQUEÑAS Y SOLO COLOR VERDE PARA INFORMACIÓN ===== */
+        .grados-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+
+        .grado-card-compact {
+            background: white;
+            border-radius: 12px;
+            padding: 18px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--border-color);
+            border-left: 5px solid;
+            transition: var(--transition);
+            position: relative;
+            height: fit-content;
+        }
+
         .grado-card-compact:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        /* Solo 3 colores para los bordes izquierdos */
+        .grado-card-compact[data-nivel="Doctorado"] {
+            border-left-color: var(--orange-color);
         }
         
+        .grado-card-compact[data-nivel="Maestría"] {
+            border-left-color: var(--blue-color);
+        }
+        
+        .grado-card-compact[data-nivel="Especialidad"],
+        .grado-card-compact[data-nivel="Licenciatura"] {
+            border-left-color: var(--green-color);
+        }
+
         .grado-header-compact {
             display: flex;
             justify-content: space-between;
             align-items: flex-start;
-            margin-bottom: 0.5rem;
+            margin-bottom: 12px;
+            flex-wrap: wrap;
+            gap: 10px;
         }
-        
+
         .grado-title-compact {
-            font-weight: 600;
-            color: var(--primary);
-            font-size: 0.9rem;
-            margin-bottom: 0.25rem;
+            font-weight: 700;
+            color: #1e293b;
+            font-size: 16px;
+            margin-bottom: 5px;
+            line-height: 1.3;
         }
-        
+
         .grado-nivel-compact {
             display: inline-block;
-            padding: 2px 8px;
-            background-color: rgba(7, 68, 182, 0.1);
-            color: var(--primary);
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        
-        .grado-info-compact {
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            margin-bottom: 0.25rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-        }
-        
-        .grado-info-compact i {
-            width: 14px;
-            color: var(--primary);
-            font-size: 0.75rem;
-        }
-        
-        /* Stats cards más compactas */
-        .stats-compact {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 12px;
-            margin-bottom: 1.5rem;
-        }
-        
-        .stat-card-compact {
-            background: white;
-            border-radius: 8px;
-            padding: 1rem;
-            box-shadow: 0 3px 10px rgba(0,0,0,0.05);
-            border-top: 3px solid var(--primary);
-            transition: var(--transition);
-        }
-        
-        .stat-icon-compact {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 10px;
-            font-size: 1.2rem;
-            color: white;
-            background: linear-gradient(135deg, var(--primary), var(--primary-light));
-        }
-        
-        .stat-value-compact {
-            font-size: 1.5rem;
+            padding: 4px 12px;
+            border-radius: 50px;
+            font-size: 11px;
             font-weight: 700;
-            color: var(--primary);
-            line-height: 1;
-            margin-bottom: 3px;
-            text-align: center;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        /* Colores para los badges de nivel (usando los 3 colores) */
+        .grado-card-compact[data-nivel="Doctorado"] .grado-nivel-compact {
+            background: var(--orange-light);
+            color: var(--orange-dark);
         }
         
-        .stat-label-compact {
+        .grado-card-compact[data-nivel="Maestría"] .grado-nivel-compact {
+            background: var(--blue-light);
+            color: var(--blue-dark);
+        }
+        
+        .grado-card-compact[data-nivel="Especialidad"] .grado-nivel-compact,
+        .grado-card-compact[data-nivel="Licenciatura"] .grado-nivel-compact {
+            background: var(--green-light);
+            color: var(--green-dark);
+        }
+
+        .action-buttons-compact {
+            display: flex;
+            gap: 8px;
+        }
+
+        .btn-action-sm {
+            padding: 6px 12px;
+            font-size: 12px;
+            border-radius: 6px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: var(--transition);
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+        }
+
+        .btn-action-sm.btn-outline {
+            border: 1.5px solid var(--border-color);
+            background: white;
             color: var(--text-muted);
-            font-size: 0.8rem;
-            font-weight: 500;
-            text-align: center;
+            text-decoration: none;
         }
-        
-        /* Mejoras responsive adicionales */
-        @media (max-width: 768px) {
+
+        .btn-action-sm.btn-outline:hover {
+            background: var(--blue-light);
+            border-color: var(--blue-color);
+            color: var(--blue-dark);
+        }
+
+        .btn-action-sm.btn-danger {
+            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+            color: white;
+            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2);
+        }
+
+        .btn-action-sm.btn-danger:hover {
+            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+            box-shadow: 0 6px 14px rgba(249, 115, 22, 0.3);
+            transform: translateY(-2px);
+        }
+
+        /* INFORMACIÓN DEL GRADO - TODO EN VERDE */
+        .grado-info-compact {
+            color: #2d3748;
+            font-size: 13px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 3px 0;
+        }
+
+        .grado-info-compact i {
+            width: 16px;
+            text-align: center;
+            color: var(--green-color);
+            font-size: 13px;
+        }
+
+        .grado-info-compact span {
+            color: #4a5568;
+            line-height: 1.4;
+        }
+
+        .text-primary {
+            color: var(--green-dark) !important;
+            font-weight: 600;
+            text-decoration: none;
+        }
+
+        .text-primary:hover {
+            color: var(--green-color) !important;
+            text-decoration: underline;
+        }
+
+        /* Línea divisoria sutil */
+        .grado-divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, var(--green-light), transparent);
+            margin: 12px 0 10px 0;
+        }
+
+        /* ===== EMPTY STATE ===== */
+        .empty-state {
+            text-align: center;
+            padding: 60px 30px;
+            background: var(--light-bg);
+            border-radius: 16px;
+            border: 2px dashed var(--border-color);
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .empty-state h5 {
+            color: #1e293b;
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 15px;
+            margin-bottom: 0;
+        }
+
+        /* ===== ALERTAS ===== */
+        .alert {
+            padding: 16px 22px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: flex-start;
+            gap: 16px;
+            animation: slideIn 0.3s ease;
+            border: none;
+            border-left: 6px solid;
+            font-size: 15px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .alert-success {
+            background: var(--green-light);
+            border-color: var(--green-color);
+            color: var(--green-dark);
+        }
+
+        .alert-danger {
+            background: var(--orange-light);
+            border-color: var(--orange-color);
+            color: var(--orange-dark);
+        }
+
+        .alert i {
+            font-size: 20px;
+        }
+
+        .btn-close {
+            background: transparent;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            opacity: 0.6;
+            transition: var(--transition);
+            color: inherit;
+            padding: 4px;
+        }
+
+        .btn-close:hover {
+            opacity: 1;
+            transform: scale(1.1);
+        }
+
+        /* ===== RESPONSIVE ===== */
+        @media (max-width: 1200px) {
+            .header {
+                padding: 0 25px;
+                height: auto;
+                flex-direction: column;
+                gap: 15px;
+                padding: 15px;
+            }
+            
+            .header-left, .header-right {
+                width: 100%;
+                justify-content: space-between;
+            }
+            
+            .header-nav {
+                overflow-x: auto;
+                padding-bottom: 10px;
+                width: 100%;
+            }
+            
+            .nav-link {
+                padding: 12px 16px;
+                font-size: 15px;
+            }
+            
+            .content-wrapper {
+                padding: 20px 25px;
+            }
+        }
+
+        @media (max-width: 992px) {
+            .stats-compact {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
             .card-header-flex {
                 flex-direction: column;
-                align-items: stretch;
+                align-items: flex-start;
             }
             
             .btn-add-grado {
                 width: 100%;
                 justify-content: center;
             }
+            
+            .grados-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
         }
-        
-        /* Contenedor de grados con mejor espaciado */
-        .grados-container {
-            margin-top: 1.5rem;
-            padding-top: 1rem;
-            border-top: 1px solid var(--border-color);
+
+        @media (max-width: 768px) {
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .content-wrapper {
+                padding: 15px;
+            }
+            
+            .dashboard-card {
+                padding: 20px;
+            }
+            
+            .stats-compact {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+            
+            .stat-value-compact {
+                font-size: 28px;
+            }
+            
+            .grado-header-compact {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .action-buttons-compact {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            
+            .header-right {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            
+            .logout-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
+            .grados-grid {
+                grid-template-columns: 1fr;
+            }
         }
-        
-        /* Título de sección mejorado */
-        .section-title {
-            font-size: 0.9rem;
-            font-weight: 600;
-            color: var(--primary);
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        
-        /* Estado vacío mejorado */
-        .empty-state {
-            text-align: center;
-            padding: 2rem 1rem;
-            background: rgba(248, 249, 250, 0.5);
-            border-radius: 8px;
-            border: 1px dashed var(--border-color);
-        }
-        
-        .empty-state i {
-            font-size: 2rem;
-            color: var(--text-muted);
-            margin-bottom: 0.75rem;
-        }
-        
-        .empty-state h5 {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            margin-bottom: 0.5rem;
-        }
-        
-        .empty-state p {
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            margin-bottom: 0;
-        }
-        
-        /* Acciones compactas */
-        .action-buttons-compact {
-            display: flex;
-            gap: 4px;
-        }
-        
-        .btn-action-sm {
-            padding: 0.2rem 0.5rem;
-            font-size: 0.75rem;
-            border-radius: 4px;
+
+        @media (max-width: 480px) {
+            .content-wrapper {
+                padding: 12px;
+            }
+            
+            .dashboard-card {
+                padding: 18px;
+            }
+            
+            .card-title {
+                font-size: 20px;
+            }
+            
+            .btn-add-grado {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+            
+            .form-card {
+                padding: 18px;
+            }
+            
+            .form-title {
+                font-size: 18px;
+            }
+            
+            .btn-success, .btn-outline {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .d-flex {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .header-logo {
+                gap: 12px;
+            }
+            
+            .logo-img-header {
+                height: 50px;
+            }
         }
     </style>
 </head>
 <body>
-    <!-- SIDEBAR BLANCO CON LÍNEA AZUL (sin cambios) -->
-    <div class="sidebar">
-        <div class="sidebar-header">
-            <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img-sidebar">
-            <h2><i class="fas fa-chalkboard-teacher"></i> <span>GEPROC</span></h2>
-        </div>
-        
-        <div class="sidebar-menu">
-            <a href="{{ route('profesor.dashboard') }}" class="menu-item">
-                <i class="fas fa-tachometer-alt"></i>
-                <span>Inicio</span>
-            </a>
-            <a href="" class="menu-item">
-                <i class="fas fa-user"></i>
-                <span>Mi Perfil</span>
-            </a>
-            <a href="{{ route('profesor.dashboard') }}" class="menu-item">
-                <i class="fas fa-folder"></i>
-                <span>Mis Documentos</span>
-            </a>
-            <a href="" class="menu-item active">
-                <i class="fas fa-graduation-cap"></i>
-                <span>Grados Académicos</span>
-            </a>
-            <a href="" class="menu-item">
-                <i class="fas fa-cog"></i>
-                <span>Configuración</span>
-            </a>
-        </div>
-        
-        <div class="sidebar-footer">
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Cerrar Sesión</span>
-                </button>
-            </form>
-        </div>
-    </div>
-
     <!-- MAIN CONTENT -->
     <div class="main-content">
-        <!-- HEADER CON NOMBRE -->
+        <!-- HEADER SUPERIOR - EXACTAMENTE IGUAL A LA PRIMERA VISTA -->
         <div class="header">
-            <div class="user-profile">
-                <div class="user-avatar">
-                    {{ substr(auth()->user()->name, 0, 1) }}{{ substr(auth()->user()->name, strpos(auth()->user()->name, ' ') + 1, 1) ?? '' }}
+            <div class="header-left">
+                <div class="header-logo">
+                    <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img-header">
                 </div>
-                <div class="user-info">
-                    <h4>{{ auth()->user()->name }}</h4>
-                    <p>{{ auth()->user()->email }}</p>
+                <div class="header-nav">
+                    <a href="{{ route('profesor.dashboard') }}" class="nav-link">
+                        <i class="fas fa-home"></i> Inicio
+                    </a>
+                    <a href="{{ route('profesor.documentos') }}" class="nav-link">
+                        <i class="fas fa-folder"></i> Documentos
+                    </a>
+                    <a href="{{ route('maestros.grados.create') }}" class="nav-link active">
+                        <i class="fas fa-graduation-cap"></i> Grados
+                    </a>
+                    <a href="{{ route('profesor.dashboard') }}#perfil" class="nav-link">
+                        <i class="fas fa-user"></i> Perfil
+                    </a>
                 </div>
+            </div>
+            
+            <div class="header-right">
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit" class="logout-button">
+                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                    </button>
+                </form>
             </div>
         </div>
 
@@ -910,21 +932,26 @@
         <div class="content-wrapper">
             @if(session('success'))
                 <div class="alert alert-success alert-dismissible fade show" role="alert">
-                    <i class="fas fa-check-circle me-2"></i> {{ session('success') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <i class="fas fa-check-circle"></i>
+                    <div style="flex: 1;">{{ session('success') }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             @endif
 
             @if(session('error'))
                 <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                    <i class="fas fa-exclamation-circle me-2"></i> {{ session('error') }}
-                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    <i class="fas fa-exclamation-circle"></i>
+                    <div style="flex: 1;">{{ session('error') }}</div>
+                    <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
             @endif
 
             <!-- Dashboard de Grados -->
             <div class="dashboard-card">
-                <!-- Header mejorado con botón más atractivo -->
                 <div class="card-header-flex">
                     <div class="card-title">
                         <i class="fas fa-graduation-cap"></i> Mis Grados Académicos
@@ -935,12 +962,12 @@
                     </button>
                 </div>
                 
-                <!-- Estadísticas compactas -->
                 @php
                     $totalGrados = $gradosAcademicos->count();
                     $doctorados = $gradosAcademicos->where('nivel', 'Doctorado')->count();
                     $maestrias = $gradosAcademicos->where('nivel', 'Maestría')->count();
                     $licenciaturas = $gradosAcademicos->where('nivel', 'Licenciatura')->count();
+                    $especialidades = $gradosAcademicos->where('nivel', 'Especialidad')->count();
                 @endphp
                 
                 <div class="stats-compact">
@@ -972,8 +999,8 @@
                         <div class="stat-icon-compact">
                             <i class="fas fa-user-graduate"></i>
                         </div>
-                        <div class="stat-value-compact">{{ $licenciaturas }}</div>
-                        <div class="stat-label-compact">Licenciaturas</div>
+                        <div class="stat-value-compact">{{ $licenciaturas + $especialidades }}</div>
+                        <div class="stat-label-compact">Lic/Esp</div>
                     </div>
                 </div>
 
@@ -981,28 +1008,31 @@
                 <div class="form-card" id="gradoFormContainer" style="display: none;">
                     <div class="form-header">
                         <h5 class="form-title">
-                            <i class="fas fa-plus-circle me-2"></i> Agregar Nuevo Grado Académico
+                            <i class="fas fa-plus-circle"></i> Agregar Nuevo Grado Académico
                         </h5>
                     </div>
                     
                     @if($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <h6 class="alert-heading">
-                                <i class="fas fa-exclamation-triangle me-2"></i>Error en el formulario
-                            </h6>
-                            <ul class="mb-0" style="font-size: 0.9rem;">
-                                @foreach($errors->all() as $error)
-                                    <li>{{ $error }}</li>
-                                @endforeach
-                            </ul>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div style="flex: 1;">
+                                <strong>Error en el formulario</strong>
+                                <ul class="mb-0 mt-2" style="font-size: 14px;">
+                                    @foreach($errors->all() as $error)
+                                        <li>{{ $error }}</li>
+                                    @endforeach
+                                </ul>
+                            </div>
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close">
+                                <i class="fas fa-times"></i>
+                            </button>
                         </div>
                     @endif
 
                     <form action="{{ route('maestros.grados.store') }}" method="POST" enctype="multipart/form-data" id="gradoForm">
                         @csrf
                         
-                        <input type="hidden" name="maestro_id" value="{{ $maestro->id }}">
+                        <input type="hidden" name="maestro_id" value="{{ $maestro->id ?? '' }}">
 
                         <div class="row">
                             <div class="col-md-6">
@@ -1089,7 +1119,7 @@
                                     <small class="text-muted">Formatos: PDF, JPG, PNG. Máx: 2MB</small>
                                     <div id="filePreview" class="file-preview" style="display: none;">
                                         <span><i class="fas fa-file me-2"></i><span id="fileName"></span></span>
-                                        <button type="button" class="btn btn-sm btn-outline-light" onclick="clearFile()">
+                                        <button type="button" class="btn-outline-light" onclick="clearFile()">
                                             <i class="fas fa-times"></i>
                                         </button>
                                     </div>
@@ -1109,81 +1139,84 @@
                         </div>
 
                         <div class="d-flex justify-content-between mt-3">
-                            <button type="button" class="btn btn-outline" id="cancelFormBtn">
-                                <i class="fas fa-times me-2"></i> Cancelar
+                            <button type="button" class="btn-outline" id="cancelFormBtn">
+                                <i class="fas fa-times"></i> Cancelar
                             </button>
-                            <button type="submit" class="btn btn-success">
-                                <i class="fas fa-save me-2"></i> Guardar Grado
+                            <button type="submit" class="btn-success">
+                                <i class="fas fa-save"></i> Guardar Grado
                             </button>
                         </div>
                     </form>
                 </div>
 
-                <!-- Lista de Grados Académicos - Versión compacta -->
+                <!-- Lista de Grados Académicos - Ahora en grid con tarjetas más pequeñas -->
                 <div class="grados-container">
                     <div class="section-title">
                         <i class="fas fa-list"></i> Grados Registrados
                     </div>
                     
                     @if($gradosAcademicos->count() > 0)
-                        @foreach($gradosAcademicos as $grado)
-                            <div class="grado-card-compact">
-                                <div class="grado-header-compact">
-                                    <div>
-                                        <div class="grado-title-compact">{{ $grado->nombre_titulo }}</div>
-                                        <span class="grado-nivel-compact">{{ $grado->nivel }}</span>
-                                    </div>
-                                    <div class="action-buttons-compact">
-                                        <a href="{{ route('maestros.grados.edit', $grado->id) }}" class="btn btn-outline btn-action-sm">
-                                            <i class="fas fa-edit"></i>
-                                        </a>
-                                        <form action="{{ route('maestros.grados.destroy', $grado->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-action-sm" onclick="return confirm('¿Está seguro de eliminar este grado académico?')">
-                                                <i class="fas fa-trash"></i>
-                                            </button>
-                                        </form>
-                                    </div>
-                                </div>
-                                
-                                <div class="grado-info-compact">
-                                    <i class="fas fa-university"></i>
-                                    <span>{{ $grado->institucion ?? 'Sin institución registrada' }}</span>
-                                </div>
-                                
-                                <div class="grado-info-compact">
-                                    <i class="fas fa-calendar"></i>
-                                    <span>Año: {{ $grado->ano_obtencion ?? 'No especificado' }}</span>
-                                </div>
-                                
-                                @if($grado->cedula_profesional)
-                                    <div class="grado-info-compact">
-                                        <i class="fas fa-id-card"></i>
-                                        <span>Cédula: {{ $grado->cedula_profesional }}</span>
-                                    </div>
-                                @endif
-                                
-                                @if($grado->documento)
-                                    <div class="grado-info-compact">
-                                        <i class="fas fa-file"></i>
-                                        <span>
-                                            Documento: 
-                                            <a href="{{ Storage::url($grado->documento) }}" target="_blank" class="text-primary">
-                                                Ver
+                        <div class="grados-grid">
+                            @foreach($gradosAcademicos as $grado)
+                                <div class="grado-card-compact" data-nivel="{{ $grado->nivel }}">
+                                    <div class="grado-header-compact">
+                                        <div>
+                                            <div class="grado-title-compact">{{ Str::limit($grado->nombre_titulo, 40) }}</div>
+                                            <span class="grado-nivel-compact">{{ $grado->nivel }}</span>
+                                        </div>
+                                        <div class="action-buttons-compact">
+                                            <a href="{{ route('maestros.grados.edit', $grado->id) }}" class="btn-action-sm btn-outline">
+                                                <i class="fas fa-edit"></i>
                                             </a>
-                                        </span>
+                                            <form action="{{ route('maestros.grados.destroy', $grado->id) }}" method="POST" class="d-inline">
+                                                @csrf
+                                                @method('DELETE')
+                                                <button type="submit" class="btn-action-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar este grado académico?')">
+                                                    <i class="fas fa-trash"></i>
+                                                </button>
+                                            </form>
+                                        </div>
                                     </div>
-                                @endif
-                                
-                                @if($grado->observaciones)
+                                    
+                                    <div class="grado-divider"></div>
+                                    
                                     <div class="grado-info-compact">
-                                        <i class="fas fa-comment"></i>
-                                        <span>{{ Str::limit($grado->observaciones, 80) }}</span>
+                                        <i class="fas fa-university"></i>
+                                        <span>{{ $grado->institucion ?? 'Sin institución' }}</span>
                                     </div>
-                                @endif
-                            </div>
-                        @endforeach
+                                    
+                                    <div class="grado-info-compact">
+                                        <i class="fas fa-calendar"></i>
+                                        <span>Año: {{ $grado->ano_obtencion ?? 'N/E' }}</span>
+                                    </div>
+                                    
+                                    @if($grado->cedula_profesional)
+                                        <div class="grado-info-compact">
+                                            <i class="fas fa-id-card"></i>
+                                            <span>Cédula: {{ Str::limit($grado->cedula_profesional, 12) }}</span>
+                                        </div>
+                                    @endif
+                                    
+                                    @if($grado->documento)
+                                        <div class="grado-info-compact">
+                                            <i class="fas fa-file"></i>
+                                            <span>
+                                                <a href="{{ Storage::url($grado->documento) }}" target="_blank" class="text-primary">
+                                                    Ver archivo <i class="fas fa-external-link-alt ms-1" style="font-size: 10px;"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    @endif
+                                    
+                                    @if($grado->observaciones)
+                                        <div class="grado-info-compact">
+                                            <i class="fas fa-comment"></i>
+                                            <span>{{ Str::limit($grado->observaciones, 35) }}</span>
+                                        </div>
+                                    @endif
+                                </div>
+                            @endforeach
+                        </div>
                     @else
                         <div class="empty-state">
                             <i class="fas fa-graduation-cap"></i>
@@ -1228,10 +1261,10 @@
         });
 
         // Limpiar selección de archivo
-        function clearFile() {
+        window.clearFile = function() {
             document.getElementById('documento').value = '';
             document.getElementById('filePreview').style.display = 'none';
-        }
+        };
 
         // Validación de año actual
         document.getElementById('ano_obtencion').addEventListener('input', function(e) {
@@ -1281,3 +1314,4 @@
     </script>
 </body>
 </html>
+

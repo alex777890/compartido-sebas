@@ -507,22 +507,8 @@
                                         <span class="coordinacion-badge">
                                             {{ $coordinacion->maestros_count }} Maestro(s)
                                         </span>
-                                        @if($coordinacion->activa)
-                                            <span class="coordinacion-badge coordinacion-badge-secondary">
-                                                Activa
-                                            </span>
-                                        @else
-                                            <span class="coordinacion-badge" style="background: #6c757d;">
-                                                Inactiva
-                                            </span>
-                                        @endif
+
                                     </div>
-                                    <p class="mb-2"><strong>Descripción:</strong> {{ $coordinacion->descripcion ?? 'Sin descripción' }}</p>
-                                    <p class="mb-2"><strong>Fecha de creación:</strong> {{ $coordinacion->created_at->format('d/m/Y') }}</p>
-                                    <p class="mb-0"><strong>Estado:</strong> 
-                                        <span class="badge {{ $coordinacion->activa ? 'bg-success' : 'bg-secondary' }}">
-                                            {{ $coordinacion->activa ? 'Activa' : 'Inactiva' }}
-                                        </span>
                                     </p>
                                 </div>
                                 <div class="col-md-4">
@@ -531,10 +517,7 @@
                                             <i class="fas fa-eye"></i> Ver Maestros
                                         </a>
                                         <a href="{{ route('coordinaciones.estadisticas', $coordinacion->id) }}" class="btn btn-info">
-                                            <i class="fas fa-chart-bar"></i> Estatus
-                                        </a>
-                                        <a href="{{ route('coordinaciones.edit', $coordinacion->id) }}" class="btn btn-outline-secondary">
-                                            <i class="fas fa-edit"></i> Editar
+                                            <i class="fas fa-chart-bar"></i> Estadisticas
                                         </a>
                                     </div>
                                 </div>

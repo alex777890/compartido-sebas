@@ -9,6 +9,7 @@
         :root {
             --primary: #0744b6ff;
             --primary-light: #3a6bd3;
+            --primary-soft: #e8f0fe;
             --secondary: #33CAE6;
             --accent: #28a745;
             --light-bg: #F8F9FA;
@@ -31,7 +32,7 @@
             --purple-light: #ede9fe;
             --cyan-color: #06b6d4;
             --cyan-light: #cffafe;
-            --border-radius: 8px;
+            --border-radius: 12px;
             --sidebar-width: 280px;
             --header-height: 80px;
             --gradient-primary: linear-gradient(135deg, #0744b6ff 0%, #3a6bd3 100%);
@@ -58,6 +59,7 @@
             font-size: 15px;
         }
 
+        /* ===== MENÚ DE LA PRIMERA VISTA ===== */
         /* HEADER SUPERIOR MEJORADO Y MÁS GRANDE */
         .header {
             height: 90px;
@@ -112,10 +114,22 @@
             white-space: nowrap;
         }
 
-        .nav-link:hover, .nav-link.active {
-            background-color: rgba(7, 68, 182, 0.12);
+        /* HOVER CON AZUL MUY CLARO */
+        .nav-link:hover {
+            background-color: #e8f0fe;
             color: var(--primary);
             transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(7, 68, 182, 0.12);
+        }
+
+        /* ESTILO PARA EL ENLACE ACTIVO - SIN LÍNEA AZUL INFERIOR */
+        .nav-link.active {
+            background-color: #e8f0fe;
+            color: var(--primary);
+            box-shadow: 0 8px 16px rgba(7, 68, 182, 0.15);
+            border-radius: 10px;
+            position: relative;
+            font-weight: 700;
         }
 
         .nav-link i {
@@ -126,6 +140,36 @@
             display: flex;
             align-items: center;
             gap: 30px;
+        }
+
+        /* LETRERO DE BIENVENIDA - COMPACTO Y ELEGANTE */
+        .welcome-message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 18px;
+            background: white;
+            border: 1.5px solid var(--success-color);
+            border-radius: 40px;
+            color: var(--success-color);
+            font-weight: 600;
+            font-size: 15px;
+            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.1);
+            transition: var(--transition);
+            letter-spacing: 0.3px;
+        }
+
+        .welcome-message:hover {
+            background: white;
+            border-color: var(--success-color);
+            color: var(--success-color);
+            transform: translateY(-1px);
+            box-shadow: 0 5px 12px rgba(16, 185, 129, 0.15);
+        }
+
+        .welcome-message i {
+            font-size: 18px;
+            color: var(--success-color);
         }
 
         .user-profile {
@@ -165,45 +209,288 @@
         }
 
         .user-info h4 {
-            font-size: 16px;
+            font-size: 18px;
             font-weight: 700;
-            color: #2d3748;
+            color: var(--primary);
             margin-bottom: 4px;
             white-space: nowrap;
         }
 
         .user-info p {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-muted);
             white-space: nowrap;
         }
 
-        /* BOTÓN DE CERRAR SESIÓN BLANCO */
+        /* BOTÓN DE CERRAR SESIÓN - SIN CONTORNO AZUL, TOTALMENTE BLANCO */
         .logout-button {
             display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 24px;
-            background-color: white; /* CAMBIADO A BLANCO */
-            color: var(--primary);
-            border: 2px solid var(--primary);
-            border-radius: 10px;
+            padding: 12px 28px;
+            background-color: white;
+            color: #4a5568;
+            border: none;
+            border-radius: 50px;
             font-weight: 600;
             font-size: 15px;
             cursor: pointer;
             transition: var(--transition);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
         }
 
         .logout-button:hover {
-            background-color: var(--primary); /* CAMBIA A AZUL AL HOVER */
-            color: white;
+            background-color: #fee2e2;
+            color: var(--danger-color);
             transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(7, 68, 182, 0.2);
+            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.15);
+        }
+
+        .logout-button i {
+            font-size: 16px;
         }
 
         .content-wrapper {
-            padding: 35px 40px;
+            padding: 30px 35px;
             max-width: 100%;
+        }
+
+        /* ===== ESTILOS DEL DASHBOARD APLICADOS A LA VISTA DOCUMENTOS ===== */
+        
+        /* ALERTAS DEL SISTEMA */
+        .system-alert {
+            padding: 15px 20px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background-color: #f8f9fa;
+            border-left: 6px solid var(--primary);
+            animation: slideIn 0.3s ease;
+            box-shadow: var(--card-shadow);
+        }
+
+        .system-alert i {
+            font-size: 22px;
+            color: var(--primary);
+        }
+
+        .system-alert-content h4 {
+            margin: 0 0 4px 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .system-alert-content p {
+            margin: 0;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* PERIODO ALERT - MÁS COMPACTO */
+        .periodo-alert {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px 22px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+            background-color: white;
+            border: 2px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .periodo-alert:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .periodo-content {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .periodo-icon {
+            font-size: 28px;
+            flex-shrink: 0;
+        }
+
+        .periodo-content h3 {
+            margin: 0 0 5px 0;
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e293b;
+        }
+
+        .periodo-content p {
+            margin: 0;
+            font-size: 15px;
+            color: var(--text-muted);
+        }
+
+        .periodo-status {
+            padding: 8px 16px;
+            border-radius: 50px;
+            font-weight: 700;
+            font-size: 14px;
+            letter-spacing: 0.5px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .status-active {
+            background: var(--gradient-success);
+            color: white;
+        }
+
+        .status-inactive {
+            background: var(--gradient-danger);
+            color: white;
+        }
+
+        /* CARD GRID - MÁS COMPACTO */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 20px;
+            margin-bottom: 25px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: 14px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            transition: var(--transition);
+            border: 2px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            font-size: 22px;
+            color: white;
+            box-shadow: 0 5px 10px rgba(0,0,0,0.1);
+        }
+
+        .card-icon.req {
+            background: var(--gradient-primary);
+        }
+
+        .card-icon.sub {
+            background: var(--gradient-success);
+        }
+
+        .card-icon.fal {
+            background: var(--gradient-warning);
+        }
+
+        .card-icon.pro {
+            background: var(--gradient-info);
+        }
+
+        .card-title h3 {
+            font-size: 15px;
+            color: var(--text-muted);
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .card-value {
+            font-size: 32px;
+            font-weight: 800;
+            color: #1e293b;
+            line-height: 1;
+        }
+
+        .card-footer {
+            margin-top: 10px;
+            color: var(--text-muted);
+            font-size: 13px;
+            font-weight: 500;
+        }
+
+        /* SECTION STYLES - MÁS COMPACTO */
+        .section {
+            background-color: white;
+            border-radius: 16px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .section:hover {
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--light-bg);
+        }
+
+        .section-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            color: var(--primary);
+            font-weight: 700;
+        }
+
+        .section-title i {
+            font-size: 22px;
         }
 
         /* PANEL DE CONTROL SUPERIOR */
@@ -240,17 +527,18 @@
             align-items: center;
         }
 
+        /* BOTÓN VOLVER AL PANEL - MÁS PEQUEÑO */
         .btn-back {
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            padding: 14px 28px;
+            gap: 8px;
+            padding: 10px 20px;
             background: white;
             color: var(--primary);
             border: 2px solid var(--primary);
-            border-radius: 10px;
+            border-radius: 8px;
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             cursor: pointer;
             transition: var(--transition);
             text-decoration: none;
@@ -273,6 +561,8 @@
             gap: 18px;
             border-left: 6px solid transparent;
             animation: slideIn 0.3s ease;
+            box-shadow: var(--card-shadow);
+            font-size: 15px;
         }
 
         .alert-success {
@@ -304,27 +594,31 @@
             margin-top: 2px;
         }
 
-        @keyframes slideIn {
-            from {
-                opacity: 0;
-                transform: translateY(-10px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+        .alert ul {
+            margin-top: 10px;
+            margin-left: 18px;
+            font-size: 14px;
         }
 
-        /* PANEL DE PERIODO */
+        .alert ul li {
+            margin-bottom: 4px;
+        }
+
+        /* PANEL DE PERIODO - REDUCIDO */
         .periodo-panel {
             background: white;
-            border-radius: 18px;
-            padding: 35px;
-            margin-bottom: 35px;
-            box-shadow: 0 6px 20px rgba(7, 68, 182, 0.12);
-            border: 2px solid #e2e8f0;
+            border-radius: 16px;
+            padding: 25px 30px;
+            margin-bottom: 30px;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--border-color);
             position: relative;
             overflow: hidden;
+            transition: var(--transition);
+        }
+
+        .periodo-panel:hover {
+            box-shadow: var(--card-shadow-hover);
         }
 
         .periodo-panel::before {
@@ -333,7 +627,7 @@
             top: 0;
             left: 0;
             right: 0;
-            height: 6px;
+            height: 4px;
             background: var(--gradient-primary);
         }
 
@@ -341,52 +635,52 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             flex-wrap: wrap;
-            gap: 25px;
+            gap: 15px;
         }
 
         .periodo-title {
             display: flex;
             align-items: center;
-            gap: 25px;
+            gap: 16px;
         }
 
         .periodo-icon {
-            width: 60px;
-            height: 60px;
-            border-radius: 14px;
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 26px;
+            font-size: 22px;
             color: white;
             background: var(--gradient-primary);
-            box-shadow: 0 6px 15px rgba(7, 68, 182, 0.25);
+            box-shadow: 0 4px 10px rgba(7, 68, 182, 0.2);
         }
 
         .periodo-text h3 {
-            font-size: 22px;
+            font-size: 18px;
             font-weight: 700;
             color: #1e293b;
-            margin-bottom: 10px;
+            margin-bottom: 6px;
         }
 
         .periodo-text p {
-            color: #64748b;
-            font-size: 16px;
+            color: var(--text-muted);
+            font-size: 14px;
             margin: 0;
         }
 
         .periodo-badge {
-            padding: 12px 26px;
+            padding: 8px 18px;
             border-radius: 30px;
-            font-weight: 700;
-            font-size: 15px;
+            font-weight: 600;
+            font-size: 13px;
             display: inline-flex;
             align-items: center;
-            gap: 12px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
         .badge-active {
@@ -404,53 +698,53 @@
             color: white;
         }
 
-        /* BARRA DE PROGRESO GENERAL */
+        /* BARRA DE PROGRESO GENERAL - MÁS COMPACTA */
         .progress-overview {
-            background: #f8fafc;
-            border-radius: 12px;
-            padding: 30px;
-            margin-bottom: 30px;
-            border: 2px solid #e2e8f0;
+            background: var(--light-bg);
+            border-radius: 10px;
+            padding: 20px 25px;
+            border: 1px solid var(--border-color);
         }
 
         .progress-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 25px;
+            margin-bottom: 15px;
         }
 
         .progress-title {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 700;
             color: #1e293b;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
         .progress-title i {
             color: var(--primary);
+            font-size: 16px;
         }
 
         .progress-percentage {
-            font-size: 32px;
+            font-size: 24px;
             font-weight: 800;
             color: var(--primary);
         }
 
         .progress-bar-container {
-            height: 16px;
+            height: 10px;
             background: #e2e8f0;
-            border-radius: 8px;
+            border-radius: 5px;
             overflow: hidden;
-            margin-bottom: 15px;
+            margin-bottom: 10px;
         }
 
         .progress-bar {
             height: 100%;
             background: var(--gradient-primary);
-            border-radius: 8px;
+            border-radius: 5px;
             transition: width 1s ease-in-out;
             position: relative;
             overflow: hidden;
@@ -489,42 +783,42 @@
         .progress-stats {
             display: flex;
             justify-content: space-between;
-            font-size: 15px;
-            color: #64748b;
+            font-size: 13px;
+            color: var(--text-muted);
             font-weight: 500;
         }
 
         .progress-details {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 25px;
-            margin-top: 25px;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 15px;
+            margin-top: 20px;
         }
 
         .detail-item {
             background: white;
-            padding: 18px 24px;
-            border-radius: 12px;
-            border: 2px solid #e2e8f0;
+            padding: 12px 16px;
+            border-radius: 10px;
+            border: 1px solid var(--border-color);
             display: flex;
             align-items: center;
-            gap: 18px;
+            gap: 12px;
             transition: var(--transition);
         }
 
         .detail-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            transform: translateY(-2px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.06);
         }
 
         .detail-icon {
-            width: 45px;
-            height: 45px;
-            border-radius: 12px;
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 18px;
+            font-size: 16px;
             color: white;
             flex-shrink: 0;
         }
@@ -546,17 +840,52 @@
         }
 
         .detail-content h4 {
-            font-size: 14px;
-            color: #64748b;
-            margin-bottom: 6px;
+            font-size: 12px;
+            color: var(--text-muted);
+            margin-bottom: 4px;
             font-weight: 500;
         }
 
         .detail-content p {
-            font-size: 18px;
+            font-size: 15px;
             font-weight: 700;
             color: #1e293b;
             margin: 0;
+        }
+
+        /* SECCIÓN DE ENVÍO SUPERIOR */
+        .submit-section-top {
+            margin-bottom: 25px;
+            text-align: right;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+        }
+
+        .submit-button {
+            padding: 14px 40px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 10px;
+            font-weight: 700;
+            font-size: 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            box-shadow: 0 4px 12px rgba(7, 68, 182, 0.2);
+        }
+
+        .submit-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(7, 68, 182, 0.3);
+            background: linear-gradient(135deg, #1d4ed8 0%, #0744b6ff 100%);
+        }
+
+        .submit-button i {
+            font-size: 16px;
         }
 
         /* TABLA DE DOCUMENTOS - MÁS COMPACTA PERO ATRACTIVA */
@@ -564,14 +893,18 @@
             background: white;
             border-radius: 14px;
             overflow: hidden;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-            border: 2px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--border-color);
             margin-bottom: 35px;
             max-width: 100%;
             overflow-x: auto;
+            transition: var(--transition);
         }
 
-        /* QUITAR BARRAS DE DESPLAZAMIENTO VISIBLES */
+        .documents-table-container:hover {
+            box-shadow: var(--card-shadow-hover);
+        }
+
         .documents-table-container::-webkit-scrollbar {
             height: 6px;
             width: 6px;
@@ -590,7 +923,7 @@
         .table-header {
             padding: 22px 30px;
             background: #f8fafc;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -611,7 +944,7 @@
 
         .table-info {
             font-size: 16px;
-            color: #64748b;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 15px;
@@ -622,7 +955,7 @@
             width: 100%;
             border-collapse: collapse;
             font-size: 15px;
-            min-width: 1100px; /* REDUCIDO PARA MENOS SCROLL */
+            min-width: 1100px;
         }
 
         .documents-table thead {
@@ -637,7 +970,7 @@
             text-align: left;
             font-weight: 700;
             color: #475569;
-            border-bottom: 2px solid #e2e8f0;
+            border-bottom: 2px solid var(--border-color);
             font-size: 15px;
             text-transform: uppercase;
             letter-spacing: 0.5px;
@@ -652,7 +985,7 @@
         }
 
         .documents-table tbody tr {
-            border-bottom: 1px solid #f1f5f9;
+            border-bottom: 1px solid var(--border-color);
             transition: var(--transition);
         }
 
@@ -683,7 +1016,7 @@
 
         /* COLUMNAS ESPECÍFICAS - MÁS COMPACTAS */
         .document-name-cell {
-            min-width: 280px; /* REDUCIDO */
+            min-width: 280px;
             position: sticky;
             left: 0;
             background: inherit;
@@ -746,7 +1079,7 @@
         }
 
         .document-desc {
-            color: #64748b;
+            color: var(--text-muted);
             font-size: 13px;
             display: -webkit-box;
             -webkit-line-clamp: 1;
@@ -759,7 +1092,7 @@
 
         /* ESTADO DEL DOCUMENTO */
         .status-cell {
-            min-width: 140px; /* REDUCIDO */
+            min-width: 140px;
             width: 140px;
         }
 
@@ -796,9 +1129,9 @@
         }
 
         .status-revision {
-            background: #dbeafe;
-            color: #1e40af;
-            border: 1px solid #bfdbfe;
+            background: #fef3c7;
+            color: #92400e;
+            border: 1px solid #fde68a;
         }
 
         .status-faltante {
@@ -816,12 +1149,12 @@
         .indicator-aprobado { background: #10b981; }
         .indicator-rechazado { background: #ef4444; }
         .indicator-pendiente { background: #f59e0b; }
-        .indicator-revision { background: #3b82f6; }
+        .indicator-revision { background: #f59e0b; }
         .indicator-faltante { background: #8b5cf6; }
 
         /* INFORMACIÓN DEL DOCUMENTO */
         .info-cell {
-            min-width: 200px; /* REDUCIDO */
+            min-width: 200px;
             width: 200px;
         }
 
@@ -864,7 +1197,7 @@
         }
 
         .info-label {
-            color: #64748b;
+            color: var(--text-muted);
             min-width: 70px;
             font-size: 12px;
         }
@@ -881,7 +1214,7 @@
 
         /* ACCIONES */
         .actions-cell {
-            min-width: 180px; /* REDUCIDO */
+            min-width: 180px;
             width: 180px;
         }
 
@@ -910,7 +1243,7 @@
         .btn-view {
             background: #f8fafc;
             color: #475569;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
 
         .btn-view:hover {
@@ -958,7 +1291,7 @@
 
         /* ÁREA DE SUBIDA */
         .upload-cell {
-            min-width: 220px; /* REDUCIDO */
+            min-width: 220px;
             width: 220px;
         }
 
@@ -976,7 +1309,7 @@
             padding: 7px 12px;
             background: #f8fafc;
             color: #475569;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             font-size: 13px;
             cursor: pointer;
@@ -1000,7 +1333,7 @@
         .file-name {
             flex: 1;
             font-size: 13px;
-            color: #64748b;
+            color: var(--text-muted);
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
@@ -1148,45 +1481,11 @@
         }
 
         .no-documents-text {
-            color: #64748b;
+            color: var(--text-muted);
             font-size: 17px;
             max-width: 650px;
             margin: 0 auto 30px;
             line-height: 1.6;
-        }
-
-        /* BOTÓN DE ENVÍO */
-        .submit-section {
-            margin-top: 45px;
-            padding-top: 30px;
-            border-top: 2px solid #e2e8f0;
-            text-align: center;
-        }
-
-        .submit-button {
-            padding: 16px 45px;
-            background: var(--gradient-primary);
-            color: white;
-            border: none;
-            border-radius: 10px;
-            font-weight: 700;
-            font-size: 17px;
-            cursor: pointer;
-            transition: var(--transition);
-            display: inline-flex;
-            align-items: center;
-            gap: 14px;
-        }
-
-        .submit-button:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(7, 68, 182, 0.25);
-            background: linear-gradient(135deg, #1d4ed8 0%, #0744b6ff 100%);
-        }
-
-        /* REMOVER SCROLL INDICATOR */
-        .scroll-indicator {
-            display: none; /* OCULTO */
         }
 
         /* PROGRESS BAR INDIVIDUAL PARA CADA DOCUMENTO */
@@ -1203,7 +1502,7 @@
 
         .progress-text {
             font-size: 12px;
-            color: #64748b;
+            color: var(--text-muted);
             white-space: nowrap;
         }
 
@@ -1237,6 +1536,17 @@
             background: var(--gradient-primary);
         }
 
+        /* CLASES PARA DOCUMENTOS */
+        .has-document .btn-upload {
+            display: none;
+        }
+
+        .no-document .btn-view,
+        .no-document .btn-download,
+        .no-document .btn-update {
+            display: none;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 1200px) {
             .header {
@@ -1255,6 +1565,7 @@
             .header-nav {
                 overflow-x: auto;
                 padding-bottom: 10px;
+                width: 100%;
             }
             
             .nav-link {
@@ -1262,24 +1573,28 @@
                 font-size: 15px;
             }
             
-            .user-info h4 {
-                font-size: 15px;
+            .content-wrapper {
+                padding: 20px 25px;
             }
             
-            .user-info p {
-                font-size: 12px;
+            .welcome-message {
+                display: none;
             }
             
             .documents-table {
                 min-width: 1000px;
             }
             
-            .content-wrapper {
-                padding: 25px;
+            .submit-section-top {
+                justify-content: center;
             }
         }
 
         @media (max-width: 992px) {
+            .cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
             .main-title {
                 font-size: 28px;
             }
@@ -1292,6 +1607,17 @@
                 flex-direction: column;
                 align-items: flex-start;
                 gap: 15px;
+            }
+            
+            .periodo-alert {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .periodo-status {
+                align-self: stretch;
+                justify-content: center;
             }
             
             .periodo-header {
@@ -1309,9 +1635,46 @@
             .document-actions {
                 flex-direction: column;
             }
+            
+            .progress-details {
+                grid-template-columns: 1fr;
+            }
         }
 
         @media (max-width: 768px) {
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .header-left {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .user-info h4 {
+                font-size: 16px;
+            }
+            
+            .user-info p {
+                font-size: 13px;
+            }
+            
+            .section {
+                padding: 18px;
+            }
+            
+            .periodo-content {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .header-right {
+                flex-wrap: wrap;
+                justify-content: flex-end;
+            }
+            
             .documents-table-container {
                 border-radius: 12px;
                 overflow: hidden;
@@ -1334,7 +1697,7 @@
             }
             
             .documents-table tr {
-                border-bottom: 2px solid #e2e8f0;
+                border-bottom: 2px solid var(--border-color);
                 padding: 25px;
                 position: relative;
             }
@@ -1389,34 +1752,49 @@
             }
             
             .periodo-panel {
-                padding: 25px;
+                padding: 20px;
             }
             
             .logout-button {
-                padding: 10px 18px;
+                padding: 10px 20px;
                 font-size: 14px;
             }
-        }
-
-        @media (min-width: 769px) and (max-width: 1200px) {
-            .documents-table {
-                min-width: 1000px;
+            
+            .submit-section-top {
+                justify-content: center;
+                margin-bottom: 20px;
             }
             
-            .document-name-cell {
-                min-width: 250px;
-            }
-            
-            .info-cell {
-                min-width: 180px;
-            }
-            
-            .upload-cell {
-                min-width: 200px;
+            .submit-button {
+                width: 100%;
+                justify-content: center;
             }
         }
 
         @media (max-width: 480px) {
+            .content-wrapper {
+                padding: 15px;
+            }
+            
+            .card-value {
+                font-size: 26px;
+            }
+            
+            .section-title {
+                font-size: 18px;
+            }
+            
+            .btn-go-documents {
+                width: 100%;
+                justify-content: center;
+                padding: 10px 20px;
+            }
+            
+            .logout-button {
+                padding: 10px 20px;
+                font-size: 14px;
+            }
+            
             .documents-table th, 
             .documents-table td {
                 padding: 18px 20px;
@@ -1439,10 +1817,6 @@
                 min-width: 140px;
             }
             
-            .content-wrapper {
-                padding: 20px;
-            }
-            
             .periodo-panel {
                 padding: 20px;
             }
@@ -1456,15 +1830,22 @@
             }
         }
 
-        /* CLASES PARA DOCUMENTOS */
-        .has-document .btn-upload {
-            display: none;
-        }
-
-        .no-document .btn-view,
-        .no-document .btn-download,
-        .no-document .btn-update {
-            display: none;
+        @media (min-width: 769px) and (max-width: 1200px) {
+            .documents-table {
+                min-width: 1000px;
+            }
+            
+            .document-name-cell {
+                min-width: 250px;
+            }
+            
+            .info-cell {
+                min-width: 180px;
+            }
+            
+            .upload-cell {
+                min-width: 200px;
+            }
         }
     </style>
 </head>
@@ -1572,18 +1953,17 @@
             <!-- PANEL DE CONTROL -->
             <div class="control-panel">
                 <div class="panel-title-section">
-                    <h1 class="main-title">Gestión de Documentos Académicos</h1>
-                    <p class="subtitle">Administración y control de documentos requeridos</p>
+                    <p class="subtitle">Sube tus documentos de acuerdo al periodo habilitado</p>
                 </div>
                 <div class="action-buttons">
                     <a href="{{ route('profesor.dashboard') }}" class="btn-back">
                         <i class="fas fa-arrow-left"></i>
-                        Volver al Panel
+                        Volver
                     </a>
                 </div>
             </div>
 
-            <!-- PANEL DE PERÍODO REDISEÑADO -->
+            <!-- PANEL DE PERÍODO REDISEÑADO - MÁS COMPACTO -->
             <div class="periodo-panel">
                 <div class="periodo-header">
                     <div class="periodo-title">
@@ -1620,13 +2000,13 @@
                     </div>
                 </div>
                 
-                <!-- BARRA DE PROGRESO GENERAL -->
+                <!-- BARRA DE PROGRESO GENERAL - MÁS COMPACTA -->
                 @if($hayPeriodoHabilitado)
                 <div class="progress-overview">
                     <div class="progress-header">
                         <div class="progress-title">
                             <i class="fas fa-chart-line"></i>
-                            Progreso General de Documentos
+                            Progreso General
                         </div>
                         <div class="progress-percentage">{{ $porcentaje }}%</div>
                     </div>
@@ -1636,7 +2016,7 @@
                     </div>
                     
                     <div class="progress-stats">
-                        <span>{{ $totalSubidos }} de {{ $totalRequeridos }} documentos</span>
+                        <span>{{ $totalSubidos }} de {{ $totalRequeridos }} docs</span>
                         <span>{{ $faltantes }} pendientes</span>
                     </div>
                     
@@ -1657,8 +2037,8 @@
                                 <i class="fas fa-file-alt"></i>
                             </div>
                             <div class="detail-content">
-                                <h4>Documentos Requeridos</h4>
-                                <p>{{ $totalRequeridos }} documentos</p>
+                                <h4>Requeridos</h4>
+                                <p>{{ $totalRequeridos }}</p>
                             </div>
                         </div>
                         <div class="detail-item">
@@ -1666,8 +2046,8 @@
                                 <i class="fas fa-check-circle"></i>
                             </div>
                             <div class="detail-content">
-                                <h4>Documentos Completados</h4>
-                                <p>{{ $totalSubidos }} de {{ $totalRequeridos }}</p>
+                                <h4>Completados</h4>
+                                <p>{{ $totalSubidos }}/{{ $totalRequeridos }}</p>
                             </div>
                         </div>
                         <div class="detail-item">
@@ -1675,8 +2055,8 @@
                                 <i class="fas fa-chart-line"></i>
                             </div>
                             <div class="detail-content">
-                                <h4>Progreso General</h4>
-                                <p>{{ $porcentaje }}% completado</p>
+                                <h4>Progreso</h4>
+                                <p>{{ $porcentaje }}%</p>
                             </div>
                         </div>
                     </div>
@@ -1709,12 +2089,21 @@
                 @endif
                 
                 @if(count($documentosParaVista) > 0)
-                <!-- FORMULARIO DE SUBIDA -->
+                <!-- FORMULARIO DE SUBIDA - CORREGIDO -->
                 <form action="{{ route('profesor.subir-documentos') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
                     @csrf
                     <input type="hidden" name="periodo_id" value="{{ $periodoHabilitado->id ?? '' }}">
                     
-                    <!-- TABLA DE DOCUMENTOS - MÁS ATRACTIVA Y COMPACTA -->
+                    <!-- BOTÓN DE ENVÍO ARRIBA DE LA TABLA -->
+                    @if($hayPeriodoHabilitado)
+                    <div class="submit-section-top">
+                        <button type="submit" class="submit-button" id="submitBtn">
+                            <i class="fas fa-paper-plane"></i> Enviar Documentos Seleccionados
+                        </button>
+                    </div>
+                    @endif
+                    
+                    <!-- TABLA DE DOCUMENTOS -->
                     <div class="documents-table-container">
                         <div class="table-header">
                             <h2 class="table-title">
@@ -1726,7 +2115,6 @@
                             </div>
                         </div>
                         
-                        <!-- TABLA MÁS COMPACTA -->
                         <table class="documents-table">
                             <thead>
                                 <tr>
@@ -1744,8 +2132,9 @@
                                     $estado = $documento['estado'] ?? 'faltante';
                                     $claseDocumento = $tieneDocumento ? 'has-document' : 'no-document';
                                     $claseFila = $estado == 'pendiente' ? 'pendiente' : '';
+                                    $tipoDocumento = $documento['tipo'];
                                 @endphp
-                                <tr data-documento-id="{{ $documento['documento_id'] ?? '' }}" class="{{ $claseDocumento }} {{ $claseFila }}">
+                                <tr data-documento-id="{{ $documento['documento_id'] ?? '' }}" data-tipo="{{ $tipoDocumento }}" class="{{ $claseDocumento }} {{ $claseFila }}">
                                     <!-- NOMBRE DEL DOCUMENTO -->
                                     <td class="document-name-cell" data-label="Documento">
                                         <div class="document-name">
@@ -1885,7 +2274,6 @@
                                     <td class="actions-cell" data-label="Acciones">
                                         <div class="document-actions">
                                             @if($tieneDocumento)
-                                            <!-- Botones para documentos existentes -->
                                             <button type="button" class="action-btn btn-view" onclick="verDocumento('{{ $documento['documento_id'] ?? '' }}')">
                                                 <i class="fas fa-eye"></i> Ver
                                             </button>
@@ -1893,13 +2281,13 @@
                                                 <i class="fas fa-download"></i> Descargar
                                             </button>
                                             @if($hayPeriodoHabilitado && in_array($estado, ['aprobado', 'rechazado', 'pendiente']))
-                                            <button type="button" class="action-btn btn-update" onclick="selectFile('{{ $documento['tipo'] }}')">
+                                            <button type="button" class="action-btn btn-update" onclick="selectFile('{{ $tipoDocumento }}')">
                                                 <i class="fas fa-sync-alt"></i> Actualizar
                                             </button>
                                             @endif
                                             @else
                                             @if($hayPeriodoHabilitado)
-                                            <button type="button" class="action-btn btn-upload" onclick="selectFile('{{ $documento['tipo'] }}')">
+                                            <button type="button" class="action-btn btn-upload" onclick="selectFile('{{ $tipoDocumento }}')">
                                                 <i class="fas fa-upload"></i> Subir
                                             </button>
                                             @endif
@@ -1907,39 +2295,41 @@
                                         </div>
                                     </td>
                                     
-                                    <!-- SUBIR ARCHIVO -->
+                                    <!-- SUBIR ARCHIVO - CORREGIDO: ID ÚNICO Y NAME CORRECTO -->
                                     <td class="upload-cell" data-label="Subir Archivo">
                                         @if($hayPeriodoHabilitado)
                                         <div class="upload-container">
                                             <div class="file-input-wrapper">
-                                                <button type="button" class="file-input-btn" onclick="selectFile('{{ $documento['tipo'] }}')">
+                                                <button type="button" class="file-input-btn" onclick="selectFile('{{ $tipoDocumento }}')">
                                                     <i class="fas fa-paperclip"></i> Seleccionar
                                                 </button>
-                                                <div class="file-name" id="file-name-preview-{{ $documento['tipo'] }}" title="{{ $documento['archivo'] ?? '' }}">
+                                                <div class="file-name" id="file-name-preview-{{ $tipoDocumento }}" title="{{ $documento['archivo'] ?? '' }}">
                                                     @if($tieneDocumento)
-                                                    @php
-                                                        $archivo = $documento['archivo'] ?? 'Documento subido';
-                                                        echo strlen($archivo) > 25 ? substr($archivo, 0, 25) . '...' : $archivo;
-                                                    @endphp
+                                                        @php
+                                                            $archivo = $documento['archivo'] ?? 'Documento subido';
+                                                            echo strlen($archivo) > 25 ? substr($archivo, 0, 25) . '...' : $archivo;
+                                                        @endphp
                                                     @else
-                                                    Ningún archivo seleccionado
+                                                        Ningún archivo seleccionado
                                                     @endif
                                                 </div>
                                             </div>
                                             
+                                            <!-- ✅ CORREGIDO: ID con prefijo 'file-' para evitar conflictos, NAME es el tipo de documento -->
                                             <input type="file" 
-                                                   id="{{ $documento['tipo'] }}" 
-                                                   name="{{ $documento['tipo'] }}"
+                                                   id="file-{{ $tipoDocumento }}" 
+                                                   name="{{ $tipoDocumento }}"
                                                    accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
                                                    style="display: none;"
-                                                   onchange="updateFileName('{{ $documento['tipo'] }}', this)">
+                                                   data-tipo="{{ $tipoDocumento }}"
+                                                   onchange="handleFileSelect('{{ $tipoDocumento }}', this)">
                                             
-                                            <div id="file-selected-{{ $documento['tipo'] }}" class="file-selected" style="display: none;">
+                                            <div id="file-selected-{{ $tipoDocumento }}" class="file-selected" style="display: none;">
                                                 <div class="file-selected-info">
                                                     <i class="fas fa-file file-selected-icon"></i>
-                                                    <span class="file-selected-name" id="file-selected-name-{{ $documento['tipo'] }}"></span>
+                                                    <span class="file-selected-name" id="file-selected-name-{{ $tipoDocumento }}"></span>
                                                 </div>
-                                                <button type="button" class="file-remove" onclick="clearFile('{{ $documento['tipo'] }}')">
+                                                <button type="button" class="file-remove" onclick="clearFile('{{ $tipoDocumento }}')">
                                                     <i class="fas fa-times"></i>
                                                 </button>
                                             </div>
@@ -1955,18 +2345,6 @@
                             </tbody>
                         </table>
                     </div>
-                    
-                    <!-- BOTÓN DE ENVÍO -->
-                    @if($hayPeriodoHabilitado && count($documentosParaVista) > 0)
-                    <div class="submit-section">
-                        <button type="submit" class="submit-button" id="submitBtn">
-                            <i class="fas fa-paper-plane"></i> Enviar Documentos Seleccionados
-                        </button>
-                        <p style="margin-top: 10px; color: #64748b; font-size: 15px;">
-                            Solo se procesarán los archivos que hayas seleccionado en la tabla
-                        </p>
-                    </div>
-                    @endif
                 </form>
                 @else
                 <!-- SIN DOCUMENTOS CONFIGURADOS -->
@@ -1985,61 +2363,157 @@
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- JAVASCRIPT CORREGIDO -->
     <script>
         // Función para mostrar observaciones completas
         function alertObservacionCompleta(observacion) {
             alert("Observaciones completas:\n\n" + observacion);
         }
         
-        document.addEventListener('DOMContentLoaded', function() {
-            // Manejar la selección de archivos
-            window.updateFileName = function(tipo, input) {
-                const fileSelected = document.getElementById('file-selected-' + tipo);
-                const fileSelectedName = document.getElementById('file-selected-name-' + tipo);
-                const fileNamePreview = document.getElementById('file-name-preview-' + tipo);
-                const row = document.querySelector(`tr [onclick*="${tipo}"]`)?.closest('tr');
-                
-                if (input.files.length > 0) {
-                    fileSelectedName.textContent = input.files[0].name;
-                    fileSelected.style.display = 'flex';
-                    fileNamePreview.textContent = 'Archivo seleccionado';
-                    
-                    // Resaltar la fila
-                    if (row) {
-                        row.style.backgroundColor = '#eff6ff';
-                        row.style.borderLeft = '3px solid #3b82f6';
-                        
-                        // Cambiar clase para mostrar botones correctos
-                        row.classList.remove('no-document');
-                        row.classList.add('has-document');
-                    }
-                }
-            };
+        // ✅ FUNCIÓN PRINCIPAL PARA MANEJAR SELECCIÓN DE ARCHIVOS
+        window.handleFileSelect = function(tipo, input) {
+            const fileSelected = document.getElementById('file-selected-' + tipo);
+            const fileSelectedName = document.getElementById('file-selected-name-' + tipo);
+            const fileNamePreview = document.getElementById('file-name-preview-' + tipo);
+            const row = document.querySelector(`tr[data-tipo="${tipo}"]`);
             
-            window.clearFile = function(tipo) {
-                const input = document.getElementById(tipo);
-                const fileSelected = document.getElementById('file-selected-' + tipo);
-                const fileNamePreview = document.getElementById('file-name-preview-' + tipo);
-                const row = document.querySelector(`tr [onclick*="${tipo}"]`)?.closest('tr');
+            if (input.files.length > 0) {
+                const file = input.files[0];
                 
-                input.value = '';
-                fileSelected.style.display = 'none';
-                fileNamePreview.textContent = 'Ningún archivo seleccionado';
+                // Actualizar UI
+                fileSelectedName.textContent = file.name;
+                fileSelected.style.display = 'flex';
+                fileNamePreview.textContent = 'Archivo: ' + (file.name.length > 25 ? file.name.substring(0, 25) + '...' : file.name);
                 
-                // Quitar resaltado de la fila
+                // Resaltar la fila
                 if (row) {
-                    row.style.backgroundColor = '';
-                    row.style.borderLeft = '';
+                    row.style.backgroundColor = '#eff6ff';
+                    row.style.borderLeft = '3px solid #3b82f6';
+                    
+                    // Cambiar clase para mostrar botones correctos
+                    row.classList.remove('no-document');
+                    row.classList.add('has-document');
                 }
-            };
+                
+                // DEBUG: Mostrar en consola
+                console.log('✅ Archivo seleccionado para ' + tipo + ':', file.name);
+                console.log('   Name del input:', input.name);
+                console.log('   Tamaño:', (file.size / 1024).toFixed(2), 'KB');
+            }
+        };
+        
+        // ✅ FUNCIÓN PARA LIMPIAR ARCHIVO SELECCIONADO
+        window.clearFile = function(tipo) {
+            const input = document.getElementById('file-' + tipo);
+            const fileSelected = document.getElementById('file-selected-' + tipo);
+            const fileNamePreview = document.getElementById('file-name-preview-' + tipo);
+            const row = document.querySelector(`tr[data-tipo="${tipo}"]`);
             
-            window.selectFile = function(tipo) {
-                const input = document.getElementById(tipo);
-                if (input) {
-                    input.click();
+            if (input) {
+                input.value = '';
+            }
+            
+            if (fileSelected) {
+                fileSelected.style.display = 'none';
+            }
+            
+            if (fileNamePreview) {
+                fileNamePreview.textContent = 'Ningún archivo seleccionado';
+            }
+            
+            // Quitar resaltado de la fila
+            if (row) {
+                row.style.backgroundColor = '';
+                row.style.borderLeft = '';
+                
+                // Verificar si realmente no tiene documento
+                if (!row.classList.contains('has-document') || !row.dataset.documentoId) {
+                    row.classList.add('no-document');
+                    row.classList.remove('has-document');
                 }
-            };
+            }
+            
+            console.log('🗑️ Archivo eliminado para ' + tipo);
+        };
+        
+        // ✅ FUNCIÓN PARA ABRIR SELECTOR DE ARCHIVOS
+        window.selectFile = function(tipo) {
+            const input = document.getElementById('file-' + tipo);
+            if (input) {
+                console.log('📁 Abriendo selector para:', tipo);
+                input.click();
+            } else {
+                console.error('❌ No se encontró input para:', tipo);
+            }
+        };
+        
+        // ✅ FUNCIONES PARA VER Y DESCARGAR DOCUMENTOS
+        window.verDocumento = function(documentoId) {
+            if (documentoId) {
+                window.open("{{ url('documentos/ver') }}/" + documentoId, '_blank');
+            } else {
+                showToast('No se puede ver el documento. ID no disponible.', 'error');
+            }
+        };
+        
+        window.descargarDocumento = function(documentoId) {
+            if (documentoId) {
+                window.location.href = "{{ url('documentos/descargar') }}/" + documentoId;
+            } else {
+                showToast('No se puede descargar el documento. ID no disponible.', 'error');
+            }
+        };
+        
+        // ✅ FUNCIÓN PARA MOSTRAR TOASTS
+        function showToast(message, type = 'info') {
+            // Eliminar toasts anteriores
+            const oldToasts = document.querySelectorAll('.custom-toast');
+            oldToasts.forEach(toast => toast.remove());
+            
+            const toast = document.createElement('div');
+            toast.className = 'custom-toast';
+            toast.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                padding: 15px 20px;
+                background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
+                color: white;
+                border-radius: 10px;
+                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+                z-index: 9999;
+                animation: slideInRight 0.3s ease;
+                max-width: 350px;
+                font-size: 14px;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            
+            const icon = type === 'error' ? 'exclamation-circle' : (type === 'success' ? 'check-circle' : 'info-circle');
+            toast.innerHTML = `
+                <i class="fas fa-${icon}"></i>
+                <span style="flex: 1;">${message}</span>
+                <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; padding: 0 5px;">
+                    <i class="fas fa-times"></i>
+                </button>
+            `;
+            
+            document.body.appendChild(toast);
+            
+            setTimeout(() => {
+                if (toast.parentNode) {
+                    toast.style.animation = 'slideOutRight 0.3s ease';
+                    setTimeout(() => {
+                        if (toast.parentNode) toast.remove();
+                    }, 300);
+                }
+            }, 5000);
+        }
+        
+        // ✅ INICIALIZACIÓN CUANDO EL DOM ESTÁ LISTO
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🚀 Vista de documentos inicializada');
             
             // Validar formulario de subida
             const uploadForm = document.getElementById('uploadForm');
@@ -2048,161 +2522,36 @@
                     const submitBtn = document.getElementById('submitBtn');
                     const fileInputs = this.querySelectorAll('input[type="file"]');
                     let hasFile = false;
+                    let selectedFiles = [];
                     
                     fileInputs.forEach(input => {
                         if (input.files.length > 0) {
                             hasFile = true;
+                            selectedFiles.push({
+                                tipo: input.name,
+                                archivo: input.files[0].name,
+                                tamaño: (input.files[0].size / 1024).toFixed(2) + ' KB'
+                            });
                         }
                     });
                     
+                    console.log('📤 Archivos seleccionados para envío:', selectedFiles);
+                    
                     if (!hasFile) {
                         e.preventDefault();
-                        // Mostrar alerta personalizada
-                        const alertDiv = document.createElement('div');
-                        alertDiv.className = 'alert alert-warning';
-                        alertDiv.innerHTML = `
-                            <i class="fas fa-exclamation-triangle"></i>
-                            <div>
-                                <strong>Sin documentos seleccionados</strong>
-                                <p>Por favor, selecciona al menos un documento para enviar al sistema.</p>
-                            </div>
-                        `;
-                        
-                        const firstSection = document.querySelector('.documents-table-container');
-                        if (firstSection) {
-                            firstSection.parentNode.insertBefore(alertDiv, firstSection);
-                        }
-                        
-                        // Scroll al top
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
-                        
-                        // Remover alerta después de 5 segundos
-                        setTimeout(() => {
-                            alertDiv.remove();
-                        }, 5000);
-                        
+                        showToast('Por favor, selecciona al menos un documento para enviar.', 'warning');
                         return false;
                     }
                     
                     if (submitBtn) {
                         submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
                         submitBtn.disabled = true;
-                        
-                        // Mostrar mensaje de progreso
-                        const progressMsg = document.createElement('div');
-                        progressMsg.className = 'alert alert-info';
-                        progressMsg.innerHTML = `
-                            <i class="fas fa-spinner fa-spin"></i>
-                            <div>
-                                <strong>Enviando documentos...</strong>
-                                <p>Por favor, espera mientras se procesan tus documentos. No cierres esta página.</p>
-                            </div>
-                        `;
-                        
-                        const firstSection = document.querySelector('.documents-table-container');
-                        if (firstSection) {
-                            firstSection.parentNode.insertBefore(progressMsg, firstSection);
-                        }
-                        
-                        window.scrollTo({ top: 0, behavior: 'smooth' });
                     }
+                    
+                    showToast('Enviando documentos...', 'info');
+                    return true;
                 });
             }
-            
-            // Funciones para ver y descargar documentos
-            window.verDocumento = function(documentoId) {
-                if (documentoId) {
-                    window.open("{{ url('documentos/ver') }}/" + documentoId, '_blank');
-                } else {
-                    showToast('No se puede ver el documento. ID no disponible.', 'error');
-                }
-            };
-            
-            window.descargarDocumento = function(documentoId) {
-                if (documentoId) {
-                    window.location.href = "{{ url('documentos/descargar') }}/" + documentoId;
-                } else {
-                    showToast('No se puede descargar el documento. ID no disponible.', 'error');
-                }
-            };
-            
-            // Función para mostrar toasts
-            function showToast(message, type = 'info') {
-                const toast = document.createElement('div');
-                toast.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    right: 20px;
-                    padding: 15px 20px;
-                    background: ${type === 'error' ? '#ef4444' : '#3b82f6'};
-                    color: white;
-                    border-radius: 10px;
-                    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                    z-index: 1000;
-                    animation: slideInRight 0.3s ease;
-                    max-width: 350px;
-                    font-size: 14px;
-                    display: flex;
-                    align-items: center;
-                    gap: 10px;
-                `;
-                
-                toast.innerHTML = `
-                    <i class="fas fa-${type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
-                    <span>${message}</span>
-                `;
-                
-                document.body.appendChild(toast);
-                
-                setTimeout(() => {
-                    toast.style.animation = 'slideOutRight 0.3s ease';
-                    setTimeout(() => {
-                        document.body.removeChild(toast);
-                    }, 300);
-                }, 4000);
-            }
-            
-            // Añadir estilos para animaciones de toast
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideInRight {
-                    from {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                    to {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                }
-                @keyframes slideOutRight {
-                    from {
-                        transform: translateX(0);
-                        opacity: 1;
-                    }
-                    to {
-                        transform: translateX(100%);
-                        opacity: 0;
-                    }
-                }
-            `;
-            document.head.appendChild(style);
-            
-            // Efecto de hover para filas
-            const rows = document.querySelectorAll('.documents-table tbody tr');
-            rows.forEach(row => {
-                row.addEventListener('mouseenter', function() {
-                    if (!this.style.backgroundColor || this.style.backgroundColor === '') {
-                        this.style.backgroundColor = '#f8fafc';
-                    }
-                });
-                
-                row.addEventListener('mouseleave', function() {
-                    if (!this.style.borderLeft || this.style.borderLeft === '') {
-                        this.style.backgroundColor = '';
-                    }
-                });
-            });
             
             // Validar tamaño de archivo
             const fileInputs = document.querySelectorAll('input[type="file"]');
@@ -2212,14 +2561,52 @@
                     if (this.files[0] && this.files[0].size > maxSize) {
                         showToast('El archivo es demasiado grande. Máximo 10MB.', 'error');
                         this.value = '';
-                        const fileSelected = document.getElementById('file-selected-' + this.id);
+                        const tipo = this.dataset.tipo || this.id.replace('file-', '');
+                        const fileSelected = document.getElementById('file-selected-' + tipo);
+                        const fileNamePreview = document.getElementById('file-name-preview-' + tipo);
                         if (fileSelected) {
                             fileSelected.style.display = 'none';
+                        }
+                        if (fileNamePreview) {
+                            fileNamePreview.textContent = 'Ningún archivo seleccionado';
                         }
                     }
                 });
             });
+            
+            // DEBUG: Verificar inputs de archivo
+            const allFileInputs = document.querySelectorAll('input[type="file"]');
+            console.log('📋 Inputs de archivo encontrados:', allFileInputs.length);
+            allFileInputs.forEach(input => {
+                console.log(`   - ID: ${input.id}, Name: ${input.name}, Tipo: ${input.dataset.tipo}`);
+            });
         });
+        
+        // ✅ AÑADIR ESTILOS PARA ANIMACIONES
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideInRight {
+                from {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+                to {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+            }
+            @keyframes slideOutRight {
+                from {
+                    transform: translateX(0);
+                    opacity: 1;
+                }
+                to {
+                    transform: translateX(100%);
+                    opacity: 0;
+                }
+            }
+        `;
+        document.head.appendChild(style);
     </script>
 </body>
 </html>

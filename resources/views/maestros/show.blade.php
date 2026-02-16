@@ -911,23 +911,6 @@
                                         @endif
                                     </td>
                                     <td>
-                                        @if($grado->documento)
-                                            <a href="{{ route('grados-academicos.download', $grado->id) }}" 
-                                               class="btn btn-sm btn-outline-success" 
-                                               title="Descargar documento">
-                                                <i class="fas fa-download"></i>
-                                            </a>
-                                            <a href="{{ route('grados-academicos.show-document', $grado->id) }}" 
-                                               class="btn btn-sm btn-outline-info" 
-                                               target="_blank"
-                                               title="Ver documento">
-                                                <i class="fas fa-eye"></i>
-                                            </a>
-                                        @else
-                                            <span class="text-muted">Sin documento</span>
-                                        @endif
-                                    </td>
-                                    <td>
                                         <div class="btn-group" role="group">
                                             <form action="{{ route('grados-academicos.destroy', $grado->id) }}" 
                                                   method="POST" 

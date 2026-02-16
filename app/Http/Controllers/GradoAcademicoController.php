@@ -268,7 +268,10 @@ class GradoAcademicoController extends Controller
         }
     }
 
- public function indexMaestro()
+    /**
+     * Muestra la vista principal de grados académicos para maestros
+     */
+    public function indexMaestro()
     {
         try {
             // Obtener el maestro autenticado
@@ -277,19 +280,9 @@ class GradoAcademicoController extends Controller
             // Cargar grados académicos del maestro
             $gradosAcademicos = $maestro->gradosAcademicos()->orderBy('nivel', 'desc')->get();
             
-            // Calcular estadísticas
-            $totalGrados = $gradosAcademicos->count();
-            $doctorados = $gradosAcademicos->where('nivel', 'Doctorado')->count();
-            $maestrias = $gradosAcademicos->where('nivel', 'Maestría')->count();
-            $licenciaturas = $gradosAcademicos->where('nivel', 'Licenciatura')->count();
-            
             return view('grados_academicos.create_maestros', compact(
                 'maestro', 
-                'gradosAcademicos',
-                'totalGrados',
-                'doctorados',
-                'maestrias',
-                'licenciaturas'
+                'gradosAcademicos'
             ));
             
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -310,19 +303,9 @@ class GradoAcademicoController extends Controller
             // También obtener los grados existentes para mostrar en la misma vista
             $gradosAcademicos = $maestro->gradosAcademicos()->orderBy('nivel', 'desc')->get();
             
-            // Calcular estadísticas
-            $totalGrados = $gradosAcademicos->count();
-            $doctorados = $gradosAcademicos->where('nivel', 'Doctorado')->count();
-            $maestrias = $gradosAcademicos->where('nivel', 'Maestría')->count();
-            $licenciaturas = $gradosAcademicos->where('nivel', 'Licenciatura')->count();
-            
             return view('grados_academicos.create_maestros', compact(
                 'maestro', 
-                'gradosAcademicos',
-                'totalGrados',
-                'doctorados',
-                'maestrias',
-                'licenciaturas'
+                'gradosAcademicos'
             ));
             
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
@@ -365,67 +348,121 @@ class GradoAcademicoController extends Controller
 
             $maestro->gradosAcademicos()->save($grado);
 
+            // IMPORTANTE: Redirigir a la ruta de maestro, no a la de admin
             return redirect()->route('maestros.grados.index')
                             ->with('success', 'Grado académico registrado exitosamente.');
                             
-        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-            return redirect()->route('maestros.grados.index')
-                            ->with('error', 'No tienes permisos para realizar esta acción.');
         } catch (\Illuminate\Validation\ValidationException $e) {
             return redirect()->route('maestros.grados.index')
                             ->withErrors($e->validator)
                             ->withInput();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('maestros.grados.index')
+                            ->with('error', 'No tienes permiso para realizar esta acción.');
+        } catch (\Exception $e) {
+            return redirect()->route('maestros.grados.index')
+                            ->with('error', 'Error al guardar el grado académico: ' . $e->getMessage());
         }
     }
 
     /**
-
- * Muestra el formulario para editar un grado académico (para maestros)
- */
-public function editMaestro($id)
-{
-    try {
-        // Obtener el maestro autenticado
-        $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
-        
-        // Buscar el grado académico que pertenezca a este maestro
-        $grado = GradoAcademico::where('maestro_id', $maestro->id)
-                              ->findOrFail($id);
-        
-        return view('maestros.grados_academicos.edit', compact('grado', 'maestro'));
-        
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return redirect()->route('maestros.grados.index')
-                         ->with('error', 'Grado académico no encontrado o no tienes permisos para editarlo.');
-    }
-}
-
-/**
- * Elimina un grado académico (para maestros)
- */
-public function destroyMaestro($id)
-{
-    try {
-        // Obtener el maestro autenticado
-        $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
-        
-        // Buscar el grado académico que pertenezca a este maestro
-        $grado = GradoAcademico::where('maestro_id', $maestro->id)
-                              ->findOrFail($id);
-        
-        // Eliminar el archivo asociado si existe
-        if ($grado->documento && Storage::disk('public')->exists($grado->documento)) {
-            Storage::disk('public')->delete($grado->documento);
+     * Muestra el formulario para editar un grado académico (para maestros)
+     */
+    public function editMaestro($id)
+    {
+        try {
+            // Obtener el maestro autenticado
+            $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
+            
+            // Buscar el grado académico que pertenezca a este maestro
+            $grado = GradoAcademico::where('maestro_id', $maestro->id)
+                                  ->findOrFail($id);
+            
+            return view('grados_academicos.edit_maestros', compact('grado', 'maestro'));
+            
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('maestros.grados.index')
+                             ->with('error', 'Grado académico no encontrado o no tienes permisos para editarlo.');
         }
-        
-        $grado->delete();
-
-        return redirect()->route('maestros.grados.index')
-                         ->with('success', 'Grado académico eliminado exitosamente.');
-                         
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return redirect()->route('maestros.grados.index')
-                         ->with('error', 'Grado académico no encontrado o no tienes permisos para eliminarlo.');
     }
-}
+
+    /**
+     * Actualiza un grado académico (para maestros)
+     */
+    public function updateMaestro(Request $request, $id)
+    {
+        try {
+            // Validación
+            $validated = $request->validate([
+                'nivel' => 'required|in:Licenciatura,Especialidad,Maestría,Doctorado',
+                'nombre_titulo' => 'required|string|max:255',
+                'institucion' => 'nullable|string|max:255',
+                'ano_obtencion' => 'nullable|integer|min:1900|max:' . date('Y'),
+                'cedula_profesional' => 'nullable|string|max:50',
+                'fecha_expedicion_cedula' => 'nullable|date|before_or_equal:today',
+                'documento' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
+                'observaciones' => 'nullable|string|max:500',
+            ]);
+
+            // Obtener el maestro autenticado
+            $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
+            
+            // Buscar el grado académico que pertenezca a este maestro
+            $grado = GradoAcademico::where('maestro_id', $maestro->id)
+                                  ->findOrFail($id);
+
+            // Subir nuevo documento si existe
+            if ($request->hasFile('documento')) {
+                // Eliminar documento anterior si existe
+                if ($grado->documento && Storage::disk('public')->exists($grado->documento)) {
+                    Storage::disk('public')->delete($grado->documento);
+                }
+                
+                $path = $request->file('documento')->store('grados_academicos', 'public');
+                $validated['documento'] = $path;
+            }
+
+            $grado->update($validated);
+
+            return redirect()->route('maestros.grados.index')
+                            ->with('success', 'Grado académico actualizado exitosamente.');
+                            
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return redirect()->route('maestros.grados.edit', $id)
+                            ->withErrors($e->validator)
+                            ->withInput();
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('maestros.grados.index')
+                             ->with('error', 'Grado académico no encontrado o no tienes permisos para editarlo.');
+        }
+    }
+
+    /**
+     * Elimina un grado académico (para maestros)
+     */
+    public function destroyMaestro($id)
+    {
+        try {
+            // Obtener el maestro autenticado
+            $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
+            
+            // Buscar el grado académico que pertenezca a este maestro
+            $grado = GradoAcademico::where('maestro_id', $maestro->id)
+                                  ->findOrFail($id);
+            
+            // Eliminar el archivo asociado si existe
+            if ($grado->documento && Storage::disk('public')->exists($grado->documento)) {
+                Storage::disk('public')->delete($grado->documento);
+            }
+            
+            $grado->delete();
+
+            return redirect()->route('maestros.grados.index')
+                             ->with('success', 'Grado académico eliminado exitosamente.');
+                             
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('maestros.grados.index')
+                             ->with('error', 'Grado académico no encontrado o no tienes permisos para eliminarlo.');
+        }
+    }
 }
