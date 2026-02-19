@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Editar Perfil - Sistema GEPROC</title>
+    <title>Mi Perfil - Sistema GEPROC</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -226,6 +226,33 @@
             border-color: transparent;
         }
 
+        /* Botón Editar Perfil */
+        .btn-edit {
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            padding: 14px 32px;
+            background: var(--gradient-primary);
+            color: white;
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 15px;
+            cursor: pointer;
+            transition: var(--transition);
+            text-decoration: none;
+            box-shadow: 0 5px 15px rgba(7, 68, 182, 0.25);
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(7, 68, 182, 0.35);
+        }
+
+        .btn-edit i {
+            font-size: 16px;
+        }
+
         /* Tarjeta de Perfil Principal */
         .profile-card {
             background: white;
@@ -285,7 +312,118 @@
             padding: 35px;
         }
 
-        /* Secciones del Formulario */
+        /* ===== SECCIÓN DE INFORMACIÓN DEL MAESTRO ===== */
+        .info-section {
+            margin-bottom: 30px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .info-card {
+            background: var(--light-bg);
+            border: 2px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            transition: var(--transition);
+        }
+
+        .info-card:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--card-shadow);
+        }
+
+        .info-card-title {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            color: var(--primary);
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .info-card-title i {
+            font-size: 22px;
+        }
+
+        .info-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding: 8px 0;
+            border-bottom: 1px dashed rgba(0,0,0,0.05);
+        }
+
+        .info-item:last-child {
+            border-bottom: none;
+        }
+
+        .info-label {
+            width: 130px;
+            color: var(--text-muted);
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .info-value {
+            flex: 1;
+            color: #1e293b;
+            font-weight: 600;
+            font-size: 15px;
+        }
+
+        .info-value i {
+            color: var(--green-color);
+            margin-right: 5px;
+        }
+
+        /* Badges */
+        .badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 30px;
+            font-size: 13px;
+            font-weight: 600;
+        }
+
+        .badge-success {
+            background: var(--green-light);
+            color: var(--green-dark);
+        }
+
+        .badge-info {
+            background: var(--blue-light);
+            color: var(--blue-dark);
+        }
+
+        /* ===== FORMULARIO DE EDICIÓN (OCULTO INICIALMENTE) ===== */
+        .edit-form-container {
+            display: none;
+            animation: slideDown 0.5s ease;
+        }
+
+        .edit-form-container.show {
+            display: block;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .form-section {
             margin-bottom: 40px;
         }
@@ -388,7 +526,7 @@
             font-weight: 500;
         }
 
-        /* Información de Solo Lectura */
+        /* Información de Solo Lectura (ahora editable) */
         .readonly-info {
             background: var(--light-bg);
             border: 2px solid var(--border-color);
@@ -411,18 +549,18 @@
             color: var(--primary);
         }
 
-        .info-grid {
+        .readonly-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
             gap: 20px;
         }
 
-        .info-item {
+        .readonly-item {
             display: flex;
             flex-direction: column;
         }
 
-        .info-label {
+        .readonly-label {
             font-size: 12px;
             color: var(--text-muted);
             text-transform: uppercase;
@@ -431,7 +569,7 @@
             font-weight: 600;
         }
 
-        .info-value {
+        .readonly-value {
             font-weight: 600;
             color: #1e293b;
             font-size: 15px;
@@ -533,27 +671,6 @@
             }
         }
 
-        /* Loading state */
-        .btn.loading {
-            position: relative;
-            color: transparent;
-        }
-
-        .btn.loading::after {
-            content: '';
-            position: absolute;
-            width: 20px;
-            height: 20px;
-            border: 2px solid rgba(255, 255, 255, 0.3);
-            border-top-color: white;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-        }
-
-        @keyframes spin {
-            to { transform: rotate(360deg); }
-        }
-
         /* Responsive */
         @media (max-width: 1200px) {
             .header {
@@ -592,6 +709,10 @@
                 gap: 15px;
             }
 
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+
             .form-grid {
                 grid-template-columns: 1fr;
             }
@@ -606,10 +727,6 @@
 
             .profile-header h1 {
                 font-size: 26px;
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
             }
         }
 
@@ -642,6 +759,10 @@
                 padding: 10px 20px;
                 font-size: 14px;
             }
+
+            .info-label {
+                width: 100px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -662,6 +783,11 @@
             }
 
             .btn-back {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .btn-edit {
                 width: 100%;
                 justify-content: center;
             }
@@ -737,245 +863,423 @@
             <!-- PANEL DE CONTROL -->
             <div class="control-panel">
                 <div class="panel-title-section">
-                    <h1 class="main-title">Editar Perfil Personal</h1>
-                    <p class="subtitle">Actualiza tu información personal y de contacto</p>
+                    <h1 class="main-title">Mi Perfil </h1>
+                    <p class="subtitle">Revisa la informacion de tu perfil guardada y si es necesario edita tu perfil</p>
                 </div>
                 <div class="action-buttons">
-                    <a href="{{ route('profesor.mi-perfil') }}" class="btn-back">
-                        <i class="fas fa-arrow-left"></i>
-                        Volver al Perfil
-                    </a>
+                    <button id="toggleEditBtn" class="btn-edit">
+                        <i class="fas fa-edit"></i>
+                        <span id="btnText">Editar Perfil</span>
+                    </button>
                 </div>
             </div>
 
             <!-- TARJETA DE PERFIL -->
             <div class="profile-card">
                 <div class="profile-header">
-                    <h1><i class="fas fa-user-edit"></i> Editar Información Personal</h1>
-                    <p>Actualiza tu información personal. Los campos marcados con * son obligatorios.</p>
+                    <h1><i class="fas fa-user-circle"></i> {{ $maestro->nombres }} {{ $maestro->apellido_paterno }} {{ $maestro->apellido_materno }}</h1>
+                    <p>{{ $maestro->email }} · {{ $maestro->coordinacion->nombre ?? 'Coordinación no asignada' }}</p>
                 </div>
 
                 <div class="profile-content">
-                    <form action="{{ route('profesor.actualizar-perfil') }}" method="POST" id="profileForm">
-                        @csrf
-
-                        <!-- Información Personal -->
-                        <div class="form-section">
-                            <h3 class="section-title"><i class="fas fa-user-circle"></i> Información Personal</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="nombres" class="form-label required">
-                                        <i class="fas fa-user"></i> Nombres
-                                    </label>
-                                    <input type="text"
-                                           class="form-control @error('nombres') is-invalid @enderror"
-                                           id="nombres"
-                                           name="nombres"
-                                           value="{{ old('nombres', $maestro->nombres) }}"
-                                           required>
-                                    @error('nombres')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
+                    <!-- ===== SECCIÓN DE INFORMACIÓN DEL MAESTRO (SIEMPRE VISIBLE) ===== -->
+                    <div id="infoSection" class="info-section">
+                        <div class="info-grid">
+                            <!-- Información Personal -->
+                            <div class="info-card">
+                                <div class="info-card-title">
+                                    <i class="fas fa-user"></i>
+                                    <span>Información Personal</span>
                                 </div>
-
-                                <div class="form-group">
-                                    <label for="apellido_paterno" class="form-label required">
-                                        <i class="fas fa-user"></i> Apellido Paterno
-                                    </label>
-                                    <input type="text"
-                                           class="form-control @error('apellido_paterno') is-invalid @enderror"
-                                           id="apellido_paterno"
-                                           name="apellido_paterno"
-                                           value="{{ old('apellido_paterno', $maestro->apellido_paterno) }}"
-                                           required>
-                                    @error('apellido_paterno')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="apellido_materno" class="form-label">
-                                        <i class="fas fa-user"></i> Apellido Materno
-                                    </label>
-                                    <input type="text"
-                                           class="form-control @error('apellido_materno') is-invalid @enderror"
-                                           id="apellido_materno"
-                                           name="apellido_materno"
-                                           value="{{ old('apellido_materno', $maestro->apellido_materno) }}">
-                                    @error('apellido_materno')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Datos Demográficos -->
-                        <div class="form-section">
-                            <h3 class="section-title"><i class="fas fa-user-friends"></i> Datos Demográficos</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="fecha_nacimiento" class="form-label required">
-                                        <i class="fas fa-birthday-cake"></i> Fecha de Nacimiento
-                                    </label>
-                                    <input type="date"
-                                           class="form-control @error('fecha_nacimiento') is-invalid @enderror"
-                                           id="fecha_nacimiento"
-                                           name="fecha_nacimiento"
-                                           value="{{ old('fecha_nacimiento', $maestro->fecha_nacimiento) }}"
-                                           required>
-                                    @error('fecha_nacimiento')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="edad" class="form-label required">
-                                        <i class="fas fa-calendar-alt"></i> Edad
-                                    </label>
-                                    <div class="input-group">
-                                        <input type="number"
-                                               class="form-control @error('edad') is-invalid @enderror"
-                                               id="edad"
-                                               name="edad"
-                                               min="18"
-                                               max="100"
-                                               value="{{ old('edad', $maestro->edad) }}"
-                                               required>
-                                        <span class="input-group-text">años</span>
-                                    </div>
-                                    @error('edad')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="sexo" class="form-label">
-                                        <i class="fas fa-venus-mars"></i> Sexo
-                                    </label>
-                                    <select class="form-select @error('sexo') is-invalid @enderror"
-                                            id="sexo"
-                                            name="sexo">
-                                        <option value="">Seleccionar...</option>
-                                        <option value="Masculino" {{ old('sexo', $maestro->sexo) == 'Masculino' ? 'selected' : '' }}>Masculino</option>
-                                        <option value="Femenino" {{ old('sexo', $maestro->sexo) == 'Femenino' ? 'selected' : '' }}>Femenino</option>
-                                        <option value="Otro" {{ old('sexo', $maestro->sexo) == 'Otro' ? 'selected' : '' }}>Otro</option>
-                                    </select>
-                                    @error('sexo')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group">
-                                    <label for="estado_civil" class="form-label">
-                                        <i class="fas fa-heart"></i> Estado Civil
-                                    </label>
-                                    <select class="form-select @error('estado_civil') is-invalid @enderror"
-                                            id="estado_civil"
-                                            name="estado_civil">
-                                        <option value="">Seleccionar...</option>
-                                        <option value="Soltero" {{ old('estado_civil', $maestro->estado_civil) == 'Soltero' ? 'selected' : '' }}>Soltero</option>
-                                        <option value="Casado" {{ old('estado_civil', $maestro->estado_civil) == 'Casado' ? 'selected' : '' }}>Casado</option>
-                                        <option value="Divorciado" {{ old('estado_civil', $maestro->estado_civil) == 'Divorciado' ? 'selected' : '' }}>Divorciado</option>
-                                        <option value="Viudo" {{ old('estado_civil', $maestro->estado_civil) == 'Viudo' ? 'selected' : '' }}>Viudo</option>
-                                        <option value="Unión Libre" {{ old('estado_civil', $maestro->estado_civil) == 'Unión Libre' ? 'selected' : '' }}>Unión Libre</option>
-                                    </select>
-                                    @error('estado_civil')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Información de Contacto -->
-                        <div class="form-section">
-                            <h3 class="section-title"><i class="fas fa-address-card"></i> Información de Contacto</h3>
-                            <div class="form-grid">
-                                <div class="form-group">
-                                    <label for="telefono" class="form-label">
-                                        <i class="fas fa-phone"></i> Teléfono
-                                    </label>
-                                    <input type="text"
-                                           class="form-control @error('telefono') is-invalid @enderror"
-                                           id="telefono"
-                                           name="telefono"
-                                           value="{{ old('telefono', $maestro->telefono) }}"
-                                           placeholder="Ej. 555-123-4567">
-                                    @error('telefono')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-
-                                <div class="form-group" style="grid-column: span 2;">
-                                    <label for="direccion" class="form-label">
-                                        <i class="fas fa-home"></i> Dirección
-                                    </label>
-                                    <textarea class="form-control @error('direccion') is-invalid @enderror"
-                                              id="direccion"
-                                              name="direccion"
-                                              rows="3"
-                                              placeholder="Calle, número, colonia, ciudad...">{{ old('direccion', $maestro->direccion) }}</textarea>
-                                    @error('direccion')
-                                        <div class="invalid-feedback">
-                                            <i class="fas fa-exclamation-circle"></i> {{ $message }}
-                                        </div>
-                                    @enderror
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Información Institucional (Solo lectura) -->
-                        <div class="readonly-info">
-                            <h5><i class="fas fa-info-circle"></i> Información Institucional (No editable)</h5>
-                            <div class="info-grid">
                                 <div class="info-item">
-                                    <span class="info-label">Email Institucional</span>
+                                    <span class="info-label">Nombres:</span>
+                                    <span class="info-value">{{ $maestro->nombres }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Apellidos:</span>
+                                    <span class="info-value">{{ $maestro->apellido_paterno }} {{ $maestro->apellido_materno }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Fecha Nac.:</span>
+                                    <span class="info-value">{{ \Carbon\Carbon::parse($maestro->fecha_nacimiento)->format('d/m/Y') }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Edad:</span>
+                                    <span class="info-value">{{ $maestro->edad }} años</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Sexo:</span>
+                                    <span class="info-value">{{ $maestro->sexo ?? 'No especificado' }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Estado Civil:</span>
+                                    <span class="info-value">{{ $maestro->estado_civil ?? 'No especificado' }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Información de Contacto -->
+                            <div class="info-card">
+                                <div class="info-card-title">
+                                    <i class="fas fa-address-card"></i>
+                                    <span>Contacto</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Teléfono:</span>
+                                    <span class="info-value">{{ $maestro->telefono ?? 'No registrado' }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Email:</span>
                                     <span class="info-value">{{ $maestro->email }}</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">RFC</span>
+                                    <span class="info-label">Dirección:</span>
+                                    <span class="info-value">{{ $maestro->direccion ?? 'No registrada' }}</span>
+                                </div>
+                            </div>
+
+                            <!-- Información Institucional -->
+                            <div class="info-card">
+                                <div class="info-card-title">
+                                    <i class="fas fa-building"></i>
+                                    <span>Información Institucional</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">RFC:</span>
                                     <span class="info-value">{{ $maestro->rfc }}</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">CURP</span>
+                                    <span class="info-label">CURP:</span>
                                     <span class="info-value">{{ $maestro->curp }}</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Coordinación</span>
-                                    <span class="info-value">{{ $maestro->coordinacion->nombre ?? 'No asignada' }}</span>
+                                    <span class="info-label">Grado Académico:</span>
+                                    <span class="info-value">{{ $maestro->maximo_grado_academico ?? 'No especificado' }}</span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Coordinación:</span>
+                                    <span class="info-value">
+                                        <span class="badge badge-info">
+                                            <i class="fas fa-check-circle"></i>
+                                            {{ $maestro->coordinacion->nombre ?? 'No asignada' }}
+                                        </span>
+                                    </span>
+                                </div>
+                                <div class="info-item">
+                                    <span class="info-label">Estado:</span>
+                                    <span class="info-value">
+                                        @if($maestro->activo)
+                                            <span class="badge badge-success">
+                                                <i class="fas fa-check-circle"></i> Activo
+                                            </span>
+                                        @else
+                                            <span class="badge badge-danger">
+                                                <i class="fas fa-times-circle"></i> Inactivo
+                                            </span>
+                                        @endif
+                                    </span>
                                 </div>
                             </div>
-                            <p style="margin-top: 15px; font-size: 13px; color: var(--text-muted);">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                Para cambiar estos datos, contacta al administrador del sistema.
-                            </p>
                         </div>
+                    </div>
 
-                        <!-- Acciones del Formulario -->
-                        <div class="form-actions">
-                            <a href="{{ route('profesor.mi-perfil') }}" class="btn btn-outline-secondary">
-                                <i class="fas fa-times"></i> Cancelar
-                            </a>
-                            <button type="submit" class="btn btn-primary" id="submitBtn">
-                                <i class="fas fa-save"></i> Guardar Cambios
-                            </button>
-                        </div>
-                    </form>
+                    <!-- ===== FORMULARIO DE EDICIÓN (OCULTO INICIALMENTE) ===== -->
+                    <div id="editFormContainer" class="edit-form-container">
+                        <form action="{{ route('profesor.actualizar-perfil') }}" method="POST" id="profileForm">
+                            @csrf
+
+                            <!-- Información Personal -->
+                            <div class="form-section">
+                                <h3 class="section-title"><i class="fas fa-user-circle"></i> Información Personal</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="nombres" class="form-label required">
+                                            <i class="fas fa-user"></i> Nombres
+                                        </label>
+                                        <input type="text"
+                                               class="form-control @error('nombres') is-invalid @enderror"
+                                               id="nombres"
+                                               name="nombres"
+                                               value="{{ old('nombres', $maestro->nombres) }}"
+                                               required>
+                                        @error('nombres')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="apellido_paterno" class="form-label required">
+                                            <i class="fas fa-user"></i> Apellido Paterno
+                                        </label>
+                                        <input type="text"
+                                               class="form-control @error('apellido_paterno') is-invalid @enderror"
+                                               id="apellido_paterno"
+                                               name="apellido_paterno"
+                                               value="{{ old('apellido_paterno', $maestro->apellido_paterno) }}"
+                                               required>
+                                        @error('apellido_paterno')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="apellido_materno" class="form-label">
+                                            <i class="fas fa-user"></i> Apellido Materno
+                                        </label>
+                                        <input type="text"
+                                               class="form-control @error('apellido_materno') is-invalid @enderror"
+                                               id="apellido_materno"
+                                               name="apellido_materno"
+                                               value="{{ old('apellido_materno', $maestro->apellido_materno) }}">
+                                        @error('apellido_materno')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Datos Demográficos -->
+                            <div class="form-section">
+                                <h3 class="section-title"><i class="fas fa-user-friends"></i> </h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="fecha_nacimiento" class="form-label required">
+                                            <i class="fas fa-birthday-cake"></i> Fecha de Nacimiento
+                                        </label>
+                                        <input type="date"
+                                               class="form-control @error('fecha_nacimiento') is-invalid @enderror"
+                                               id="fecha_nacimiento"
+                                               name="fecha_nacimiento"
+                                               value="{{ old('fecha_nacimiento', $maestro->fecha_nacimiento ? \Carbon\Carbon::parse($maestro->fecha_nacimiento)->format('Y-m-d') : '') }}"
+                                               required>
+                                        @error('fecha_nacimiento')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="edad" class="form-label required">
+                                            <i class="fas fa-calendar-alt"></i> Edad
+                                        </label>
+                                        <div class="input-group">
+                                            <input type="number"
+                                                   class="form-control @error('edad') is-invalid @enderror"
+                                                   id="edad"
+                                                   name="edad"
+                                                   min="18"
+                                                   max="100"
+                                                   value="{{ old('edad', $maestro->edad) }}"
+                                                   required>
+                                            <span class="input-group-text">años</span>
+                                        </div>
+                                        @error('edad')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="sexo" class="form-label">
+                                            <i class="fas fa-venus-mars"></i> Sexo
+                                        </label>
+                                        <select class="form-select @error('sexo') is-invalid @enderror"
+                                                id="sexo"
+                                                name="sexo">
+                                            <option value="">Seleccionar...</option>
+                                            <option value="Masculino" {{ old('sexo', $maestro->sexo) == 'Masculino' ? 'selected' : '' }}>Masculino</option>
+                                            <option value="Femenino" {{ old('sexo', $maestro->sexo) == 'Femenino' ? 'selected' : '' }}>Femenino</option>
+                                            <option value="Otro" {{ old('sexo', $maestro->sexo) == 'Otro' ? 'selected' : '' }}>Otro</option>
+                                        </select>
+                                        @error('sexo')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="estado_civil" class="form-label">
+                                            <i class="fas fa-heart"></i> Estado Civil
+                                        </label>
+                                        <select class="form-select @error('estado_civil') is-invalid @enderror"
+                                                id="estado_civil"
+                                                name="estado_civil">
+                                            <option value="">Seleccionar...</option>
+                                            <option value="Soltero" {{ old('estado_civil', $maestro->estado_civil) == 'Soltero' ? 'selected' : '' }}>Soltero</option>
+                                            <option value="Casado" {{ old('estado_civil', $maestro->estado_civil) == 'Casado' ? 'selected' : '' }}>Casado</option>
+                                            <option value="Divorciado" {{ old('estado_civil', $maestro->estado_civil) == 'Divorciado' ? 'selected' : '' }}>Divorciado</option>
+                                            <option value="Viudo" {{ old('estado_civil', $maestro->estado_civil) == 'Viudo' ? 'selected' : '' }}>Viudo</option>
+                                            <option value="Unión Libre" {{ old('estado_civil', $maestro->estado_civil) == 'Unión Libre' ? 'selected' : '' }}>Unión Libre</option>
+                                        </select>
+                                        @error('estado_civil')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Información de Contacto -->
+                            <div class="form-section">
+                                <h3 class="section-title"><i class="fas fa-address-card"></i> Información de Contacto</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="telefono" class="form-label">
+                                            <i class="fas fa-phone"></i> Teléfono
+                                        </label>
+                                        <input type="text"
+                                               class="form-control @error('telefono') is-invalid @enderror"
+                                               id="telefono"
+                                               name="telefono"
+                                               value="{{ old('telefono', $maestro->telefono) }}"
+                                               placeholder="Ej. 555-123-4567">
+                                        @error('telefono')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group" style="grid-column: span 2;">
+                                        <label for="direccion" class="form-label">
+                                            <i class="fas fa-home"></i> Dirección
+                                        </label>
+                                        <textarea class="form-control @error('direccion') is-invalid @enderror"
+                                                  id="direccion"
+                                                  name="direccion"
+                                                  rows="3"
+                                                  placeholder="Calle, número, colonia, ciudad...">{{ old('direccion', $maestro->direccion) }}</textarea>
+                                        @error('direccion')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Información Institucional (AHORA EDITABLE) -->
+                            <div class="form-section">
+                                <h3 class="section-title"><i class="fas fa-building"></i> Información Importante</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label for="email" class="form-label required">
+                                            <i class="fas fa-envelope"></i> Email Institucional
+                                        </label>
+                                        <input type="email"
+                                               class="form-control @error('email') is-invalid @enderror"
+                                               id="email"
+                                               name="email"
+                                               value="{{ old('email', $maestro->email) }}"
+                                               required>
+                                        @error('email')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="rfc" class="form-label required">
+                                            <i class="fas fa-id-card"></i> RFC
+                                        </label>
+                                        <input type="text"
+                                               class="form-control @error('rfc') is-invalid @enderror"
+                                               id="rfc"
+                                               name="rfc"
+                                               value="{{ old('rfc', $maestro->rfc) }}"
+                                               maxlength="13"
+                                               required>
+                                        @error('rfc')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="curp" class="form-label required">
+                                            <i class="fas fa-id-card"></i> CURP
+                                        </label>
+                                        <input type="text"
+                                               class="form-control @error('curp') is-invalid @enderror"
+                                               id="curp"
+                                               name="curp"
+                                               value="{{ old('curp', $maestro->curp) }}"
+                                               maxlength="18"
+                                               required>
+                                        @error('curp')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="maximo_grado_academico" class="form-label required">
+                                            <i class="fas fa-graduation-cap"></i> Máximo Grado Académico
+                                        </label>
+                                        <select class="form-select @error('maximo_grado_academico') is-invalid @enderror"
+                                                id="maximo_grado_academico"
+                                                name="maximo_grado_academico"
+                                                required>
+                                            <option value="">Seleccionar...</option>
+                                            <option value="Licenciatura" {{ old('maximo_grado_academico', $maestro->maximo_grado_academico) == 'Licenciatura' ? 'selected' : '' }}>Licenciatura</option>
+                                            <option value="Especialidad" {{ old('maximo_grado_academico', $maestro->maximo_grado_academico) == 'Especialidad' ? 'selected' : '' }}>Especialidad</option>
+                                            <option value="Maestría" {{ old('maximo_grado_academico', $maestro->maximo_grado_academico) == 'Maestría' ? 'selected' : '' }}>Maestría</option>
+                                            <option value="Doctorado" {{ old('maximo_grado_academico', $maestro->maximo_grado_academico) == 'Doctorado' ? 'selected' : '' }}>Doctorado</option>
+                                        </select>
+                                        @error('maximo_grado_academico')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label for="coordinaciones_id" class="form-label required">
+                                            <i class="fas fa-building"></i> Coordinación
+                                        </label>
+                                        <select class="form-select @error('coordinaciones_id') is-invalid @enderror"
+                                                id="coordinaciones_id"
+                                                name="coordinaciones_id"
+                                                required>
+                                            <option value="">Seleccionar...</option>
+                                            @foreach($coordinaciones ?? [] as $coordinacion)
+                                                <option value="{{ $coordinacion->id }}" {{ old('coordinaciones_id', $maestro->coordinaciones_id) == $coordinacion->id ? 'selected' : '' }}>
+                                                    {{ $coordinacion->nombre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('coordinaciones_id')
+                                            <div class="invalid-feedback">
+                                                <i class="fas fa-exclamation-circle"></i> {{ $message }}
+                                            </div>
+                                        @enderror
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Acciones del Formulario -->
+                            <div class="form-actions">
+                                <button type="button" id="cancelEditBtn" class="btn btn-outline-secondary">
+                                    <i class="fas fa-times"></i> Cancelar
+                                </button>
+                                <button type="submit" class="btn btn-primary" id="submitBtn">
+                                    <i class="fas fa-save"></i> Guardar Cambios
+                                </button>
+                            </div>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
@@ -983,6 +1287,54 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            const toggleBtn = document.getElementById('toggleEditBtn');
+            const cancelBtn = document.getElementById('cancelEditBtn');
+            const infoSection = document.getElementById('infoSection');
+            const editFormContainer = document.getElementById('editFormContainer');
+            const btnText = document.getElementById('btnText');
+            
+            let isEditMode = false;
+
+            // Función para alternar entre vista de información y formulario
+            function toggleEditMode() {
+                isEditMode = !isEditMode;
+                
+                if (isEditMode) {
+                    // Mostrar formulario, ocultar información
+                    infoSection.style.display = 'none';
+                    editFormContainer.classList.add('show');
+                    btnText.textContent = 'Ver Perfil';
+                } else {
+                    // Mostrar información, ocultar formulario
+                    infoSection.style.display = 'block';
+                    editFormContainer.classList.remove('show');
+                    btnText.textContent = 'Editar Perfil';
+                }
+            }
+
+            // Evento del botón principal de edición
+            if (toggleBtn) {
+                toggleBtn.addEventListener('click', toggleEditMode);
+            }
+
+            // Evento del botón cancelar en el formulario
+            if (cancelBtn) {
+                cancelBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    if (isEditMode) {
+                        toggleEditMode();
+                    }
+                });
+            }
+
+            // Si hay errores de validación, mostrar automáticamente el formulario
+            @if($errors->any())
+                infoSection.style.display = 'none';
+                editFormContainer.classList.add('show');
+                btnText.textContent = 'Ver Perfil';
+                isEditMode = true;
+            @endif
+
             // Calcular edad automáticamente cuando cambia la fecha de nacimiento
             const fechaNacimientoInput = document.getElementById('fecha_nacimiento');
             const edadInput = document.getElementById('edad');
@@ -1031,8 +1383,8 @@
             if (profileForm && submitBtn) {
                 profileForm.addEventListener('submit', function(e) {
                     // Validación adicional de edad
-                    const edad = parseInt(edadInput.value);
-                    if (edad < 18 || edad > 100) {
+                    const edad = parseInt(edadInput?.value);
+                    if (edad && (edad < 18 || edad > 100)) {
                         e.preventDefault();
                         showToast('Por favor, ingresa una edad válida entre 18 y 100 años', 'error');
                         edadInput.focus();
@@ -1042,13 +1394,11 @@
                     // Cambiar estado del botón
                     const originalText = submitBtn.innerHTML;
                     submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Guardando...';
-                    submitBtn.classList.add('loading');
                     submitBtn.disabled = true;
 
                     // Revertir si hay error (timeout por si acaso)
                     setTimeout(() => {
                         submitBtn.innerHTML = originalText;
-                        submitBtn.classList.remove('loading');
                         submitBtn.disabled = false;
                     }, 5000);
 

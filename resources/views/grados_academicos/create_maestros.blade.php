@@ -37,6 +37,12 @@
             --orange-light: #ffedd5;
             --orange-dark: #ea580c;
             
+            /* Colores para el botón de eliminar - AHORA EN AZUL */
+            --delete-color: #3b82f6;
+            --delete-light: #dbeafe;
+            --delete-dark: #2563eb;
+            --delete-gradient: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            
             --border-radius: 12px;
             --sidebar-width: 280px;
             --header-height: 80px;
@@ -197,8 +203,8 @@
             align-items: center;
             flex-wrap: wrap;
             gap: 20px;
-            margin-bottom: 25px;
-            padding-bottom: 20px;
+            margin-bottom: 10px;
+            padding-bottom: 10px;
             border-bottom: 2px solid var(--light-bg);
         }
 
@@ -215,6 +221,14 @@
         .card-title i {
             font-size: 28px;
             color: var(--primary);
+        }
+
+        .header-description {
+            color: var(--text-muted);
+            margin-bottom: 20px;
+            font-size: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed var(--border-color);
         }
 
         /* ===== BOTÓN AGREGAR - ESTILO MÁS SOBRIO ===== */
@@ -594,21 +608,25 @@
         }
 
         .btn-action-sm {
-            padding: 6px 12px;
-            font-size: 12px;
-            border-radius: 6px;
+            padding: 8px 14px;
+            font-size: 13px;
+            border-radius: 8px;
             display: inline-flex;
             align-items: center;
-            gap: 6px;
+            gap: 8px;
             transition: var(--transition);
             font-weight: 600;
             border: none;
             cursor: pointer;
+            text-decoration: none;
+            letter-spacing: 0.2px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
         }
 
+        /* Botón de Editar */
         .btn-action-sm.btn-outline {
-            border: 1.5px solid var(--border-color);
             background: white;
+            border: 1.5px solid var(--border-color);
             color: var(--text-muted);
             text-decoration: none;
         }
@@ -617,18 +635,63 @@
             background: var(--blue-light);
             border-color: var(--blue-color);
             color: var(--blue-dark);
-        }
-
-        .btn-action-sm.btn-danger {
-            background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-            color: white;
-            box-shadow: 0 4px 10px rgba(249, 115, 22, 0.2);
-        }
-
-        .btn-action-sm.btn-danger:hover {
-            background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
-            box-shadow: 0 6px 14px rgba(249, 115, 22, 0.3);
             transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-action-sm.btn-outline i {
+            color: var(--blue-color);
+            transition: var(--transition);
+        }
+
+        /* Botón de Eliminar - NUEVO DISEÑO EN AZUL ATRACTIVO */
+        .btn-action-sm.btn-delete {
+            background: white;
+            border: 1.5px solid var(--delete-light);
+            color: var(--delete-color);
+            position: relative;
+            overflow: hidden;
+            z-index: 1;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15);
+        }
+
+        .btn-action-sm.btn-delete::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: var(--delete-gradient);
+            transition: left 0.3s ease;
+            z-index: -1;
+        }
+
+        .btn-action-sm.btn-delete:hover {
+            color: white;
+            border-color: transparent;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-action-sm.btn-delete:hover::before {
+            left: 0;
+        }
+
+        .btn-action-sm.btn-delete i {
+            color: var(--delete-color);
+            transition: var(--transition);
+            font-size: 13px;
+        }
+
+        .btn-action-sm.btn-delete:hover i {
+            color: white;
+            animation: pulse 0.5s ease;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         /* INFORMACIÓN DEL GRADO - TODO EN VERDE */
@@ -670,6 +733,52 @@
             height: 1px;
             background: linear-gradient(to right, transparent, var(--green-light), transparent);
             margin: 12px 0 10px 0;
+        }
+
+        /* ===== MODAL DE EDICIÓN ===== */
+        .modal-content {
+            border-radius: 16px;
+            border: none;
+            box-shadow: var(--card-shadow-hover);
+        }
+
+        .modal-header {
+            background: var(--gradient-primary);
+            color: white;
+            border-radius: 16px 16px 0 0;
+            padding: 20px 25px;
+            border-bottom: none;
+        }
+
+        .modal-header .modal-title {
+            font-weight: 700;
+            font-size: 18px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .modal-header .btn-close {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            padding: 8px;
+            font-size: 14px;
+            opacity: 1;
+            border: none;
+        }
+
+        .modal-header .btn-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+
+        .modal-body {
+            padding: 25px;
+        }
+
+        .modal-footer {
+            padding: 20px 25px;
+            border-top: 2px solid var(--light-bg);
         }
 
         /* ===== EMPTY STATE ===== */
@@ -745,6 +854,90 @@
         .btn-close:hover {
             opacity: 1;
             transform: scale(1.1);
+        }
+
+        /* ===== DOCUMENTO ACTUAL EN MODAL ===== */
+        .current-document {
+            background: var(--blue-light);
+            border: 2px solid var(--blue-color);
+            border-radius: 10px;
+            padding: 12px 16px;
+            margin-top: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--blue-dark);
+            font-weight: 600;
+        }
+
+        .current-document i {
+            color: var(--blue-color);
+        }
+
+        .btn-document {
+            background: white;
+            border: 1.5px solid var(--blue-color);
+            color: var(--blue-dark);
+            padding: 6px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            transition: var(--transition);
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-document:hover {
+            background: var(--blue-color);
+            color: white;
+        }
+
+        /* Estilos para el modal de confirmación - AHORA EN AZUL */
+        .modal-header.bg-delete {
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%) !important;
+        }
+        
+        #deleteConfirmModal .modal-content {
+            border: none;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+        }
+        
+        #deleteConfirmModal .modal-body {
+            padding: 25px;
+        }
+        
+        #deleteConfirmModal .btn-outline {
+            border: 2px solid #e2e8f0;
+            background: white;
+            color: #64748b;
+            padding: 10px 24px;
+            font-weight: 600;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        #deleteConfirmModal .btn-outline:hover {
+            background: #f1f5f9;
+            border-color: #94a3b8;
+            color: #334155;
+        }
+        
+        #deleteConfirmModal .btn-delete-confirm {
+            padding: 10px 24px;
+            font-weight: 600;
+            border-radius: 10px;
+            border: none;
+            color: white;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+        }
+        
+        #deleteConfirmModal .btn-delete-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.4);
         }
 
         /* ===== RESPONSIVE ===== */
@@ -909,7 +1102,7 @@
                     <a href="{{ route('profesor.documentos') }}" class="nav-link">
                         <i class="fas fa-folder"></i> Documentos
                     </a>
-                    <a href="{{ route('maestros.grados.create') }}" class="nav-link active">
+                    <a href="{{ route('maestros.grados.index') }}" class="nav-link active">
                         <i class="fas fa-graduation-cap"></i> Grados
                     </a>
                     <a href="{{ route('editar-mi-perfil') }}" class="nav-link">
@@ -956,11 +1149,11 @@
                     <div class="card-title">
                         <i class="fas fa-graduation-cap"></i> Mis Grados Académicos
                     </div>
-                    
                     <button type="button" class="btn-add-grado" id="toggleFormBtn">
                         <i class="fas fa-plus-circle"></i> Agregar Grado
                     </button>
                 </div>
+                <p class="header-description">Sube la informacion de tus grados academicos que tengas</p>
                 
                 @php
                     $totalGrados = $gradosAcademicos->count();
@@ -1004,7 +1197,7 @@
                     </div>
                 </div>
 
-                <!-- Formulario (oculto inicialmente) -->
+                <!-- Formulario de Agregar (oculto inicialmente) -->
                 <div class="form-card" id="gradoFormContainer" style="display: none;">
                     <div class="form-header">
                         <h5 class="form-title">
@@ -1098,17 +1291,6 @@
                                 </div>
 
                                 <div class="mb-3">
-                                    <label for="fecha_expedicion_cedula" class="form-label">Fecha de Expedición</label>
-                                    <input type="date" name="fecha_expedicion_cedula" id="fecha_expedicion_cedula" 
-                                           class="form-control @error('fecha_expedicion_cedula') is-invalid @enderror" 
-                                           value="{{ old('fecha_expedicion_cedula') }}" 
-                                           max="{{ date('Y-m-d') }}">
-                                    @error('fecha_expedicion_cedula')
-                                        <div class="invalid-feedback">{{ $message }}</div>
-                                    @enderror
-                                </div>
-
-                                <div class="mb-3">
                                     <label for="documento" class="form-label">Documento Comprobatorio</label>
                                     <input type="file" name="documento" id="documento" 
                                            class="form-control @error('documento') is-invalid @enderror" 
@@ -1149,7 +1331,92 @@
                     </form>
                 </div>
 
-                <!-- Lista de Grados Académicos - Ahora en grid con tarjetas más pequeñas -->
+                <!-- Modal de Edición -->
+                <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+                    <div class="modal-dialog modal-lg modal-dialog-centered">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="editModalLabel">
+                                    <i class="fas fa-edit"></i> Editar Grado Académico
+                                </h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            <form action="" method="POST" enctype="multipart/form-data" id="editForm">
+                                @csrf
+                                @method('PUT')
+                                <div class="modal-body">
+                                    <div class="row">
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="edit_nivel" class="form-label required">Nivel Académico</label>
+                                                <select name="nivel" id="edit_nivel" class="form-select" required>
+                                                    <option value="">Seleccione un nivel</option>
+                                                    <option value="Licenciatura">Licenciatura</option>
+                                                    <option value="Especialidad">Especialidad</option>
+                                                    <option value="Maestría">Maestría</option>
+                                                    <option value="Doctorado">Doctorado</option>
+                                                </select>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="edit_nombre_titulo" class="form-label required">Nombre del Título</label>
+                                                <input type="text" name="nombre_titulo" id="edit_nombre_titulo" 
+                                                       class="form-control" required>
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="edit_institucion" class="form-label">Institución Educativa</label>
+                                                <input type="text" name="institucion" id="edit_institucion" 
+                                                       class="form-control">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="edit_ano_obtencion" class="form-label">Año de Obtención</label>
+                                                <input type="number" name="ano_obtencion" id="edit_ano_obtencion" 
+                                                       class="form-control" min="1900" max="{{ date('Y') }}">
+                                            </div>
+                                        </div>
+
+                                        <div class="col-md-6">
+                                            <div class="mb-3">
+                                                <label for="edit_cedula_profesional" class="form-label">Cédula Profesional</label>
+                                                <input type="text" name="cedula_profesional" id="edit_cedula_profesional" 
+                                                       class="form-control">
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="edit_documento" class="form-label">Documento Comprobatorio</label>
+                                                <input type="file" name="documento" id="edit_documento" 
+                                                       class="form-control" accept=".pdf,.jpg,.jpeg,.png">
+                                                <small class="text-muted">Formatos: PDF, JPG, PNG. Máx: 2MB</small>
+                                                
+                                            </div>
+
+                                            <div class="mb-3">
+                                                <label for="edit_observaciones" class="form-label">Observaciones</label>
+                                                <textarea name="observaciones" id="edit_observaciones" 
+                                                          class="form-control" rows="2"
+                                                          placeholder="Observaciones adicionales"></textarea>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn-outline" data-bs-dismiss="modal">
+                                        <i class="fas fa-times"></i> Cancelar
+                                    </button>
+                                    <button type="submit" class="btn-success">
+                                        <i class="fas fa-save"></i> Actualizar Grado
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Lista de Grados Académicos -->
                 <div class="grados-container">
                     <div class="section-title">
                         <i class="fas fa-list"></i> Grados Registrados
@@ -1158,21 +1425,30 @@
                     @if($gradosAcademicos->count() > 0)
                         <div class="grados-grid">
                             @foreach($gradosAcademicos as $grado)
-                                <div class="grado-card-compact" data-nivel="{{ $grado->nivel }}">
+                                <div class="grado-card-compact" data-nivel="{{ $grado->nivel }}" data-grado-id="{{ $grado->id }}">
                                     <div class="grado-header-compact">
                                         <div>
                                             <div class="grado-title-compact">{{ Str::limit($grado->nombre_titulo, 40) }}</div>
                                             <span class="grado-nivel-compact">{{ $grado->nivel }}</span>
                                         </div>
                                         <div class="action-buttons-compact">
-                                            <a href="{{ route('maestros.grados.edit', $grado->id) }}" class="btn-action-sm btn-outline">
-                                                <i class="fas fa-edit"></i>
-                                            </a>
-                                            <form action="{{ route('maestros.grados.destroy', $grado->id) }}" method="POST" class="d-inline">
+                                            <button type="button" class="btn-action-sm btn-outline edit-grado-btn" 
+                                                    data-id="{{ $grado->id }}"
+                                                    data-nivel="{{ $grado->nivel }}"
+                                                    data-nombre_titulo="{{ $grado->nombre_titulo }}"
+                                                    data-institucion="{{ $grado->institucion }}"
+                                                    data-ano_obtencion="{{ $grado->ano_obtencion }}"
+                                                    data-cedula_profesional="{{ $grado->cedula_profesional }}"
+                                                    data-observaciones="{{ $grado->observaciones }}"
+                                                    data-documento="{{ $grado->documento }}"
+                                                    data-nombre_documento="{{ $grado->nombre_documento }}">
+                                                <i class="fas fa-edit"></i> Editar
+                                            </button>
+                                            <form action="{{ route('maestros.grados.destroy', $grado->id) }}" method="POST" class="d-inline delete-grado-form">
                                                 @csrf
                                                 @method('DELETE')
-                                                <button type="submit" class="btn-action-sm btn-danger" onclick="return confirm('¿Está seguro de eliminar este grado académico?')">
-                                                    <i class="fas fa-trash"></i>
+                                                <button type="submit" class="btn-action-sm btn-delete">
+                                                    <i class="fas fa-trash-alt"></i> Eliminar
                                                 </button>
                                             </form>
                                         </div>
@@ -1198,21 +1474,18 @@
                                     @endif
                                     
                                     @if($grado->documento)
-    <div class="grado-info-compact">
-        <i class="fas fa-file"></i>
-        <span>
-            <a href="{{ route('maestros.grados.show-document', $grado->id) }}" target="_blank" class="text-primary">
-                <i class="fas fa-eye"></i> Ver archivo
-            </a>
-            <a href="{{ route('maestros.grados.download-document', $grado->id) }}" class="text-primary ms-2" title="Descargar documento">
-                <i class="fas fa-download"></i>
-            </a>
-            @if($grado->nombre_documento)
-                <small class="text-muted d-block mt-1">{{ Str::limit($grado->nombre_documento, 30) }}</small>
-            @endif
-        </span>
-    </div>
-@endif
+                                        <div class="grado-info-compact">
+                                            <i class="fas fa-file"></i>
+                                            <span>
+                                                <a href="{{ route('maestros.grados.show-document', $grado->id) }}" target="_blank" class="text-primary">
+                                                    <i class="fas fa-eye"></i> Ver archivo
+                                                </a>
+                                                <a href="{{ route('maestros.grados.download-document', $grado->id) }}" class="text-primary ms-2" title="Descargar documento">
+                                                    <i class="fas fa-download"></i>
+                                                </a>
+                                            </span>
+                                        </div>
+                                    @endif
                                     
                                     @if($grado->observaciones)
                                         <div class="grado-info-compact">
@@ -1235,89 +1508,171 @@
         </div>
     </div>
 
+    <!-- Modal de Confirmación para Eliminar - AHORA EN AZUL -->
+    <div class="modal fade" id="deleteConfirmModal" tabindex="-1" aria-labelledby="deleteConfirmModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header bg-delete">
+                    <h5 class="modal-title" id="deleteConfirmModalLabel">
+                        <i class="fas fa-exclamation-triangle"></i> Confirmar Eliminación
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="text-center mb-4">
+                        <i class="fas fa-trash-alt" style="font-size: 48px; color: #3b82f6; margin-bottom: 15px;"></i>
+                        <h5 style="color: #1e293b; font-weight: 600;">¿Estás seguro?</h5>
+                        <p style="color: #64748b; margin: 10px 0 5px;">Esta acción eliminará permanentemente:</p>
+                        <p style="color: #1e293b; font-weight: 600; background: #f1f5f9; padding: 10px; border-radius: 8px;" id="gradoInfoEliminar"></p>
+                    </div>
+                    <div class="alert" style="background: #dbeafe; border-left: 4px solid #3b82f6; color: #1e40af;">
+                        <i class="fas fa-info-circle me-2"></i>
+                        <strong>¡Esta acción no se puede deshacer!</strong>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn-outline" data-bs-dismiss="modal">
+                        <i class="fas fa-times"></i> Cancelar
+                    </button>
+                    <form action="" method="POST" id="deleteGradoForm" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn-delete-confirm">
+                            <i class="fas fa-trash-alt"></i> Sí, eliminar
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-        // Mostrar/ocultar formulario
-        const toggleFormBtn = document.getElementById('toggleFormBtn');
-        const gradoFormContainer = document.getElementById('gradoFormContainer');
-        const cancelFormBtn = document.getElementById('cancelFormBtn');
+    // Mostrar/ocultar formulario
+    const toggleFormBtn = document.getElementById('toggleFormBtn');
+    const gradoFormContainer = document.getElementById('gradoFormContainer');
+    const cancelFormBtn = document.getElementById('cancelFormBtn');
+    
+    toggleFormBtn.addEventListener('click', function() {
+        gradoFormContainer.style.display = gradoFormContainer.style.display === 'none' ? 'block' : 'none';
+    });
+    
+    cancelFormBtn.addEventListener('click', function() {
+        gradoFormContainer.style.display = 'none';
+    });
+
+    // Mostrar nombre del archivo seleccionado (SOLO PARA CREAR)
+    document.getElementById('documento').addEventListener('change', function(e) {
+        const fileInput = e.target;
+        const fileName = fileInput.files[0] ? fileInput.files[0].name : '';
+        const filePreview = document.getElementById('filePreview');
+        const fileNameSpan = document.getElementById('fileName');
         
-        toggleFormBtn.addEventListener('click', function() {
-            gradoFormContainer.style.display = gradoFormContainer.style.display === 'none' ? 'block' : 'none';
-        });
+        if (fileName) {
+            fileNameSpan.textContent = fileName;
+            filePreview.style.display = 'flex';
+        } else {
+            filePreview.style.display = 'none';
+        }
+    });
+
+    // Limpiar selección de archivo (SOLO PARA CREAR)
+    window.clearFile = function() {
+        document.getElementById('documento').value = '';
+        document.getElementById('filePreview').style.display = 'none';
+    };
+
+    // Validación de año actual
+    document.getElementById('ano_obtencion').addEventListener('input', function(e) {
+        const currentYear = new Date().getFullYear();
+        const inputYear = parseInt(e.target.value);
         
-        cancelFormBtn.addEventListener('click', function() {
-            gradoFormContainer.style.display = 'none';
+        if (inputYear > currentYear) {
+            e.target.setCustomValidity(`El año no puede ser mayor a ${currentYear}`);
+        } else {
+            e.target.setCustomValidity('');
+        }
+    });
+
+    // Validar formulario antes de enviar
+    document.getElementById('gradoForm').addEventListener('submit', function(e) {
+        const nivel = document.getElementById('nivel').value;
+        const titulo = document.getElementById('nombre_titulo').value;
+        
+        if (!nivel || !titulo) {
+            e.preventDefault();
+            alert('Por favor complete todos los campos obligatorios marcados con *');
+            return false;
+        }
+        
+        return true;
+    });
+
+    // Mostrar formulario si hay errores
+    document.addEventListener('DOMContentLoaded', function() {
+        const hasErrors = {{ $errors->any() ? 'true' : 'false' }};
+        if (hasErrors) {
+            gradoFormContainer.style.display = 'block';
+        }
+    });
+
+    // Función para cargar datos en el modal de edición
+    document.querySelectorAll('.edit-grado-btn').forEach(button => {
+        button.addEventListener('click', function() {
+            const id = this.dataset.id;
+            const nivel = this.dataset.nivel;
+            const nombreTitulo = this.dataset.nombre_titulo;
+            const institucion = this.dataset.institucion || '';
+            const anoObtencion = this.dataset.ano_obtencion || '';
+            const cedula = this.dataset.cedula_profesional || '';
+            const observaciones = this.dataset.observaciones || '';
+
+            // Configurar el action del formulario
+            const editForm = document.getElementById('editForm');
+            editForm.action = `{{ route('maestros.grados.update', '') }}/${id}`;
+
+            // Llenar el formulario con los datos
+            document.getElementById('edit_nivel').value = nivel;
+            document.getElementById('edit_nombre_titulo').value = nombreTitulo;
+            document.getElementById('edit_institucion').value = institucion;
+            document.getElementById('edit_ano_obtencion').value = anoObtencion;
+            document.getElementById('edit_cedula_profesional').value = cedula;
+            document.getElementById('edit_observaciones').value = observaciones;
+
+            // Limpiar input de archivo
+            document.getElementById('edit_documento').value = '';
+
+            // Mostrar el modal
+            const editModal = new bootstrap.Modal(document.getElementById('editModal'));
+            editModal.show();
         });
+    });
 
-        // Mostrar nombre del archivo seleccionado
-        document.getElementById('documento').addEventListener('change', function(e) {
-            const fileInput = e.target;
-            const fileName = fileInput.files[0] ? fileInput.files[0].name : '';
-            const filePreview = document.getElementById('filePreview');
-            const fileNameSpan = document.getElementById('fileName');
-            
-            if (fileName) {
-                fileNameSpan.textContent = fileName;
-                filePreview.style.display = 'flex';
-            } else {
-                filePreview.style.display = 'none';
-            }
-        });
-
-        // Limpiar selección de archivo
-        window.clearFile = function() {
-            document.getElementById('documento').value = '';
-            document.getElementById('filePreview').style.display = 'none';
-        };
-
-        // Validación de año actual
-        document.getElementById('ano_obtencion').addEventListener('input', function(e) {
-            const currentYear = new Date().getFullYear();
-            const inputYear = parseInt(e.target.value);
-            
-            if (inputYear > currentYear) {
-                e.target.setCustomValidity(`El año no puede ser mayor a ${currentYear}`);
-            } else {
-                e.target.setCustomValidity('');
-            }
-        });
-
-        // Validación de fecha futura
-        document.getElementById('fecha_expedicion_cedula').addEventListener('input', function(e) {
-            const selectedDate = new Date(e.target.value);
-            const today = new Date();
-            
-            if (selectedDate > today) {
-                e.target.setCustomValidity('La fecha no puede ser futura');
-            } else {
-                e.target.setCustomValidity('');
-            }
-        });
-
-        // Validar formulario antes de enviar
-        document.getElementById('gradoForm').addEventListener('submit', function(e) {
-            const nivel = document.getElementById('nivel').value;
-            const titulo = document.getElementById('nombre_titulo').value;
-            
-            if (!nivel || !titulo) {
+    // Reemplazar el confirm nativo por el modal personalizado
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.delete-grado-form button[type="submit"]').forEach(button => {
+            button.addEventListener('click', function(e) {
                 e.preventDefault();
-                alert('Por favor complete todos los campos obligatorios marcados con *');
-                return false;
-            }
-            
-            return true;
+                const form = this.closest('form');
+                const gradoCard = this.closest('.grado-card-compact');
+                const gradoTitulo = gradoCard.querySelector('.grado-title-compact').textContent;
+                const gradoNivel = gradoCard.querySelector('.grado-nivel-compact').textContent;
+                
+                // Mostrar información en el modal
+                document.getElementById('gradoInfoEliminar').textContent = `${gradoNivel}: ${gradoTitulo}`;
+                
+                // Configurar el formulario
+                document.getElementById('deleteGradoForm').action = form.action;
+                
+                // Mostrar el modal
+                const deleteModal = new bootstrap.Modal(document.getElementById('deleteConfirmModal'));
+                deleteModal.show();
+            });
         });
-
-        // Mostrar formulario si hay errores
-        document.addEventListener('DOMContentLoaded', function() {
-            const hasErrors = {{ $errors->any() ? 'true' : 'false' }};
-            if (hasErrors) {
-                gradoFormContainer.style.display = 'block';
-            }
-        });
+    });
     </script>
 </body>
 </html>
-

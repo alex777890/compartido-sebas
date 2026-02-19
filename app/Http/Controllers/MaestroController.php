@@ -580,7 +580,6 @@ public function editarMiPerfil()
             ->with('error', 'Error al cargar formulario: ' . $e->getMessage());
     }
 }
-
 /**
  * ✅ NUEVO MÉTODO: Actualizar datos personales del maestro
  */
@@ -600,7 +599,7 @@ public function actualizarMiPerfil(Request $request)
                 ->with('error', 'No tienes un perfil registrado.');
         }
 
-        // ✅ Validación de datos
+        // ✅ Validación de datos COMPLETA (DESCOMENTADA)
         $validated = $request->validate([
             'nombres' => 'required|string|max:100',
             'apellido_paterno' => 'required|string|max:50',
@@ -611,21 +610,26 @@ public function actualizarMiPerfil(Request $request)
             'estado_civil' => 'nullable|in:Soltero,Casado,Divorciado,Viudo,Unión Libre',
             'telefono' => 'nullable|string|max:15',
             'direccion' => 'nullable|string|max:255',
-            // Los siguientes campos no se pueden cambiar desde el panel del maestro
-            // 'email' => 'required|email|unique:maestros,email,' . $maestro->id,
-            // 'rfc' => 'required|string|size:13|unique:maestros,rfc,' . $maestro->id,
-            // 'curp' => 'required|string|size:18|unique:maestros,curp,' . $maestro->id,
-            // 'maximo_grado_academico' => 'required|in:Licenciatura,Especialidad,Maestría,Doctorado',
-            // 'coordinaciones_id' => 'required|exists:coordinaciones,id',
+            // ✅ CAMPOS INSTITUCIONALES - AHORA EDITABLES
+            'email' => 'required|email|unique:maestros,email,' . $maestro->id,
+            'rfc' => 'required|string|size:13|unique:maestros,rfc,' . $maestro->id,
+            'curp' => 'required|string|size:18|unique:maestros,curp,' . $maestro->id,
+            'maximo_grado_academico' => 'required|in:Licenciatura,Especialidad,Maestría,Doctorado',
+            'coordinaciones_id' => 'required|exists:coordinaciones,id',
         ], [
             'fecha_nacimiento.before' => 'La fecha de nacimiento no puede ser futura.',
             'edad.min' => 'La edad mínima debe ser 18 años.',
             'edad.max' => 'La edad máxima no puede exceder 100 años.',
+            'email.unique' => 'Este email ya está registrado por otro usuario.',
+            'rfc.unique' => 'Este RFC ya está registrado por otro usuario.',
+            'rfc.size' => 'El RFC debe tener exactamente 13 caracteres.',
+            'curp.unique' => 'Esta CURP ya está registrada por otro usuario.',
+            'curp.size' => 'La CURP debe tener exactamente 18 caracteres.',
         ]);
 
         \Log::info('Validación pasada correctamente');
 
-        // ✅ Actualizar solo los campos permitidos
+        // ✅ Actualizar TODOS los campos (incluyendo institucionales)
         $maestro->update([
             'nombres' => $validated['nombres'],
             'apellido_paterno' => $validated['apellido_paterno'],
@@ -636,13 +640,18 @@ public function actualizarMiPerfil(Request $request)
             'estado_civil' => $validated['estado_civil'] ?? null,
             'telefono' => $validated['telefono'] ?? null,
             'direccion' => $validated['direccion'] ?? null,
+            // ✅ CAMPOS INSTITUCIONALES AGREGADOS
+            'email' => $validated['email'],
+            'rfc' => $validated['rfc'],
+            'curp' => $validated['curp'],
+            'maximo_grado_academico' => $validated['maximo_grado_academico'],
+            'coordinaciones_id' => $validated['coordinaciones_id'],
         ]);
 
         \Log::info('Perfil actualizado exitosamente. ID: ' . $maestro->id);
         
-// POR ESTO:
-return redirect()->route('editar-mi-perfil')
-    ->with('success', '¡Tus datos personales han sido actualizados exitosamente!');
+        return redirect()->route('editar-mi-perfil')
+            ->with('success', '¡Todos tus datos han sido actualizados exitosamente!');
 
     } catch (\Illuminate\Validation\ValidationException $e) {
         \Log::error('Error de validación: ' . json_encode($e->errors()));
@@ -659,7 +668,6 @@ return redirect()->route('editar-mi-perfil')
             ->with('error', 'Error al actualizar el perfil: ' . $e->getMessage());
     }
 }
-
 
 
     //////////////////

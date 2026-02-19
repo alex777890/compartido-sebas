@@ -998,12 +998,13 @@
                 $maestroData = $maestroData ?? $maestro ?? null;
                 $actividadesRecientes = $actividadesRecientes ?? [];
             @endphp
-
-            <!-- LETRERO DE BIENVENIDA - COMPACTO Y ELEGANTE -->
-            <div class="welcome-message">
-                <i class="fas fa-hand-wave"></i>
-                <span>¡Bienvenido/a, {{ $maestroData->nombres ?? 'Profesor' }}!</span>
-            </div>
+ <!-- LETRERO DE BIENVENIDA - CON SALUDO DINÁMICO -->
+<div class="welcome-message" id="welcomeContainer">
+    <i class="fas fa-hand-wave"></i>
+    <span id="welcomeText">
+        Cargando saludo...
+    </span>
+</div>
 
             <!-- ALERTA DEL SISTEMA -->
             @if($hayPeriodoHabilitado && $faltantes > 0)
@@ -1215,6 +1216,39 @@
                 });
             });
         });
+
+function actualizarSaludoMexico() {
+    const welcomeText = document.getElementById('welcomeText');
+    if (!welcomeText) return;
+    
+    // Crear fecha con zona horaria de México
+    const opciones = { timeZone: 'America/Mexico_City', hour: 'numeric', hour12: false };
+    const formatter = new Intl.DateTimeFormat('es-MX', opciones);
+    const horaMexico = parseInt(formatter.format(new Date()));
+    
+    const nombre = "{{ $maestroData->nombres ?? 'Profesor' }}";
+    let saludo, emoji;
+    
+    if (horaMexico >= 0 && horaMexico < 12) {
+        emoji = '🌅';
+        saludo = 'Buenos días';
+    } else if (horaMexico >= 12 && horaMexico < 19) {
+        emoji = '☀️';
+        saludo = 'Buenas tardes';
+    } else {
+        emoji = '🌙';
+        saludo = 'Buenas noches';
+    }
+    
+    // Mostrar SOLO el saludo sin la hora
+    welcomeText.innerHTML = `${emoji} ¡${saludo}, ${nombre}! Bienvenido/a al Sistema`;
+}
+
+// Ejecutar inmediatamente
+actualizarSaludoMexico();
+
+// Actualizar cada minuto
+setInterval(actualizarSaludoMexico, 60000);
     </script>
 </body>
 </html>

@@ -2185,7 +2185,7 @@
                             </h3>
                             <p>
                                 @if($hayPeriodoHabilitado)
-                                Sistema de carga de documentos habilitado
+                                Sistema de carga de documentos habilitado sube tus documentos de forma correctamente  para poder ser revisados y guardarlos en tu expediente.
                                 @else
                                 El sistema se activará automáticamente cuando se habilite un nuevo período para que puedas subir tus documentos.
                                 @endif

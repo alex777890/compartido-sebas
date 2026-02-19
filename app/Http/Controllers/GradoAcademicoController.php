@@ -32,13 +32,12 @@ class GradoAcademicoController extends Controller
      */
     public function store(Request $request)
     {
-        // Validación de datos
+        // Validación de datos - Eliminado fecha_expedicion_cedula
         $validated = $request->validate([
             'maestro_id' => 'required|exists:maestros,id',
             'nivel' => 'required|in:Licenciatura,Especialidad,Maestría,Doctorado',
             'nombre_titulo' => 'required|string|max:200',
             'cedula_profesional' => 'nullable|string|max:20',
-            'fecha_expedicion_cedula' => 'nullable|date|before_or_equal:today',
             'institucion' => 'nullable|string|max:150',
             'ano_obtencion' => 'nullable|integer|min:1900|max:' . (date('Y')),
             'observaciones' => 'nullable|string|max:500',
@@ -50,7 +49,6 @@ class GradoAcademicoController extends Controller
             'nivel.in' => 'El nivel académico debe ser válido.',
             'nombre_titulo.required' => 'El nombre del título es requerido.',
             'nombre_titulo.max' => 'El nombre del título no debe exceder los 200 caracteres.',
-            'fecha_expedicion_cedula.before_or_equal' => 'La fecha de expedición no puede ser futura.',
             'ano_obtencion.max' => 'El año de obtención no puede ser mayor al año actual.',
             'documento.mimes' => 'El documento debe ser un archivo PDF, JPG, JPEG o PNG.',
             'documento.max' => 'El documento no debe pesar más de 2MB.',
@@ -128,17 +126,16 @@ class GradoAcademicoController extends Controller
         try {
             $grado = GradoAcademico::findOrFail($id);
 
+            // Validación - Eliminado fecha_expedicion_cedula
             $validated = $request->validate([
                 'nivel' => 'required|in:Licenciatura,Especialidad,Maestría,Doctorado',
                 'nombre_titulo' => 'required|string|max:200',
                 'cedula_profesional' => 'nullable|string|max:20',
-                'fecha_expedicion_cedula' => 'nullable|date|before_or_equal:today',
                 'institucion' => 'nullable|string|max:150',
                 'ano_obtencion' => 'nullable|integer|min:1900|max:' . (date('Y')),
                 'observaciones' => 'nullable|string|max:500',
                 'documento' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             ], [
-                'fecha_expedicion_cedula.before_or_equal' => 'La fecha de expedición no puede ser futura.',
                 'ano_obtencion.max' => 'El año de obtención no puede ser mayor al año actual.',
                 'documento.mimes' => 'El documento debe ser un archivo PDF, JPG, JPEG o PNG.',
                 'documento.max' => 'El documento no debe pesar más de 2MB.',
@@ -315,12 +312,12 @@ class GradoAcademicoController extends Controller
     }
 
     /**
-     * Almacena un nuevo grado académico (para maestros)
+     * Almacena un nuevo grado académico (para maestros) - CORREGIDO
      */
     public function storeMaestro(Request $request)
     {
         try {
-            // Validación
+            // Validación - Eliminado fecha_expedicion_cedula
             $validated = $request->validate([
                 'maestro_id' => 'required|exists:maestros,id',
                 'nivel' => 'required|in:Licenciatura,Especialidad,Maestría,Doctorado',
@@ -328,9 +325,8 @@ class GradoAcademicoController extends Controller
                 'institucion' => 'nullable|string|max:255',
                 'ano_obtencion' => 'nullable|integer|min:1900|max:' . date('Y'),
                 'cedula_profesional' => 'nullable|string|max:50',
-                'fecha_expedicion_cedula' => 'nullable|date|before_or_equal:today',
-                'documento' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
                 'observaciones' => 'nullable|string|max:500',
+                'documento' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             ]);
 
             // Verificar que el maestro pertenezca al usuario autenticado
@@ -340,15 +336,27 @@ class GradoAcademicoController extends Controller
 
             $grado = new GradoAcademico($validated);
 
-            // Subir documento si existe
+            // Subir documento si existe - CORREGIDO: usar storeAs para tener control del nombre
             if ($request->hasFile('documento')) {
-                $path = $request->file('documento')->store('grados_academicos', 'public');
-                $grado->documento = $path;
+                $file = $request->file('documento');
+                $fileName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $filePath = $file->storeAs('grados_academicos', $fileName, 'public');
+                
+                if (!$filePath) {
+                    throw new \Exception('Error al guardar el archivo en el servidor.');
+                }
+                
+                $grado->documento = $filePath;
+                $grado->nombre_documento = $file->getClientOriginalName();
+                
+                Log::info('Documento guardado en storeMaestro:', [
+                    'ruta' => $filePath,
+                    'nombre_original' => $grado->nombre_documento
+                ]);
             }
 
             $maestro->gradosAcademicos()->save($grado);
 
-            // IMPORTANTE: Redirigir a la ruta de maestro, no a la de admin
             return redirect()->route('maestros.grados.index')
                             ->with('success', 'Grado académico registrado exitosamente.');
                             
@@ -360,6 +368,11 @@ class GradoAcademicoController extends Controller
             return redirect()->route('maestros.grados.index')
                             ->with('error', 'No tienes permiso para realizar esta acción.');
         } catch (\Exception $e) {
+            Log::error('Error al guardar grado académico:', [
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
             return redirect()->route('maestros.grados.index')
                             ->with('error', 'Error al guardar el grado académico: ' . $e->getMessage());
         }
@@ -378,7 +391,14 @@ class GradoAcademicoController extends Controller
             $grado = GradoAcademico::where('maestro_id', $maestro->id)
                                   ->findOrFail($id);
             
-            return view('grados_academicos.edit_maestros', compact('grado', 'maestro'));
+            // Obtener todos los grados del maestro para mostrar en la lista
+            $gradosAcademicos = $maestro->gradosAcademicos()->orderBy('nivel', 'desc')->get();
+            
+            return view('grados_academicos.create_maestros', compact(
+                'grado', 
+                'maestro', 
+                'gradosAcademicos'
+            ));
             
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return redirect()->route('maestros.grados.index')
@@ -387,21 +407,20 @@ class GradoAcademicoController extends Controller
     }
 
     /**
-     * Actualiza un grado académico (para maestros)
+     * Actualiza un grado académico (para maestros) - CORREGIDO
      */
     public function updateMaestro(Request $request, $id)
     {
         try {
-            // Validación
+            // Validación - Eliminado fecha_expedicion_cedula
             $validated = $request->validate([
                 'nivel' => 'required|in:Licenciatura,Especialidad,Maestría,Doctorado',
                 'nombre_titulo' => 'required|string|max:255',
                 'institucion' => 'nullable|string|max:255',
                 'ano_obtencion' => 'nullable|integer|min:1900|max:' . date('Y'),
                 'cedula_profesional' => 'nullable|string|max:50',
-                'fecha_expedicion_cedula' => 'nullable|date|before_or_equal:today',
-                'documento' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
                 'observaciones' => 'nullable|string|max:500',
+                'documento' => 'nullable|file|mimes:pdf,jpg,jpeg,png|max:2048',
             ]);
 
             // Obtener el maestro autenticado
@@ -411,18 +430,38 @@ class GradoAcademicoController extends Controller
             $grado = GradoAcademico::where('maestro_id', $maestro->id)
                                   ->findOrFail($id);
 
-            // Subir nuevo documento si existe
+            // Subir nuevo documento si existe - CORREGIDO
             if ($request->hasFile('documento')) {
                 // Eliminar documento anterior si existe
                 if ($grado->documento && Storage::disk('public')->exists($grado->documento)) {
                     Storage::disk('public')->delete($grado->documento);
+                    Log::info('Documento anterior eliminado:', ['ruta' => $grado->documento]);
                 }
                 
-                $path = $request->file('documento')->store('grados_academicos', 'public');
-                $validated['documento'] = $path;
+                $file = $request->file('documento');
+                $fileName = time() . '_' . preg_replace('/[^a-zA-Z0-9._-]/', '_', $file->getClientOriginalName());
+                $filePath = $file->storeAs('grados_academicos', $fileName, 'public');
+                
+                if (!$filePath) {
+                    throw new \Exception('Error al guardar el archivo en el servidor.');
+                }
+                
+                $validated['documento'] = $filePath;
+                $validated['nombre_documento'] = $file->getClientOriginalName();
+                
+                Log::info('Documento actualizado en updateMaestro:', [
+                    'ruta' => $filePath,
+                    'nombre_original' => $validated['nombre_documento']
+                ]);
             }
 
             $grado->update($validated);
+            
+            Log::info('Grado académico actualizado:', [
+                'id' => $grado->id,
+                'documento' => $grado->documento,
+                'nombre_documento' => $grado->nombre_documento
+            ]);
 
             return redirect()->route('maestros.grados.index')
                             ->with('success', 'Grado académico actualizado exitosamente.');
@@ -434,6 +473,15 @@ class GradoAcademicoController extends Controller
         } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
             return redirect()->route('maestros.grados.index')
                              ->with('error', 'Grado académico no encontrado o no tienes permisos para editarlo.');
+        } catch (\Exception $e) {
+            Log::error('Error al actualizar grado académico:', [
+                'grado_id' => $id,
+                'error' => $e->getMessage(),
+                'trace' => $e->getTraceAsString()
+            ]);
+            
+            return redirect()->route('maestros.grados.index')
+                             ->with('error', 'Error al actualizar el grado académico: ' . $e->getMessage());
         }
     }
 
@@ -453,6 +501,7 @@ class GradoAcademicoController extends Controller
             // Eliminar el archivo asociado si existe
             if ($grado->documento && Storage::disk('public')->exists($grado->documento)) {
                 Storage::disk('public')->delete($grado->documento);
+                Log::info('Documento eliminado al eliminar grado:', ['ruta' => $grado->documento]);
             }
             
             $grado->delete();
@@ -465,85 +514,86 @@ class GradoAcademicoController extends Controller
                              ->with('error', 'Grado académico no encontrado o no tienes permisos para eliminarlo.');
         }
     }
-    /**
- * Muestra el documento de un grado académico (para maestros)
- */
-public function showDocumentMaestro($id)
-{
-    try {
-        // Obtener el maestro autenticado
-        $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
-        
-        // Buscar el grado académico que pertenezca a este maestro
-        $grado = GradoAcademico::where('maestro_id', $maestro->id)
-                              ->findOrFail($id);
-        
-        if (!$grado->documento) {
-            return redirect()->back()->with('error', 'No hay documento disponible.');
-        }
-        
-        if (!Storage::disk('public')->exists($grado->documento)) {
-            return redirect()->back()->with('error', 'El documento no se encuentra en el servidor.');
-        }
-        
-        $filePath = Storage::disk('public')->path($grado->documento);
-        $mimeType = Storage::disk('public')->mimeType($grado->documento);
-        
-        return response()->file($filePath, [
-            'Content-Type' => $mimeType,
-            'Content-Disposition' => 'inline; filename="' . ($grado->nombre_documento ?? 'documento') . '"'
-        ]);
-        
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return redirect()->route('maestros.grados.index')
-                         ->with('error', 'Documento no encontrado o no tienes permisos para verlo.');
-    } catch (\Exception $e) {
-        Log::error('Error al mostrar documento:', [
-            'grado_id' => $id,
-            'error' => $e->getMessage()
-        ]);
-        
-        return redirect()->route('maestros.grados.index')
-                         ->with('error', 'Error al mostrar el documento.');
-    }
-}
 
-/**
- * Descarga el documento de un grado académico (para maestros)
- */
-public function downloadDocumentMaestro($id)
-{
-    try {
-        // Obtener el maestro autenticado
-        $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
-        
-        // Buscar el grado académico que pertenezca a este maestro
-        $grado = GradoAcademico::where('maestro_id', $maestro->id)
-                              ->findOrFail($id);
-        
-        if (!$grado->documento) {
-            return redirect()->back()->with('error', 'No hay documento disponible para descargar.');
+    /**
+     * Muestra el documento de un grado académico (para maestros)
+     */
+    public function showDocumentMaestro($id)
+    {
+        try {
+            // Obtener el maestro autenticado
+            $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
+            
+            // Buscar el grado académico que pertenezca a este maestro
+            $grado = GradoAcademico::where('maestro_id', $maestro->id)
+                                  ->findOrFail($id);
+            
+            if (!$grado->documento) {
+                return redirect()->back()->with('error', 'No hay documento disponible.');
+            }
+            
+            if (!Storage::disk('public')->exists($grado->documento)) {
+                return redirect()->back()->with('error', 'El documento no se encuentra en el servidor.');
+            }
+            
+            $filePath = Storage::disk('public')->path($grado->documento);
+            $mimeType = Storage::disk('public')->mimeType($grado->documento);
+            
+            return response()->file($filePath, [
+                'Content-Type' => $mimeType,
+                'Content-Disposition' => 'inline; filename="' . ($grado->nombre_documento ?? 'documento') . '"'
+            ]);
+            
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('maestros.grados.index')
+                             ->with('error', 'Documento no encontrado o no tienes permisos para verlo.');
+        } catch (\Exception $e) {
+            Log::error('Error al mostrar documento:', [
+                'grado_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return redirect()->route('maestros.grados.index')
+                             ->with('error', 'Error al mostrar el documento.');
         }
-        
-        if (!Storage::disk('public')->exists($grado->documento)) {
-            return redirect()->back()->with('error', 'El documento no se encuentra en el servidor.');
-        }
-        
-        $nombreDescarga = $grado->nombre_documento ?? 'documento_' . $grado->id . '.pdf';
-        
-        return Storage::disk('public')->download($grado->documento, $nombreDescarga);
-        
-    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
-        return redirect()->route('maestros.grados.index')
-                         ->with('error', 'Documento no encontrado o no tienes permisos para descargarlo.');
-    } catch (\Exception $e) {
-        Log::error('Error al descargar documento:', [
-            'grado_id' => $id,
-            'error' => $e->getMessage()
-        ]);
-        
-        return redirect()->route('maestros.grados.index')
-                         ->with('error', 'Error al descargar el documento.');
     }
-}
+
+    /**
+     * Descarga el documento de un grado académico (para maestros)
+     */
+    public function downloadDocumentMaestro($id)
+    {
+        try {
+            // Obtener el maestro autenticado
+            $maestro = Maestro::where('user_id', auth()->id())->firstOrFail();
+            
+            // Buscar el grado académico que pertenezca a este maestro
+            $grado = GradoAcademico::where('maestro_id', $maestro->id)
+                                  ->findOrFail($id);
+            
+            if (!$grado->documento) {
+                return redirect()->back()->with('error', 'No hay documento disponible para descargar.');
+            }
+            
+            if (!Storage::disk('public')->exists($grado->documento)) {
+                return redirect()->back()->with('error', 'El documento no se encuentra en el servidor.');
+            }
+            
+            $nombreDescarga = $grado->nombre_documento ?? 'documento_' . $grado->id . '.pdf';
+            
+            return Storage::disk('public')->download($grado->documento, $nombreDescarga);
+            
+        } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+            return redirect()->route('maestros.grados.index')
+                             ->with('error', 'Documento no encontrado o no tienes permisos para descargarlo.');
+        } catch (\Exception $e) {
+            Log::error('Error al descargar documento:', [
+                'grado_id' => $id,
+                'error' => $e->getMessage()
+            ]);
+            
+            return redirect()->route('maestros.grados.index')
+                             ->with('error', 'Error al descargar el documento.');
+        }
+    }
 }
