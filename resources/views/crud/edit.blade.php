@@ -20,15 +20,15 @@
     }
 
     body { 
-        background: white; 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        background: #f5f7fa; 
+        font-family: 'Inter', 'Segoe UI', sans-serif; 
         color: #333; 
-        line-height: 1.6;
+        line-height: 1.5;
         padding: 0;
         margin: 0;
     }
 
-    /* Barra superior */
+    /* Barra superior - TAMAÑO ORIGINAL */
     .navbar-top { 
         background: white; 
         border-bottom: 1px solid var(--border-color);
@@ -74,7 +74,7 @@
         object-fit: contain;
     }
 
-    /* Barra de menú */
+    /* Barra de menú - TAMAÑO ORIGINAL */
     .navbar-menu { 
         background: var(--primary); 
         padding: 0.7rem 0;
@@ -143,6 +143,7 @@
     .navbar-menu .user-name {
         font-weight: 500;
         color: rgba(255, 255, 255, 0.9);
+        font-size: 0.95rem;
     }
 
     .navbar-menu .user-avatar {
@@ -174,57 +175,44 @@
         border-color: rgba(255, 255, 255, 0.6);
     }
 
-    .navbar-menu .logout-btn:active {
-        background: rgba(255, 255, 255, 0.2);
-    }
-
-    /* Contenido principal */
+    /* Contenido principal - MÁS COMPACTO */
     .main-content { 
-        padding: 30px 20px;
-        min-height: calc(100vh - 140px);
+        padding: 20px;
+        min-height: calc(100vh - 110px);
     }
 
     .content-container {
         background: white;
-        border-radius: 6px;
-        padding: 2rem;
-        margin-bottom: 2rem;
+        border-radius: 8px;
+        padding: 1.5rem;
+        margin-bottom: 1rem;
         border: 1px solid var(--border-color);
         box-shadow: var(--card-shadow);
-        max-width: 700px;
-        margin: 2rem auto;
+        max-width: 1200px;
+        margin: 0 auto;
     }
 
-    h1, h2, h3, h4, h5, h6 {
-        font-weight: 600;
-    }
-    
     h2 { 
         color: var(--primary);
-        margin-bottom: 1rem; 
-        padding-bottom: 0.8rem;
-        position: relative;
-        font-size: 1.5rem;
+        margin-bottom: 0.5rem; 
+        font-size: 1.3rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
     }
     
-    h2::after {
-        content: '';
-        position: absolute;
-        bottom: 0;
-        left: 0;
-        width: 50px;
-        height: 2px;
-        background: var(--primary);
+    h2 i {
+        font-size: 1.2rem;
     }
 
-    /* Header mejorado */
+    /* Header compacto */
     .page-header {
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 2rem;
+        margin-bottom: 1.2rem;
         flex-wrap: wrap;
-        gap: 1.5rem;
+        gap: 1rem;
     }
 
     .page-title-section {
@@ -233,83 +221,123 @@
 
     .page-subtitle {
         color: var(--text-muted);
-        font-size: 0.95rem;
+        font-size: 0.85rem;
         margin-bottom: 0;
     }
 
     .page-actions {
         display: flex;
-        gap: 1rem;
+        gap: 0.8rem;
         flex-wrap: wrap;
     }
 
-    /* Formulario */
-    .form-container {
-        margin-top: 1.5rem;
+    /* FORMULARIO EN GRID - 2 COLUMNAS */
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .form-group {
+        background: rgba(7, 68, 182, 0.02);
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        padding: 1rem;
+        margin-bottom: 1rem;
+    }
+
+    .form-group.full-width {
+        grid-column: span 2;
+    }
+
+    .form-group-title {
+        color: var(--primary);
+        font-weight: 600;
+        margin-bottom: 0.8rem;
+        padding-bottom: 0.4rem;
+        border-bottom: 1px solid var(--border-color);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        font-size: 0.95rem;
+    }
+
+    .form-group-title i {
+        font-size: 0.9rem;
+    }
+
+    /* Campos en grid dentro de cada grupo */
+    .fields-grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 1rem;
+    }
+
+    .field-container {
+        margin-bottom: 0.5rem;
+    }
+
+    .field-container.full-width {
+        grid-column: span 2;
     }
 
     .form-label {
         font-weight: 500;
         color: var(--primary);
-        margin-bottom: 0.5rem;
-        font-size: 0.95rem;
+        margin-bottom: 0.3rem;
+        font-size: 0.85rem;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.3rem;
+    }
+
+    .form-label i {
+        font-size: 0.8rem;
+        color: var(--text-muted);
     }
 
     .form-control, .form-select {
         border: 1px solid var(--border-color);
         border-radius: 4px;
-        padding: 0.75rem;
-        font-size: 1rem;
+        padding: 0.5rem 0.75rem;
+        font-size: 0.9rem;
         transition: var(--transition);
+        height: 38px;
     }
 
     .form-control:focus, .form-select:focus {
         border-color: var(--primary);
-        box-shadow: 0 0 0 0.25rem rgba(7, 68, 182, 0.15);
-    }
-
-    .form-control.is-invalid, .form-select.is-invalid {
-        border-color: #dc3545;
-    }
-
-    .form-control.is-invalid:focus {
-        box-shadow: 0 0 0 0.25rem rgba(220, 53, 69, 0.25);
-    }
-
-    .invalid-feedback {
-        font-size: 0.85rem;
-        margin-top: 0.25rem;
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
+        box-shadow: 0 0 0 0.2rem rgba(7, 68, 182, 0.1);
     }
 
     .form-text {
         color: var(--text-muted);
-        font-size: 0.85rem;
-        margin-top: 0.5rem;
+        font-size: 0.75rem;
+        margin-top: 0.2rem;
         display: flex;
         align-items: center;
-        gap: 0.5rem;
+        gap: 0.3rem;
     }
 
-    /* Información del usuario actual */
+    /* Información del usuario actual - Compacta */
     .user-current-info {
-        background: rgba(7, 68, 182, 0.03);
+        background: rgba(7, 68, 182, 0.02);
         border: 1px solid var(--border-color);
         border-radius: 6px;
-        padding: 1.5rem;
-        margin-bottom: 2rem;
+        padding: 1rem;
+        margin-bottom: 1.2rem;
+    }
+
+    .user-current-info h5 {
+        font-size: 0.95rem;
+        margin-bottom: 0.8rem;
+        color: var(--primary);
     }
 
     .user-info-grid {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-        gap: 1rem;
-        margin-top: 1rem;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 0.8rem;
     }
 
     .info-item {
@@ -318,36 +346,80 @@
     }
 
     .info-label {
-        font-size: 0.85rem;
+        font-size: 0.7rem;
         color: var(--text-muted);
-        margin-bottom: 0.25rem;
+        margin-bottom: 0.1rem;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
     }
 
     .info-value {
         font-weight: 500;
         color: var(--primary);
+        font-size: 0.9rem;
     }
 
-    /* Botones */
+    /* Badges compactos */
+    .badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        border-radius: 3px;
+    }
+
+    .role-badge-admin {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    .role-badge-profesor {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .role-badge-coordinacion {
+        background: rgba(7, 68, 182, 0.1);
+        color: var(--primary);
+        border: 1px solid rgba(7, 68, 182, 0.2);
+    }
+
+    /* Coordinación especial */
+    .coordinacion-required {
+        border-left: 3px solid var(--primary);
+        padding-left: 0.8rem;
+        background: rgba(7, 68, 182, 0.03);
+        border-radius: 0 4px 4px 0;
+    }
+
+    /* Contraseña opcional */
+    .password-optional {
+        border-left: 3px solid #28a745;
+        padding-left: 0.8rem;
+        background: rgba(40, 167, 69, 0.03);
+    }
+
+    /* Botones más compactos */
     .btn-primary-custom {
         background: var(--primary);
         border: none;
         color: white;
         font-weight: 500;
-        padding: 0.75rem 1.5rem;
-        border-radius: 5px;
+        padding: 0.5rem 1.2rem;
+        border-radius: 4px;
         transition: var(--transition);
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        font-size: 1rem;
+        gap: 6px;
+        font-size: 0.9rem;
+        height: 38px;
     }
 
     .btn-primary-custom:hover {
         background: #063a9b;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 12px rgba(7, 68, 182, 0.2);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(7, 68, 182, 0.2);
     }
 
     .btn-secondary-custom {
@@ -355,20 +427,19 @@
         border: none;
         color: white;
         font-weight: 500;
-        padding: 0.75rem 1.5rem;
-        border-radius: 5px;
+        padding: 0.5rem 1.2rem;
+        border-radius: 4px;
         transition: var(--transition);
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        font-size: 1rem;
+        gap: 6px;
+        font-size: 0.9rem;
+        height: 38px;
     }
 
     .btn-secondary-custom:hover {
         background: #5a6268;
-        color: white;
-        transform: translateY(-2px);
-        box-shadow: 0 4px 8px rgba(108, 117, 125, 0.2);
+        transform: translateY(-1px);
     }
 
     .btn-outline-custom {
@@ -376,166 +447,113 @@
         border: 1px solid var(--border-color);
         color: var(--primary);
         font-weight: 500;
-        padding: 0.75rem 1.5rem;
-        border-radius: 5px;
+        padding: 0.5rem 1.2rem;
+        border-radius: 4px;
         transition: var(--transition);
         display: inline-flex;
         align-items: center;
-        gap: 8px;
-        font-size: 1rem;
+        gap: 6px;
+        font-size: 0.9rem;
+        height: 38px;
     }
 
     .btn-outline-custom:hover {
         background: rgba(7, 68, 182, 0.05);
         border-color: var(--primary);
-        transform: translateY(-2px);
     }
 
     .btn-group-custom {
         display: flex;
-        gap: 1rem;
-        margin-top: 2rem;
-        padding-top: 1.5rem;
+        gap: 0.8rem;
+        margin-top: 1rem;
+        padding-top: 1rem;
         border-top: 1px solid var(--border-color);
         justify-content: flex-end;
     }
 
-    /* Alertas */
+    /* Alertas compactas */
     .alert {
-        border-radius: 6px;
-        border: 1px solid transparent;
-        padding: 1rem;
-        margin-bottom: 1.5rem;
+        border-radius: 4px;
+        padding: 0.8rem;
+        margin-bottom: 1rem;
+        font-size: 0.9rem;
+    }
+
+    .alert ul {
+        margin: 0.3rem 0 0 1.2rem;
+        padding-left: 0.5rem;
     }
 
     .alert-danger {
-        background-color: rgba(220, 53, 69, 0.1);
+        background-color: rgba(220, 53, 69, 0.05);
         border-color: rgba(220, 53, 69, 0.2);
         color: #dc3545;
     }
 
-    .alert-danger ul {
-        margin: 0.5rem 0 0 1rem;
-        padding-left: 1rem;
-    }
-
-    .alert-danger li {
-        margin-bottom: 0.25rem;
-    }
-
-    .alert-danger .btn-close {
-        filter: invert(1) brightness(0.5) sepia(1) hue-rotate(-70deg) saturate(5);
-    }
-
     /* Campos dinámicos */
-    .field-container {
-        margin-bottom: 1.5rem;
-        transition: var(--transition);
-        opacity: 1;
-        height: auto;
-        overflow: hidden;
-    }
-
     .field-container.hidden {
-        opacity: 0;
-        height: 0;
-        margin: 0;
-        padding: 0;
-        visibility: hidden;
+        display: none;
     }
 
     .field-container.visible {
-        opacity: 1;
-        height: auto;
-        margin-bottom: 1.5rem;
-        visibility: visible;
-    }
-
-    /* Grupo de formulario */
-    .form-group {
-        background: rgba(7, 68, 182, 0.02);
-        border: 1px solid var(--border-color);
-        border-radius: 6px;
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
-    }
-
-    .form-group-title {
-        color: var(--primary);
-        font-weight: 600;
-        margin-bottom: 1rem;
-        padding-bottom: 0.5rem;
-        border-bottom: 1px solid var(--border-color);
-        display: flex;
-        align-items: center;
-        gap: 0.5rem;
-    }
-
-    /* Coordinación especial */
-    .coordinacion-required {
-        border-left: 4px solid var(--primary);
-        padding-left: 1rem;
-        background: rgba(7, 68, 182, 0.03);
-    }
-
-    /* Contraseña opcional */
-    .password-optional {
-        background: rgba(40, 167, 69, 0.03);
-        border-left: 4px solid #28a745;
-        padding-left: 1rem;
+        display: block;
     }
 
     /* Responsive */
+    @media (max-width: 992px) {
+        .form-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .form-group.full-width {
+            grid-column: span 1;
+        }
+        
+        .fields-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .field-container.full-width {
+            grid-column: span 1;
+        }
+        
+        .user-info-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
     @media (max-width: 768px) {
-        .navbar-brand {
-            font-size: 1.2rem;
-        }
-        
-        .navbar-menu .nav-link {
-            padding: 0.5rem 1rem !important;
-            margin: 0.1rem 0;
-        }
-        
-        .main-content {
-            padding: 20px 15px;
-        }
-        
-        .content-container {
-            padding: 1.5rem;
-            margin: 1rem auto;
-        }
-        
-        .navbar-menu {
-            top: 60px;
+        .navbar-top {
+            padding: 0.4rem 0;
         }
         
         .logo-img {
-            height: 45px;
+            height: 40px;
         }
         
-        .navbar-menu .user-info-container {
-            flex-direction: column;
-            gap: 10px;
-            align-items: flex-end;
-            margin-top: 10px;
-            padding-top: 10px;
-            border-top: 1px solid rgba(255, 255, 255, 0.2);
+        .navbar-brand {
+            font-size: 1.1rem;
+        }
+        
+        .navbar-menu {
+            top: 58px;
+        }
+        
+        .main-content {
+            padding: 15px;
+        }
+        
+        .content-container {
+            padding: 1rem;
         }
         
         .page-header {
             flex-direction: column;
             align-items: stretch;
-            gap: 1rem;
         }
         
         .page-actions {
             width: 100%;
-            justify-content: stretch;
-        }
-        
-        .page-actions .btn {
-            flex: 1;
-            justify-content: center;
         }
         
         .btn-group-custom {
@@ -547,38 +565,36 @@
             justify-content: center;
         }
         
-        .form-group {
-            padding: 1rem;
+        .user-info-container {
+            flex-direction: column;
+            gap: 8px;
+            align-items: flex-start;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255,255,255,0.2);
         }
         
         .user-info-grid {
             grid-template-columns: 1fr;
+            gap: 0.5rem;
         }
     }
 
     @media (max-width: 576px) {
         h2 {
-            font-size: 1.3rem;
-        }
-        
-        .logo-img {
-            height: 40px;
+            font-size: 1.2rem;
         }
         
         .content-container {
-            padding: 1.2rem;
-            border-radius: 4px;
+            padding: 0.8rem;
         }
         
-        .btn-primary-custom, 
-        .btn-secondary-custom, 
-        .btn-outline-custom {
-            padding: 0.6rem 1rem;
-            font-size: 0.9rem;
+        .form-group {
+            padding: 0.8rem;
         }
         
         .user-current-info {
-            padding: 1rem;
+            padding: 0.8rem;
         }
     }
     </style>
@@ -596,7 +612,7 @@
         </div>
     </nav>
 
-    <!-- Segunda barra - Menú -->
+    <!-- Segunda barra - Menú (SIN MODIFICAR) -->
     <nav class="navbar navbar-expand-lg navbar-menu">
         <div class="container">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -634,36 +650,36 @@
         <div class="row">
             <div class="col-12 main-content">
                 <div class="content-container">
-                    <!-- Header mejorado del contenido -->
+                    <!-- Header compacto -->
                     <div class="page-header">
                         <div class="page-title-section">
-                            <h2><i class="fas fa-user-edit me-2"></i>Editar Usuario</h2>
+                            <h2>
+                                <i class="fas fa-user-edit"></i>
+                                Editar Usuario
+                            </h2>
                             <p class="page-subtitle">Modifique la información del usuario {{ $user->name }}</p>
                         </div>
                         <div class="page-actions">
                             <a href="{{ route('users.index') }}" class="btn-outline-custom">
-                                <i class="fas fa-users me-2"></i>Ver Usuarios
-                            </a>
-                            <a href="{{ route('dashboard') }}" class="btn-secondary-custom">
-                                <i class="fas fa-home me-2"></i>Inicio
+                                <i class="fas fa-users"></i>Ver Usuarios
                             </a>
                         </div>
                     </div>
 
-                    <!-- Información actual del usuario -->
+                    <!-- Información actual del usuario (compacta) -->
                     <div class="user-current-info">
-                        <h5 class="mb-3"><i class="fas fa-info-circle me-2 text-primary"></i>Información Actual</h5>
+                        <h5 class="mb-2"><i class="fas fa-info-circle me-1 text-primary"></i>Información Actual</h5>
                         <div class="user-info-grid">
                             <div class="info-item">
-                                <span class="info-label">ID del Usuario</span>
+                                <span class="info-label">ID</span>
                                 <span class="info-value">#{{ $user->id }}</span>
                             </div>
                             <div class="info-item">
-                                <span class="info-label">Correo Actual</span>
+                                <span class="info-label">Correo</span>
                                 <span class="info-value">{{ $user->email }}</span>
                             </div>
                             <div class="info-item">
-                                <span class="info-label">Rol Actual</span>
+                                <span class="info-label">Rol</span>
                                 <span class="info-value">
                                     @if($user->role === 'admin')
                                         <span class="badge role-badge-admin"><i class="fas fa-crown me-1"></i>Administrador</span>
@@ -675,7 +691,7 @@
                                 </span>
                             </div>
                             <div class="info-item">
-                                <span class="info-label">Coordinación Asignada</span>
+                                <span class="info-label">Coordinación</span>
                                 <span class="info-value">
                                     @if($user->coordinacion)
                                         <span class="badge bg-secondary">
@@ -692,187 +708,158 @@
 
                     <!-- Alertas de errores -->
                     @if($errors->any())
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <div class="d-flex align-items-center">
-                                <i class="fas fa-exclamation-triangle me-2"></i>
-                                <div class="flex-grow-1">
-                                    <strong class="me-2">Por favor corrige los siguientes errores:</strong>
-                                    <ul class="mb-0 mt-2">
+                        <div class="alert alert-danger alert-dismissible fade show">
+                            <div class="d-flex">
+                                <i class="fas fa-exclamation-triangle me-2 mt-1"></i>
+                                <div>
+                                    <strong>Errores encontrados:</strong>
+                                    <ul class="mb-0">
                                         @foreach($errors->all() as $error)
                                             <li>{{ $error }}</li>
                                         @endforeach
                                     </ul>
                                 </div>
+                                <button type="button" class="btn-close ms-auto" data-bs-dismiss="alert"></button>
                             </div>
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
                         </div>
                     @endif
 
-                    <!-- Formulario de edición -->
-                    <form method="POST" action="{{ route('users.update', $user) }}" class="form-container" id="userForm">
+                    <!-- Formulario en GRID de 2 columnas -->
+                    <form method="POST" action="{{ route('users.update', $user) }}" id="userForm">
                         @csrf
                         @method('PUT')
 
-                        <!-- Grupo 1: Información básica -->
-                        <div class="form-group">
-                            <h4 class="form-group-title">
-                                <i class="fas fa-id-card"></i> Información Personal
-                            </h4>
-                            
-                            <!-- Nombre completo -->
-                            <div class="field-container">
-                                <label for="name" class="form-label">
-                                    <i class="fas fa-user"></i>Nombre Completo
-                                </label>
-                                <input type="text" 
-                                       class="form-control @error('name') is-invalid @enderror" 
-                                       id="name" 
-                                       name="name" 
-                                       value="{{ old('name', $user->name) }}" 
-                                       placeholder="Ej: Juan Pérez González"
-                                       required>
-                                @error('name')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i>{{ $message }}
+                        <div class="form-grid">
+                            <!-- Grupo 1: Información personal -->
+                            <div class="form-group">
+                                <h4 class="form-group-title">
+                                    <i class="fas fa-id-card"></i> Información Personal
+                                </h4>
+                                <div class="fields-grid">
+                                    <!-- Nombre completo -->
+                                    <div class="field-container full-width">
+                                        <label for="name" class="form-label">
+                                            <i class="fas fa-user"></i>Nombre Completo
+                                        </label>
+                                        <input type="text" 
+                                               class="form-control @error('name') is-invalid @enderror" 
+                                               id="name" name="name" 
+                                               value="{{ old('name', $user->name) }}" 
+                                               placeholder="Juan Pérez González" required>
+                                        @error('name')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                @enderror
-                            </div>
 
-                            <!-- Correo electrónico -->
-                            <div class="field-container">
-                                <label for="email" class="form-label">
-                                    <i class="fas fa-envelope"></i>Correo Electrónico
-                                </label>
-                                <input type="email" 
-                                       class="form-control @error('email') is-invalid @enderror" 
-                                       id="email" 
-                                       name="email" 
-                                       value="{{ old('email', $user->email) }}" 
-                                       placeholder="ejemplo@iufim.edu.mx"
-                                       required>
-                                @error('email')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i>{{ $message }}
+                                    <!-- Correo electrónico -->
+                                    <div class="field-container full-width">
+                                        <label for="email" class="form-label">
+                                            <i class="fas fa-envelope"></i>Correo Electrónico
+                                        </label>
+                                        <input type="email" 
+                                               class="form-control @error('email') is-invalid @enderror" 
+                                               id="email" name="email" 
+                                               value="{{ old('email', $user->email) }}" 
+                                               placeholder="ejemplo@iufim.edu.mx" required>
+                                        @error('email')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div class="form-text">
+                                            <i class="fas fa-info-circle"></i>
+                                            Será el usuario de acceso
+                                        </div>
                                     </div>
-                                @enderror
-                                <div class="form-text">
-                                    <i class="fas fa-info-circle"></i>
-                                    Este será el usuario para acceder al sistema
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Grupo 2: Rol y permisos -->
-                        <div class="form-group">
-                            <h4 class="form-group-title">
-                                <i class="fas fa-user-tag"></i> Permisos y Acceso
-                            </h4>
-                            
-                            <!-- Rol -->
-                            <div class="field-container">
-                                <label for="role" class="form-label">
-                                    <i class="fas fa-user-shield"></i>Tipo de Usuario
-                                </label>
-                                <select class="form-select @error('role') is-invalid @enderror" 
-                                        id="role" 
-                                        name="role" 
-                                        required>
-                                    <option value="">Seleccione un tipo de usuario</option>
-                                    <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Administrador</option>
-                                    <option value="profesor" {{ old('role', $user->role) == 'profesor' ? 'selected' : '' }}>Profesor</option>
-                                    <option value="coordinacion" {{ old('role', $user->role) == 'coordinacion' ? 'selected' : '' }}>Coordinación</option>
-                                </select>
-                                @error('role')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i>{{ $message }}
-                                    </div>
-                                @enderror
-                                <div class="form-text">
-                                    <i class="fas fa-info-circle"></i>
-                                    El tipo determina los permisos y funcionalidades disponibles
                                 </div>
                             </div>
 
-                            <!-- Coordinación (condicional) - CORREGIDO el nombre del campo -->
-                            <div class="field-container coordinacion-required {{ (old('role', $user->role) == 'coordinacion' || old('coordinaciones_id', $user->coordinaciones_id)) ? 'visible' : 'hidden' }}" id="coordinacionField">
-                                <label for="coordinaciones_id" class="form-label">
-                                    <i class="fas fa-university"></i>Asignar a Coordinación
-                                    <span class="text-danger">*</span>
-                                </label>
-                                <select class="form-select @error('coordinaciones_id') is-invalid @enderror" 
-                                        id="coordinaciones_id" 
-                                        name="coordinaciones_id">
-                                    <option value="">Seleccione una coordinación</option>
-                                    @foreach($coordinaciones as $coordinacion)
-                                        <option value="{{ $coordinacion->id }}" {{ old('coordinaciones_id', $user->coordinaciones_id) == $coordinacion->id ? 'selected' : '' }}>
-                                            {{ $coordinacion->nombre }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                                @error('coordinaciones_id')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i>{{ $message }}
+                            <!-- Grupo 2: Rol y permisos -->
+                            <div class="form-group">
+                                <h4 class="form-group-title">
+                                    <i class="fas fa-user-tag"></i> Permisos y Acceso
+                                </h4>
+                                <div class="fields-grid">
+                                    <!-- Rol -->
+                                    <div class="field-container full-width">
+                                        <label for="role" class="form-label">
+                                            <i class="fas fa-user-shield"></i>Tipo de Usuario
+                                        </label>
+                                        <select class="form-select @error('role') is-invalid @enderror" 
+                                                id="role" name="role" required>
+                                            <option value="">Seleccione tipo</option>
+                                            <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Administrador</option>
+                                            <option value="profesor" {{ old('role', $user->role) == 'profesor' ? 'selected' : '' }}>Profesor</option>
+                                            <option value="coordinacion" {{ old('role', $user->role) == 'coordinacion' ? 'selected' : '' }}>Coordinación</option>
+                                        </select>
+                                        @error('role')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                @enderror
-                                <div class="form-text">
-                                    <i class="fas fa-info-circle"></i>
-                                    Solo usuarios del tipo "Coordinación" requieren estar asignados
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Grupo 3: Seguridad (opcional) -->
-                        <div class="form-group password-optional">
-                            <h4 class="form-group-title">
-                                <i class="fas fa-lock"></i> Cambio de Contraseña (Opcional)
-                            </h4>
-                            
-                            <!-- Contraseña -->
-                            <div class="field-container">
-                                <label for="password" class="form-label">
-                                    <i class="fas fa-key"></i>Nueva Contraseña
-                                </label>
-                                <input type="password" 
-                                       class="form-control @error('password') is-invalid @enderror" 
-                                       id="password" 
-                                       name="password" 
-                                       placeholder="Dejar en blanco para no cambiar">
-                                @error('password')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i>{{ $message }}
+                                    <!-- Coordinación (condicional) -->
+                                    <div class="field-container full-width coordinacion-required {{ (old('role', $user->role) == 'coordinacion' || old('coordinaciones_id', $user->coordinaciones_id)) ? 'visible' : 'hidden' }}" id="coordinacionField">
+                                        <label for="coordinaciones_id" class="form-label">
+                                            <i class="fas fa-university"></i>Asignar a Coordinación
+                                            <span class="text-danger">*</span>
+                                        </label>
+                                        <select class="form-select @error('coordinaciones_id') is-invalid @enderror" 
+                                                id="coordinaciones_id" name="coordinaciones_id">
+                                            <option value="">Seleccione una coordinación</option>
+                                            @foreach($coordinaciones as $coordinacion)
+                                                <option value="{{ $coordinacion->id }}" {{ old('coordinaciones_id', $user->coordinaciones_id) == $coordinacion->id ? 'selected' : '' }}>
+                                                    {{ $coordinacion->display_name ?? $coordinacion->nombre }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                        @error('coordinaciones_id')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
                                     </div>
-                                @enderror
-                                <div class="form-text">
-                                    <i class="fas fa-info-circle"></i>
-                                    La contraseña debe tener al menos 8 caracteres (opcional)
                                 </div>
                             </div>
 
-                            <!-- Confirmar contraseña -->
-                            <div class="field-container">
-                                <label for="password_confirmation" class="form-label">
-                                    <i class="fas fa-key"></i>Confirmar Nueva Contraseña
-                                </label>
-                                <input type="password" 
-                                       class="form-control @error('password_confirmation') is-invalid @enderror" 
-                                       id="password_confirmation" 
-                                       name="password_confirmation" 
-                                       placeholder="Repita la nueva contraseña">
-                                @error('password_confirmation')
-                                    <div class="invalid-feedback">
-                                        <i class="fas fa-exclamation-circle"></i>{{ $message }}
+                            <!-- Grupo 3: Seguridad (opcional - ocupa las 2 columnas) -->
+                            <div class="form-group full-width password-optional">
+                                <h4 class="form-group-title">
+                                    <i class="fas fa-lock"></i> Cambio de Contraseña (Opcional)
+                                </h4>
+                                <div class="fields-grid">
+                                    <!-- Contraseña -->
+                                    <div class="field-container">
+                                        <label for="password" class="form-label">
+                                            <i class="fas fa-key"></i>Nueva Contraseña
+                                        </label>
+                                        <input type="password" 
+                                               class="form-control @error('password') is-invalid @enderror" 
+                                               id="password" name="password" 
+                                               placeholder="Dejar en blanco para no cambiar">
+                                        @error('password')
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                        <div class="form-text">Mínimo 8 caracteres</div>
                                     </div>
-                                @enderror
+
+                                    <!-- Confirmar contraseña -->
+                                    <div class="field-container">
+                                        <label for="password_confirmation" class="form-label">
+                                            <i class="fas fa-key"></i>Confirmar Contraseña
+                                        </label>
+                                        <input type="password" 
+                                               class="form-control" 
+                                               id="password_confirmation" 
+                                               name="password_confirmation" 
+                                               placeholder="Repita la nueva contraseña">
+                                    </div>
+                                </div>
                             </div>
                         </div>
 
                         <!-- Botones de acción -->
                         <div class="btn-group-custom">
                             <a href="{{ route('users.index') }}" class="btn-secondary-custom">
-                                <i class="fas fa-times me-2"></i>Cancelar
+                                <i class="fas fa-times"></i>Cancelar
                             </a>
-                            <button type="submit" class="btn-primary-custom" id="submitBtn">
-                                <i class="fas fa-save me-2"></i>Actualizar Usuario
+                            <button type="submit" class="btn-primary-custom">
+                                <i class="fas fa-save"></i>Actualizar Usuario
                             </button>
                         </div>
                     </form>
@@ -886,7 +873,6 @@
         (function(){
             const navbar = document.querySelector('.navbar-top');
 
-            // Efecto de scroll en navbar
             window.addEventListener('scroll', function() {
                 if (window.scrollY > 50) {
                     navbar.classList.add('scrolled');
@@ -902,120 +888,79 @@
                 const coordinacionSelect = document.getElementById('coordinaciones_id');
                 
                 if (roleSelect.value === 'coordinacion') {
-                    // Mostrar campo de coordinación con animación
                     coordinacionField.classList.remove('hidden');
-                    setTimeout(() => {
-                        coordinacionField.classList.add('visible');
-                    }, 10);
+                    coordinacionField.classList.add('visible');
                     coordinacionSelect.required = true;
-                    
-                    // Agregar indicador visual
-                    coordinacionField.classList.add('coordinacion-required');
                 } else {
-                    // Ocultar campo de coordinación con animación
                     coordinacionField.classList.remove('visible');
-                    coordinacionField.classList.remove('coordinacion-required');
-                    setTimeout(() => {
-                        coordinacionField.classList.add('hidden');
-                    }, 300);
+                    coordinacionField.classList.add('hidden');
                     coordinacionSelect.required = false;
-                    // No limpiar el valor para mantener la selección si se cambia el rol y se vuelve
                 }
             }
 
-            // Validación del formulario antes de enviar
-            function validateForm() {
-                const roleSelect = document.getElementById('role');
-                const coordinacionSelect = document.getElementById('coordinaciones_id');
-                const coordinacionField = document.getElementById('coordinacionField');
+            // Validación de coincidencia de contraseñas
+            function validatePasswordMatch() {
+                const password = document.getElementById('password');
+                const confirm = document.getElementById('password_confirmation');
                 
-                // Si es coordinación, verificar que se haya seleccionado una coordinación
-                if (roleSelect.value === 'coordinacion') {
-                    if (!coordinacionSelect.value) {
-                        // Mostrar error
-                        coordinacionSelect.classList.add('is-invalid');
+                if (password.value && confirm.value) {
+                    if (password.value !== confirm.value) {
+                        confirm.classList.add('is-invalid');
+                        confirm.setCustomValidity('Las contraseñas no coinciden');
                         
-                        // Crear mensaje de error si no existe
-                        let errorDiv = coordinacionSelect.nextElementSibling;
+                        // Mostrar mensaje de error
+                        let errorDiv = confirm.nextElementSibling;
                         if (!errorDiv || !errorDiv.classList.contains('invalid-feedback')) {
                             errorDiv = document.createElement('div');
-                            errorDiv.className = 'invalid-feedback d-flex align-items-center';
-                            errorDiv.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i>Debe seleccionar una coordinación para este rol.';
-                            coordinacionSelect.parentNode.insertBefore(errorDiv, coordinacionSelect.nextSibling);
+                            errorDiv.className = 'invalid-feedback';
+                            errorDiv.textContent = 'Las contraseñas no coinciden';
+                            confirm.parentNode.appendChild(errorDiv);
                         }
-                        
-                        // Enfocar el campo y mostrar alerta
-                        coordinacionSelect.focus();
-                        
-                        // Mostrar alerta flotante
-                        showAlert('Debe seleccionar una coordinación para el rol de Coordinación.', 'danger');
-                        return false;
                     } else {
-                        // Remover error si existe
-                        coordinacionSelect.classList.remove('is-invalid');
-                        const errorDiv = coordinacionSelect.nextElementSibling;
+                        confirm.classList.remove('is-invalid');
+                        confirm.setCustomValidity('');
+                        
+                        // Remover mensaje de error
+                        const errorDiv = confirm.nextElementSibling;
                         if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
                             errorDiv.remove();
                         }
                     }
                 }
+            }
+
+            // Validación del formulario
+            function validateForm() {
+                const roleSelect = document.getElementById('role');
+                const coordinacionSelect = document.getElementById('coordinaciones_id');
+                
+                if (roleSelect.value === 'coordinacion' && !coordinacionSelect.value) {
+                    coordinacionSelect.classList.add('is-invalid');
+                    
+                    let errorDiv = coordinacionSelect.nextElementSibling;
+                    if (!errorDiv || !errorDiv.classList.contains('invalid-feedback')) {
+                        errorDiv = document.createElement('div');
+                        errorDiv.className = 'invalid-feedback';
+                        errorDiv.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i>Debe seleccionar una coordinación';
+                        coordinacionSelect.parentNode.insertBefore(errorDiv, coordinacionSelect.nextSibling);
+                    }
+                    
+                    coordinacionSelect.focus();
+                    return false;
+                }
                 
                 return true;
             }
 
-            // Mostrar alerta temporal
-            function showAlert(message, type = 'info') {
-                // Remover alertas anteriores
-                const existingAlert = document.querySelector('.floating-alert');
-                if (existingAlert) {
-                    existingAlert.remove();
-                }
-                
-                const alertDiv = document.createElement('div');
-                alertDiv.className = `alert alert-${type} floating-alert alert-dismissible fade show`;
-                alertDiv.style.cssText = `
-                    position: fixed;
-                    top: 120px;
-                    right: 20px;
-                    z-index: 9999;
-                    min-width: 300px;
-                    max-width: 400px;
-                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-                `;
-                
-                alertDiv.innerHTML = `
-                    <div class="d-flex align-items-center">
-                        <i class="fas fa-${type === 'danger' ? 'exclamation-triangle' : 'info-circle'} me-2"></i>
-                        <div class="flex-grow-1">${message}</div>
-                        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
-                    </div>
-                `;
-                
-                document.body.appendChild(alertDiv);
-                
-                // Auto cerrar después de 5 segundos
-                setTimeout(() => {
-                    if (alertDiv.parentNode) {
-                        const bsAlert = new bootstrap.Alert(alertDiv);
-                        bsAlert.close();
-                    }
-                }, 5000);
-            }
-
-            // Ejecutar al cargar la página
             document.addEventListener('DOMContentLoaded', function() {
-                // Verificar el rol actual para mostrar/ocultar coordinación
                 const roleSelect = document.getElementById('role');
-                const userRole = roleSelect.value;
-                
-                if (userRole === 'coordinacion') {
+                if (roleSelect.value === 'coordinacion') {
                     toggleCoordinacionField();
                 }
                 
-                // Agregar evento al cambio de rol
                 roleSelect.addEventListener('change', toggleCoordinacionField);
                 
-                // Cerrar alertas automáticamente después de 5 segundos
+                // Auto-cerrar alertas
                 setTimeout(() => {
                     document.querySelectorAll('.alert').forEach(alert => {
                         const bsAlert = new bootstrap.Alert(alert);
@@ -1023,12 +968,13 @@
                     });
                 }, 5000);
 
-                // Enfocar el primer campo del formulario
-                const firstField = document.querySelector('input[required]');
-                if (firstField) {
-                    setTimeout(() => {
-                        firstField.focus();
-                    }, 100);
+                // Validación de contraseñas
+                const password = document.getElementById('password');
+                const confirm = document.getElementById('password_confirmation');
+                
+                if (password && confirm) {
+                    password.addEventListener('input', validatePasswordMatch);
+                    confirm.addEventListener('input', validatePasswordMatch);
                 }
                 
                 // Validar formulario antes de enviar
@@ -1036,57 +982,9 @@
                 form.addEventListener('submit', function(e) {
                     if (!validateForm()) {
                         e.preventDefault();
-                        e.stopPropagation();
                     }
                 });
             });
-
-            // Validación en tiempo real para campos requeridos
-            document.querySelectorAll('input[required], select[required]').forEach(field => {
-                field.addEventListener('blur', function() {
-                    if (!this.value.trim()) {
-                        this.classList.add('is-invalid');
-                    } else {
-                        this.classList.remove('is-invalid');
-                    }
-                });
-            });
-
-            // Validación de coincidencia de contraseñas (solo si se ingresan)
-            const passwordField = document.getElementById('password');
-            const confirmPasswordField = document.getElementById('password_confirmation');
-            
-            function validatePasswordMatch() {
-                if (passwordField.value || confirmPasswordField.value) {
-                    if (passwordField.value !== confirmPasswordField.value) {
-                        confirmPasswordField.classList.add('is-invalid');
-                        confirmPasswordField.setCustomValidity('Las contraseñas no coinciden');
-                        
-                        // Mostrar mensaje de error personalizado
-                        let errorDiv = confirmPasswordField.nextElementSibling;
-                        if (!errorDiv || !errorDiv.classList.contains('invalid-feedback')) {
-                            errorDiv = document.createElement('div');
-                            errorDiv.className = 'invalid-feedback d-flex align-items-center';
-                            errorDiv.innerHTML = '<i class="fas fa-exclamation-circle me-1"></i>Las contraseñas no coinciden';
-                            confirmPasswordField.parentNode.insertBefore(errorDiv, confirmPasswordField.nextSibling);
-                        }
-                    } else {
-                        confirmPasswordField.classList.remove('is-invalid');
-                        confirmPasswordField.setCustomValidity('');
-                        
-                        // Remover mensaje de error si existe
-                        const errorDiv = confirmPasswordField.nextElementSibling;
-                        if (errorDiv && errorDiv.classList.contains('invalid-feedback')) {
-                            errorDiv.remove();
-                        }
-                    }
-                }
-            }
-            
-            if (passwordField && confirmPasswordField) {
-                passwordField.addEventListener('input', validatePasswordMatch);
-                confirmPasswordField.addEventListener('input', validatePasswordMatch);
-            }
 
         })();
     </script>

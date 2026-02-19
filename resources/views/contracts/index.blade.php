@@ -17,14 +17,22 @@
         --text-muted: #6C757D;
         --card-shadow: 0 5px 15px rgba(15, 126, 230, 0.08);
         --transition: all 0.3s ease;
+        
+        /* Tipografía profesional - Tamaños aumentados */
+        --font-size-base: 1rem;        /* 16px (antes 14-15px aprox) */
+        --font-size-lg: 1.125rem;      /* 18px */
+        --font-size-xl: 1.25rem;        /* 20px */
+        --font-size-2xl: 1.5rem;        /* 24px */
+        --font-size-3xl: 1.875rem;      /* 30px */
     }
 
     body { 
         background: white; 
-        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+        font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
         color: #333; 
         line-height: 1.6;
         padding-top: 0 !important;
+        font-size: var(--font-size-base);
     }
 
     /* ========== ESTILOS DE BARRA Y MENÚ IGUAL AL PRIMER CÓDIGO ========== */
@@ -48,7 +56,7 @@
     .navbar-brand { 
         color: var(--primary) !important; 
         font-weight: 600; 
-        font-size: 1.4rem;
+        font-size: 1.6rem; /* Aumentado */
         display: flex;
         align-items: center;
         gap: 12px;
@@ -58,7 +66,7 @@
         content: "";
         display: block;
         width: 6px;
-        height: 28px;
+        height: 32px; /* Aumentado */
         background: var(--primary);
         border-radius: 2px;
     }
@@ -70,7 +78,7 @@
     }
 
     .logo-img {
-        height: 50px;
+        height: 55px; /* Ligeramente aumentado */
         width: auto;
         object-fit: contain;
     }
@@ -78,30 +86,32 @@
     /* Segunda barra - Menú */
     .navbar-menu { 
         background: var(--primary); 
-        padding: 0.7rem 0;
+        padding: 0.8rem 0; /* Aumentado ligeramente */
         position: sticky;
-        top: 68px;
+        top: 73px; /* Ajustado */
         z-index: 999;
     }
 
     .navbar-menu .navbar-toggler {
         border: 1px solid rgba(255, 255, 255, 0.3);
-        padding: 0.25rem 0.5rem;
+        padding: 0.35rem 0.6rem; /* Aumentado */
     }
 
     .navbar-menu .navbar-toggler-icon {
         background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        width: 1.5em; /* Aumentado */
+        height: 1.5em; /* Aumentado */
     }
 
     .navbar-menu .nav-link {
         font-weight: 500;
         color: rgba(255, 255, 255, 0.9) !important;
-        padding: 0.6rem 1.5rem !important;
+        padding: 0.7rem 1.6rem !important; /* Aumentado */
         margin: 0 0.1rem;
         border-radius: 4px;
         transition: var(--transition);
         position: relative;
-        font-size: 0.95rem;
+        font-size: 1.05rem; /* Aumentado */
     }
 
     .navbar-menu .nav-link:hover, 
@@ -138,17 +148,18 @@
     .navbar-menu .user-info {
         display: flex;
         align-items: center;
-        gap: 10px;
+        gap: 12px; /* Aumentado */
         color: white;
     }
 
     .navbar-menu .user-name {
         font-weight: 500;
         color: rgba(255, 255, 255, 0.9);
+        font-size: 1.05rem; /* Aumentado */
     }
 
     .navbar-menu .user-avatar {
-        font-size: 1.3rem;
+        font-size: 1.5rem; /* Aumentado */
         color: rgba(255, 255, 255, 0.9);
     }
 
@@ -160,14 +171,14 @@
         background: transparent;
         border: 1px solid rgba(255, 255, 255, 0.4);
         color: rgba(255, 255, 255, 0.9);
-        padding: 0.4rem 1rem;
+        padding: 0.5rem 1.2rem; /* Aumentado */
         border-radius: 4px;
         font-weight: 500;
         transition: var(--transition);
         display: flex;
         align-items: center;
         gap: 8px;
-        font-size: 0.9rem;
+        font-size: 1rem; /* Aumentado */
     }
 
     .navbar-menu .logout-btn:hover {
@@ -182,8 +193,8 @@
 
     /* Contenido principal */
     .main-content { 
-        padding: 30px 20px;
-        min-height: calc(100vh - 140px);
+        padding: 35px 25px; /* Aumentado */
+        min-height: calc(100vh - 155px);
     }
     
     h1, h2, h3, h4, h5, h6 {
@@ -192,10 +203,10 @@
     
     h2 { 
         color: var(--primary);
-        margin-bottom: 1.5rem; 
-        padding-bottom: 0.8rem;
+        margin-bottom: 1.8rem; /* Aumentado */
+        padding-bottom: 1rem; /* Aumentado */
         position: relative;
-        font-size: 1.5rem;
+        font-size: var(--font-size-2xl); /* 24px */
     }
     
     h2::after {
@@ -203,16 +214,16 @@
         position: absolute;
         bottom: 0;
         left: 0;
-        width: 50px;
-        height: 2px;
+        width: 60px; /* Aumentado */
+        height: 3px; /* Aumentado */
         background: var(--primary);
     }
     
     /* Contenedor de contenido */
     .content-container {
         background: white;
-        border-radius: 6px;
-        padding: 2rem;
+        border-radius: 8px; /* Aumentado */
+        padding: 2.2rem; /* Aumentado */
         margin-bottom: 2rem;
         border: 1px solid var(--border-color);
         box-shadow: var(--card-shadow);
@@ -224,12 +235,13 @@
         border: none;
         color: white;
         font-weight: 500;
-        padding: 0.6rem 1.5rem;
-        border-radius: 5px;
+        padding: 0.7rem 1.8rem; /* Aumentado */
+        border-radius: 6px; /* Aumentado */
         transition: var(--transition);
         display: inline-flex;
         align-items: center;
-        gap: 8px;
+        gap: 10px; /* Aumentado */
+        font-size: var(--font-size-base); /* 16px */
     }
     
     .btn-primary-geproc:hover {
@@ -242,22 +254,23 @@
     /* Panel de filtro - CORREGIDO */
     .filter-panel {
         background: white;
-        border-radius: 6px;
-        padding: 1.5rem;
+        border-radius: 8px; /* Aumentado */
+        padding: 1.8rem; /* Aumentado */
         border: 1px solid var(--border-color);
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem; /* Aumentado */
     }
     
     .filter-label {
         color: var(--primary);
-        font-size: 0.95rem;
+        font-size: var(--font-size-base); /* 16px */
+        margin-bottom: 0.5rem;
     }
     
     .form-select-geproc {
         border: 1px solid var(--border-color);
-        border-radius: 5px;
-        padding: 0.6rem 1rem;
-        font-size: 0.95rem;
+        border-radius: 6px; /* Aumentado */
+        padding: 0.7rem 1.2rem; /* Aumentado */
+        font-size: var(--font-size-base); /* 16px */
         transition: var(--transition);
         width: 100%;
     }
@@ -270,17 +283,18 @@
     /* Pestañas personalizadas */
     .custom-tabs {
         border-bottom: 1px solid var(--border-color);
-        margin-bottom: 1.5rem;
+        margin-bottom: 2rem; /* Aumentado */
     }
     
     .custom-tabs .nav-link {
         border: none;
         color: var(--text-muted);
         font-weight: 500;
-        padding: 0.7rem 1.5rem;
-        border-radius: 5px 5px 0 0;
+        padding: 0.8rem 1.8rem; /* Aumentado */
+        border-radius: 6px 6px 0 0; /* Aumentado */
         margin-right: 0.3rem;
         transition: var(--transition);
+        font-size: var(--font-size-base); /* 16px */
     }
     
     .custom-tabs .nav-link:hover {
@@ -297,10 +311,10 @@
     /* Tarjetas de datos */
     .data-card {
         background: white;
-        border-radius: 6px;
+        border-radius: 8px; /* Aumentado */
         border: 1px solid var(--border-color);
-        padding: 1.5rem;
-        margin-bottom: 1.5rem;
+        padding: 1.8rem; /* Aumentado */
+        margin-bottom: 2rem; /* Aumentado */
         transition: var(--transition);
     }
     
@@ -312,9 +326,13 @@
         display: flex;
         justify-content: space-between;
         align-items: center;
-        margin-bottom: 1.5rem;
-        padding-bottom: 1rem;
+        margin-bottom: 1.8rem; /* Aumentado */
+        padding-bottom: 1.2rem; /* Aumentado */
         border-bottom: 1px solid var(--border-color);
+    }
+    
+    .card-top-info h5 {
+        font-size: var(--font-size-lg); /* 18px */
     }
     
     /* Tabla personalizada */
@@ -328,14 +346,16 @@
         background: rgba(7, 68, 182, 0.05);
         color: var(--primary);
         font-weight: 600;
-        padding: 1rem;
+        padding: 1.2rem 1rem; /* Aumentado padding vertical */
         border-bottom: 2px solid var(--border-color);
+        font-size: var(--font-size-base); /* 16px */
     }
     
     .table-custom tbody td {
-        padding: 1rem;
+        padding: 1.2rem 1rem; /* Aumentado padding vertical */
         border-bottom: 1px solid var(--border-color);
         vertical-align: middle;
+        font-size: var(--font-size-base); /* 16px */
     }
     
     .table-custom tbody tr:hover {
@@ -346,28 +366,30 @@
     .badge-area {
         background: rgba(7, 68, 182, 0.1);
         color: var(--primary);
-        padding: 0.3rem 0.8rem;
-        border-radius: 4px;
-        font-size: 0.85rem;
+        padding: 0.4rem 1rem; /* Aumentado */
+        border-radius: 6px; /* Aumentado */
+        font-size: 0.9rem; /* Ligeramente aumentado */
         font-weight: 500;
+        display: inline-block;
     }
     
     /* Botones de acción */
     .action-flex {
         display: flex;
-        gap: 8px;
+        gap: 10px; /* Aumentado */
     }
     
     .act-btn {
-        width: 36px;
-        height: 36px;
-        border-radius: 4px;
+        width: 40px; /* Aumentado */
+        height: 40px; /* Aumentado */
+        border-radius: 6px; /* Aumentado */
         display: flex;
         align-items: center;
         justify-content: center;
         text-decoration: none;
         transition: var(--transition);
         border: none;
+        font-size: 1.1rem; /* Aumentado */
     }
     
     .act-btn.view {
@@ -409,8 +431,8 @@
     .template-card {
         background: white;
         border: 1px solid var(--border-color);
-        border-radius: 6px;
-        padding: 2rem 1.5rem;
+        border-radius: 8px; /* Aumentado */
+        padding: 2.2rem 1.8rem; /* Aumentado */
         transition: var(--transition);
         height: 100%;
     }
@@ -421,14 +443,14 @@
     }
     
     .file-icon-large {
-        width: 70px;
-        height: 70px;
+        width: 80px; /* Aumentado */
+        height: 80px; /* Aumentado */
         background: rgba(7, 68, 182, 0.1);
         border-radius: 50%;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 2rem;
+        font-size: 2.2rem; /* Aumentado */
         color: var(--primary);
     }
     
@@ -436,14 +458,15 @@
         color: var(--primary);
         font-weight: 600;
         margin-bottom: 1rem;
+        font-size: var(--font-size-lg); /* 18px */
     }
     
     .btn-use-template {
         background: var(--primary);
         color: white;
         border: none;
-        padding: 0.6rem 1.2rem;
-        border-radius: 5px;
+        padding: 0.7rem 1.4rem; /* Aumentado */
+        border-radius: 6px; /* Aumentado */
         font-weight: 500;
         text-decoration: none;
         display: inline-flex;
@@ -451,6 +474,7 @@
         gap: 8px;
         transition: var(--transition);
         flex: 1;
+        font-size: var(--font-size-base); /* 16px */
     }
     
     .btn-use-template:hover {
@@ -461,22 +485,23 @@
     
     /* Secciones por mes */
     .month-section {
-        margin-bottom: 2rem;
+        margin-bottom: 2.5rem; /* Aumentado */
     }
     
     .month-title {
         color: var(--primary);
         font-weight: 600;
-        margin-bottom: 1rem;
-        padding-left: 0.5rem;
+        margin-bottom: 1.2rem; /* Aumentado */
+        padding-left: 0.8rem; /* Aumentado */
         border-left: 4px solid var(--primary);
+        font-size: var(--font-size-xl); /* 20px */
     }
     
     /* Badge general */
     .badge {
         font-weight: 500;
-        padding: 0.4rem 0.8rem;
-        font-size: 0.8rem;
+        padding: 0.5rem 1rem; /* Aumentado */
+        font-size: 0.85rem; /* Ligeramente aumentado */
     }
     
     .badge-primary { background: var(--primary); }
@@ -484,23 +509,39 @@
     .badge-success { background: #2E7D32; }
     .badge-warning { background: #F57C00; }
     
+    /* Texto de la tabla */
+    .contract-name-cell {
+        font-weight: 500;
+        font-size: var(--font-size-base); /* 16px */
+    }
+    
+    .file-icon-box {
+        width: 40px; /* Aumentado */
+        height: 40px; /* Aumentado */
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 1.3rem; /* Aumentado */
+    }
+    
     /* Responsive adjustments */
     @media (max-width: 768px) {
         .navbar-brand {
-            font-size: 1.2rem;
+            font-size: 1.4rem;
         }
         
         .navbar-menu .nav-link {
-            padding: 0.5rem 1rem !important;
+            padding: 0.6rem 1.2rem !important;
             margin: 0.1rem 0;
+            font-size: 1rem;
         }
         
         .main-content {
-            padding: 20px 15px;
+            padding: 25px 15px;
         }
         
         .content-container {
-            padding: 1.5rem;
+            padding: 1.8rem;
         }
         
         .card-top-info {
@@ -510,20 +551,32 @@
         }
         
         .navbar-menu {
-            top: 60px;
+            top: 67px;
         }
         
         .logo-img {
-            height: 45px;
+            height: 48px;
         }
         
         .navbar-menu .user-info-container {
             flex-direction: column;
-            gap: 10px;
+            gap: 12px;
             align-items: flex-end;
-            margin-top: 10px;
-            padding-top: 10px;
+            margin-top: 12px;
+            padding-top: 12px;
             border-top: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .navbar-menu .user-name {
+            font-size: 1rem;
+        }
+        
+        h2 {
+            font-size: 1.4rem;
+        }
+        
+        .table-custom tbody td {
+            font-size: 0.95rem;
         }
     }
     
@@ -538,17 +591,18 @@
         
         .table-custom tbody tr {
             display: block;
-            margin-bottom: 1rem;
+            margin-bottom: 1.2rem;
             border: 1px solid var(--border-color);
-            border-radius: 6px;
-            padding: 1rem;
+            border-radius: 8px;
+            padding: 1.2rem;
         }
         
         .table-custom tbody td {
             display: block;
             text-align: right;
             border: none;
-            padding: 0.5rem 0;
+            padding: 0.7rem 0;
+            font-size: 0.95rem;
         }
         
         .table-custom tbody td::before {
@@ -556,6 +610,7 @@
             float: left;
             font-weight: 600;
             color: var(--primary);
+            font-size: 0.95rem;
         }
         
         .action-flex {
@@ -563,7 +618,12 @@
         }
         
         .logo-img {
-            height: 40px;
+            height: 42px;
+        }
+        
+        .btn-primary-geproc {
+            padding: 0.6rem 1.5rem;
+            font-size: 0.95rem;
         }
     }
     </style>
@@ -623,7 +683,7 @@
                     <div class="d-flex justify-content-between align-items-center flex-wrap gap-3">
                         <div>
                             <h2 class="mb-1">Gestión de Contratos</h2>
-                            <p class="text-muted mb-0">Panel de control administrativo y análisis de documentos</p>
+                            <p class="text-muted mb-0" style="font-size: 1.05rem;">Panel de control administrativo y análisis de documentos</p>
                         </div>
                         <div>
                             <a href="{{ route('contracts.analyze') }}" class="btn-primary-geproc">
@@ -658,7 +718,7 @@
                         </div>
                         @if(request('coordinacion_id'))
                         <div class="col-12 col-md-3">
-                            <a href="{{ route('contracts.index') }}" class="btn btn-outline-secondary w-100">
+                            <a href="{{ route('contracts.index') }}" class="btn btn-outline-secondary w-100" style="padding: 0.7rem 1rem; font-size: 1rem;">
                                 <i class="fas fa-undo-alt me-2"></i> Limpiar Filtro
                             </a>
                         </div>
@@ -690,7 +750,7 @@
                                 <h5 class="fw-bold mb-0">
                                     <i class="fas fa-history me-2"></i>Documentos Recientes
                                 </h5>
-                                <span class="badge bg-light text-muted rounded-pill px-3 py-2">
+                                <span class="badge bg-light text-muted rounded-pill px-3 py-2" style="font-size: 0.95rem;">
                                     {{ $recentContracts->count() }} resultados encontrados
                                 </span>
                             </div>
@@ -740,7 +800,7 @@
                                         </tr>
                                         @empty
                                         <tr>
-                                            <td colspan="4" class="text-center py-5">No hay contratos recientes registrados.</td>
+                                            <td colspan="4" class="text-center py-5" style="font-size: 1.05rem;">No hay contratos recientes registrados.</td>
                                         </tr>
                                         @endforelse
                                     </tbody>
@@ -791,7 +851,7 @@
                                         <tbody>
                                             @foreach($contracts as $contract)
                                             <tr>
-                                                <td class="fw-bold">{{ $contract->nombre }}</td>
+                                                <td class="fw-bold" style="font-size: 1rem;">{{ $contract->nombre }}</td>
                                                 <td>
                                                     <div class="action-flex justify-content-end">
                                                         <a href="{{ route('contracts.show', $contract->id) }}" class="act-btn view" title="Ver"><i class="fas fa-eye"></i></a>

@@ -219,7 +219,7 @@
     .stats-container {
         display: grid;
         grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-        gap: 1.5rem;
+        gap: 1rem;
         margin: 2rem 0;
     }
 
@@ -232,10 +232,7 @@
         transition: var(--transition);
     }
 
-    .stat-card:hover {
-        transform: translateY(-5px);
-        box-shadow: var(--card-shadow);
-    }
+    
 
     .stat-icon {
         font-size: 2.5rem;
@@ -243,15 +240,15 @@
     }
 
     .stat-value {
-        font-size: 2.2rem;
-        font-weight: 700;
-        margin-bottom: 0.5rem;
+        font-size: 1.8rem;
+        font-weight: 650;
+        margin-bottom: 0.3rem;
         color: var(--primary);
     }
 
     .stat-label {
         color: var(--text-muted);
-        font-size: 0.9rem;
+        font-size: 1.3rem;
         font-weight: 500;
     }
 
@@ -685,13 +682,13 @@
                     <div class="stats-container">
                         <div class="stat-card">
                             <div class="stat-icon users-icon"><i class="fas fa-users"></i></div>
-                            <div class="stat-value">{{ $totalUsers }}</div>
-                            <div class="stat-label">Usuarios Totales</div>
+                            <div class="stat-value">{{ $adminUsers }}</div>
+                            <div class="stat-label">Administradores</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon admins-icon"><i class="fas fa-user-shield"></i></div>
-                            <div class="stat-value">{{ $adminUsers }}</div>
-                            <div class="stat-label">Administradores</div>
+                            <div class="stat-value">{{ $coordinacionUsers }}</div>
+                            <div class="stat-label">Coordinaciones</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon profesores-icon"><i class="fas fa-chalkboard-teacher"></i></div>
@@ -700,8 +697,8 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon coordinacion-icon"><i class="fas fa-building"></i></div>
-                            <div class="stat-value">{{ $coordinacionUsers }}</div>
-                            <div class="stat-label">Coordinaciones</div>
+                            <div class="stat-value">{{ $totalUsers }}</div>
+                            <div class="stat-label">Usuarios Totales</div>
                         </div>
                     </div>
 
