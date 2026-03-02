@@ -900,7 +900,7 @@
                                     <span class="info-value">{{ $maestro->apellido_paterno }} {{ $maestro->apellido_materno }}</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Fecha Nac.:</span>
+                                    <span class="info-label">Fecha de Nacimiento:</span>
                                     <span class="info-value">{{ \Carbon\Carbon::parse($maestro->fecha_nacimiento)->format('d/m/Y') }}</span>
                                 </div>
                                 <div class="info-item">
@@ -908,7 +908,7 @@
                                     <span class="info-value">{{ $maestro->edad }} años</span>
                                 </div>
                                 <div class="info-item">
-                                    <span class="info-label">Sexo:</span>
+                                    <span class="info-label">Genero:</span>
                                     <span class="info-value">{{ $maestro->sexo ?? 'No especificado' }}</span>
                                 </div>
                                 <div class="info-item">

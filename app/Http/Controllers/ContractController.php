@@ -11,6 +11,7 @@ use PhpOffice\PhpWord\TemplateProcessor;
 use App\Models\Template;
 use App\Models\Contrato;
 use App\Models\Coordinacion;
+use App\Models\Maestro;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 use ZipArchive;
@@ -1007,6 +1008,79 @@ public function previewPdf($id)
     }
 }
 
+/**
+ * =============================================
+ * MÉTODOS PARA AUTOCOMPLETADO DE MAESTROS
+ * =============================================
+ */
 
+/**
+ * Obtener maestros por coordinación (AJAX)
+ */
+public function getTeachersByCoordination($coordinacionId)
+{
+    try {
+        $maestros = Maestro::where('coordinaciones_id', $coordinacionId)
+            ->select('id', 'nombres', 'apellido_paterno', 'apellido_materno')
+            ->get()
+            ->map(function($maestro) {
+                return [
+                    'id' => $maestro->id,
+                    'nombre_completo' => trim($maestro->nombres . ' ' . $maestro->apellido_paterno . ' ' . $maestro->apellido_materno)
+                ];
+            });
+        
+        return response()->json($maestros);
+    } catch (\Exception $e) {
+        Log::error('Error getTeachers: ' . $e->getMessage());
+        return response()->json(['error' => 'Error al cargar maestros'], 500);
+    }
+}
+
+/**
+ * Obtener información del maestro (AJAX)
+ */
+public function getTeacherInfo($teacherId)
+{
+    try {
+        $maestro = Maestro::with('gradosAcademicos')->find($teacherId);
+        
+        if (!$maestro) {
+            return response()->json(['error' => 'Maestro no encontrado'], 404);
+        }
+
+        $ultimoGrado = $maestro->gradosAcademicos->first();
+        
+        $data = [
+            // Campos de la tabla maestros
+            'nombres' => $maestro->nombres ?? '',
+            'apellido_paterno' => $maestro->apellido_paterno ?? '',
+            'apellido_materno' => $maestro->apellido_materno ?? '',
+            'nombre_completo' => trim($maestro->nombres . ' ' . $maestro->apellido_paterno . ' ' . $maestro->apellido_materno),
+            'maximo_grado_academico' => $maestro->maximo_grado_academico ?? '',
+            'fecha_nacimiento' => $maestro->fecha_nacimiento ? Carbon::parse($maestro->fecha_nacimiento)->format('Y-m-d') : '',
+            'edad' => $maestro->edad ?? '',
+            'sexo' => $maestro->sexo ?? '',
+            'estado_civil' => $maestro->estado_civil ?? '',
+            'telefono' => $maestro->telefono ?? '',
+            'email' => $maestro->email ?? '',
+            'direccion' => $maestro->direccion ?? '',
+            'rfc' => $maestro->rfc ?? '',
+            'curp' => $maestro->curp ?? '',
+            
+            // Campos de grados académicos
+            'nivel' => $ultimoGrado->nivel ?? '',
+            'nombre_titulo' => $ultimoGrado->nombre_titulo ?? '',
+            'cedula_profesional' => $ultimoGrado->cedula_profesional ?? '',
+            'institucion' => $ultimoGrado->institucion ?? '',
+            'ano_obtencion' => $ultimoGrado->ano_obtencion ?? '',
+        ];
+        
+        return response()->json($data);
+    } catch (\Exception $e) {
+        Log::error('Error getTeacherInfo: ' . $e->getMessage());
+        return response()->json(['error' => 'Error al cargar información'], 500);
+    }
+}
 
 }

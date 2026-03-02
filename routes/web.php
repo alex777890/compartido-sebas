@@ -382,3 +382,8 @@ Route::prefix('maestros')->group(function () {
         ->name('maestros.documentos.json');
 
 });
+
+
+
+Route::get('/contracts/get-teachers/{coordinacionId}', [App\Http\Controllers\ContractController::class, 'getTeachersByCoordination']);
+Route::get('/contracts/get-teacher-info/{teacherId}', [App\Http\Controllers\ContractController::class, 'getTeacherInfo']);
