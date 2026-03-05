@@ -684,7 +684,7 @@
                         </div>
                         <div>
                             <a href="{{ route('contracts.analyze') }}" class="btn-primary-geproc">
-                                <i class="fas fa-plus-circle me-2"></i> Nuevo Análisis IA
+                                <i class="fas fa-plus-circle me-2"></i> Nueva Plantilla
                             </a>
                         </div>
                     </div>
