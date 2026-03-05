@@ -486,26 +486,25 @@
                     <form method="POST" action="{{ route('contracts.store') }}" enctype="multipart/form-data">
                         @csrf
                         
-                        <!-- Selector de plantilla -->
-                        <div class="form-group">
-                            <label for="template_id" class="form-label required">Plantilla</label>
-                            <div class="input-with-icon">
-                                <i class="fas fa-layer-group"></i>
-                                <select name="template_id" id="template_id" class="form-select" required>
-                                    <option value="">Seleccione una plantilla...</option>
-                                    @foreach($templates as $template)
-                                        <option value="{{ $template->id }}" {{ $selectedTemplate && $selectedTemplate->id == $template->id ? 'selected' : '' }}>
-                                            {{ $template->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('template_id')
-                                <div class="error-message">
-                                    <i class="fas fa-exclamation-circle"></i>{{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+                        <!-- Mostrar solo el nombre de la plantilla -->
+<div class="form-group">
+    <label for="template_id" class="form-label required">Plantilla</label>
+    <div class="input-with-icon">
+        <i class="fas fa-layer-group"></i>
+        <div class="form-control" style="background-color: #f5f5f5; cursor: default;">
+            @if($selectedTemplate)
+                {{ $selectedTemplate->name }}
+            @else
+                <span class="text-muted">No hay plantilla seleccionada</span>
+            @endif
+        </div>
+    </div>
+    @error('template_id')
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>{{ $message }}
+        </div>
+    @enderror
+</div>
 
                         <!-- Selector de Coordinación - CORREGIDO -->
                         <div class="form-group">
@@ -550,11 +549,7 @@
                     <i class="fas fa-sync-alt me-2"></i>Autocompletar
                 </button>
             </div>
-            <div class="col-md-2">
-                <button type="button" id="verPlaceholders" class="btn btn-outline-secondary w-100" title="Ver placeholders en consola">
-                    <i class="fas fa-code"></i>
-                </button>
-            </div>
+            
         </div>
         
         <!-- Indicadores de estado -->
