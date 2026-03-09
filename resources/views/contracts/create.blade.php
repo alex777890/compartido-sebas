@@ -486,26 +486,25 @@
                     <form method="POST" action="{{ route('contracts.store') }}" enctype="multipart/form-data">
                         @csrf
                         
-                        <!-- Selector de plantilla -->
-                        <div class="form-group">
-                            <label for="template_id" class="form-label required">Plantilla</label>
-                            <div class="input-with-icon">
-                                <i class="fas fa-layer-group"></i>
-                                <select name="template_id" id="template_id" class="form-select" required>
-                                    <option value="">Seleccione una plantilla...</option>
-                                    @foreach($templates as $template)
-                                        <option value="{{ $template->id }}" {{ $selectedTemplate && $selectedTemplate->id == $template->id ? 'selected' : '' }}>
-                                            {{ $template->name }}
-                                        </option>
-                                    @endforeach
-                                </select>
-                            </div>
-                            @error('template_id')
-                                <div class="error-message">
-                                    <i class="fas fa-exclamation-circle"></i>{{ $message }}
-                                </div>
-                            @enderror
-                        </div>
+                        <!-- Mostrar solo el nombre de la plantilla -->
+<div class="form-group">
+    <label for="template_id" class="form-label required">Plantilla</label>
+    <div class="input-with-icon">
+        <i class="fas fa-layer-group"></i>
+        <div class="form-control" style="background-color: #f5f5f5; cursor: default;">
+            @if($selectedTemplate)
+                {{ $selectedTemplate->name }}
+            @else
+                <span class="text-muted">No hay plantilla seleccionada</span>
+            @endif
+        </div>
+    </div>
+    @error('template_id')
+        <div class="error-message">
+            <i class="fas fa-exclamation-circle"></i>{{ $message }}
+        </div>
+    @enderror
+</div>
 
                         <!-- Selector de Coordinación - CORREGIDO -->
                         <div class="form-group">
@@ -531,6 +530,36 @@
                                 </div>
                             @enderror
                         </div>
+
+                        <!-- ===== NUEVO: AUTOCOMPLETADO CON MAESTROS ===== -->
+<div class="card mb-4" style="border-left: 4px solid #17a2b8; background-color: #f8f9fa;">
+    <div class="card-body">
+        <h5 class="card-title text-info">
+            <i class="fas fa-chalkboard-teacher me-2"></i>Autocompletar con datos del maestro
+        </h5>
+        <div class="row">
+            <div class="col-md-7">
+                <select id="maestro_id" class="form-select" disabled>
+                    <option value="">-- Primero seleccione una coordinación --</option>
+                </select>
+                <small class="text-muted">Los maestros se cargarán según la coordinación seleccionada</small>
+            </div>
+            <div class="col-md-3">
+                <button type="button" id="loadTeacherData" class="btn btn-info w-100" disabled>
+                    <i class="fas fa-sync-alt me-2"></i>Autocompletar
+                </button>
+            </div>
+            
+        </div>
+        
+        <!-- Indicadores de estado -->
+        <div id="loadingIndicator" class="alert alert-info mt-3" style="display: none;">
+            <i class="fas fa-spinner fa-spin me-2"></i>Cargando información del maestro...
+        </div>
+        <div id="successMessage" class="alert alert-success mt-3" style="display: none;"></div>
+        <div id="errorMessage" class="alert alert-danger mt-3" style="display: none;"></div>
+    </div>
+</div>
 
                         <!-- Nombre del contrato -->
                         <div class="form-group">
@@ -726,5 +755,155 @@
 
         })();
     </script>
+
+    <!-- Script para autocompletado con maestros -->
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+$(document).ready(function() {
+    console.log('✅ Script de autocompletado cargado');
+    
+    // Elementos
+    const $coordinacion = $('#coordinacion_id');
+    const $maestro = $('#maestro_id');
+    const $loadBtn = $('#loadTeacherData');
+    const $loading = $('#loadingIndicator');
+    const $success = $('#successMessage');
+    const $error = $('#errorMessage');
+    
+    // Función para mostrar mensajes
+    function showMessage(msg, type) {
+        const $el = type === 'success' ? $success : $error;
+        $el.html('<i class="fas fa-' + (type === 'success' ? 'check-circle' : 'exclamation-circle') + ' me-2"></i>' + msg).show();
+        setTimeout(() => $el.fadeOut(), 5000);
+    }
+    
+    // Cargar maestros al cambiar coordinación
+    $coordinacion.on('change', function() {
+        const coordId = $(this).val();
+        
+        $maestro.empty().prop('disabled', true);
+        $loadBtn.prop('disabled', true);
+        
+        if (!coordId) {
+            $maestro.append('<option value="">Primero seleccione una coordinación</option>');
+            return;
+        }
+        
+        $maestro.append('<option value="">Cargando maestros...</option>');
+        
+        $.ajax({
+            url: '/contracts/get-teachers/' + coordId,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                $maestro.empty().append('<option value="">-- Seleccione un maestro --</option>');
+                
+                if (data && data.length > 0) {
+                    $.each(data, function(i, m) {
+                        $maestro.append('<option value="' + m.id + '">' + m.nombre_completo + '</option>');
+                    });
+                    $maestro.prop('disabled', false);
+                } else {
+                    $maestro.append('<option value="" disabled>No hay maestros en esta coordinación</option>');
+                }
+            },
+            error: function() {
+                $maestro.empty().append('<option value="">Error al cargar</option>');
+                showMessage('Error al cargar maestros', 'error');
+            }
+        });
+    });
+    
+    // Habilitar botón
+    $maestro.on('change', function() {
+        $loadBtn.prop('disabled', !$(this).val());
+    });
+    
+    // Autocompletar
+    $loadBtn.on('click', function() {
+        const teacherId = $maestro.val();
+        const teacherName = $maestro.find('option:selected').text();
+        
+        if (!teacherId) {
+            showMessage('Seleccione un maestro', 'error');
+            return;
+        }
+        
+        if (!confirm('¿Cargar datos de "' + teacherName + '"?')) {
+            return;
+        }
+        
+        $loading.show();
+        $loadBtn.prop('disabled', true).html('<i class="fas fa-spinner fa-spin"></i>');
+        
+        $.ajax({
+            url: '/contracts/get-teacher-info/' + teacherId,
+            type: 'GET',
+            dataType: 'json',
+            success: function(data) {
+                console.log('📊 Datos del maestro:', data);
+                
+                let contador = 0;
+                
+                // Buscar todos los inputs del formulario dinámico
+                $('input[name^="values["]').each(function() {
+                    const $input = $(this);
+                    const match = $input.attr('name').match(/values\[(.*?)\]/);
+                    
+                    if (match) {
+                        const placeholder = match[1].replace('${', '').replace('}', '');
+                        
+                        // Mapeo directo - Si el placeholder coincide con un campo de la BD
+                        if (data[placeholder] && data[placeholder] !== '') {
+                            $input.val(data[placeholder]);
+                            contador++;
+                            
+                            // Resaltar
+                            $input.css({
+                                'background-color': '#d4edda',
+                                'border-color': '#28a745',
+                                'transition': 'all 0.5s'
+                            });
+                            setTimeout(() => $input.css('background-color', ''), 2000);
+                        }
+                        
+                        // Mapeo especial para campos compuestos
+                        if (placeholder === 'nombre_completo') {
+                            $input.val(data.nombres + ' ' + data.apellido_paterno + ' ' + data.apellido_materno);
+                            contador++;
+                        }
+                    }
+                });
+                
+                $loading.hide();
+                $loadBtn.prop('disabled', false).html('<i class="fas fa-sync-alt me-2"></i>Autocompletar');
+                
+                if (contador > 0) {
+                    showMessage('✅ Se autocompletaron ' + contador + ' campos', 'success');
+                } else {
+                    showMessage('⚠️ No se encontraron campos para autocompletar', 'error');
+                }
+            },
+            error: function() {
+                $loading.hide();
+                $loadBtn.prop('disabled', false).html('<i class="fas fa-sync-alt me-2"></i>Autocompletar');
+                showMessage('Error al cargar datos', 'error');
+            }
+        });
+    });
+    
+    // Botón para ver placeholders en consola
+    $('#verPlaceholders').on('click', function() {
+        console.log('=== PLACEHOLDERS ENCONTRADOS ===');
+        $('input[name^="values["]').each(function() {
+            const match = $(this).attr('name').match(/values\[(.*?)\]/);
+            if (match) {
+                console.log(' - ' + match[1]);
+            }
+        });
+        console.log('================================');
+    });
+});
+</script>
 </body>
 </html>

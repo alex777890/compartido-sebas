@@ -156,7 +156,6 @@ body {
 .navbar-menu .user-name {
     font-weight: 500;
     color: rgba(255, 255, 255, 0.9);
-    font-size: 0.95rem;
 }
 
 .navbar-menu .user-avatar {
@@ -190,7 +189,7 @@ body {
 
 .navbar-menu .logout-btn:active {
     background: rgba(255, 255, 255, 0.2);
-}   
+}  
 
 .main-content { 
     padding: 30px 20px;
@@ -410,7 +409,7 @@ h2::after {
     }
     
     .navbar-brand {
-        font-size: 1.3rem;
+        font-size: 1.2rem;
     }
     
     .navbar-menu .nav-link {
@@ -452,7 +451,7 @@ h2::after {
     }
     
     .navbar-brand {
-        font-size: 1.1rem;
+        font-size: 1.2rem;
     }
     
     .logo-img {
