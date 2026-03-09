@@ -11,7 +11,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log; // ✅ AGREGAR ESTO
 use Illuminate\Support\Facades\Auth; // ✅ AGREGAR ESTO
 use Illuminate\Support\Facades\Schema; // ✅ AGREGAR ESTO
-
+use Illuminate\Support\Facades\Storage;
+use App\Models\Horario; // ✅ IMPORTANTE: Agregar esta línea
+use Illuminate\Support\Facades\DB; // ✅ También agregar DB para las consultas
 
 
 
@@ -900,11 +902,18 @@ public function maestros(Request $request)
             $query->with('documentos');
         }
         
+        // ✅ ORDENAMIENTO POR APELLIDO PATERNO, LUEGO MATERNO, LUEGO NOMBRE
         $maestros = $query->orderBy('apellido_paterno', 'asc')
             ->orderBy('apellido_materno', 'asc')
             ->orderBy('nombres', 'asc')
             ->paginate(15)
             ->withQueryString();
+        
+        // 🔍 PARA DEPURAR: Ver los primeros 5 maestros y su orden
+        $primerosMaestros = $maestros->take(5)->map(function($m) {
+            return $m->apellido_paterno . ' ' . $m->apellido_materno . ' ' . $m->nombres;
+        });
+        \Log::info('Orden de maestros:', $primerosMaestros->toArray());
         
         $totalMaestros = Maestro::where('coordinaciones_id', $coordinacion->id)->count();
         $maestrosActivos = Maestro::where('coordinaciones_id', $coordinacion->id)
@@ -933,7 +942,7 @@ public function maestros(Request $request)
             'maestros' => $maestros,
             'totalMaestros' => $totalMaestros,
             'maestrosActivos' => $maestrosActivos,
-            'periodoHabilitado' => $periodoHabilitado, // ✅ ESTA VARIABLE YA EXISTE
+            'periodoHabilitado' => $periodoHabilitado,
             'estadosMaestros' => $estadosMaestros,
             'documentosRequeridos' => $documentosRequeridos,
             'search' => $request->search ?? '',
@@ -947,13 +956,12 @@ public function maestros(Request $request)
             ->with('error', 'Error al cargar la lista de maestros: ' . $e->getMessage());
     }
 }
-
     
 /**
  * ✅ VISTA DETALLADA DE MAESTROS (VERSIÓN 2)
  */
 /**
- * ✅ VISTA DETALLADA DE MAESTROS (VERSIÓN 2) - CORREGIDO
+ * ✅ VISTA DETALLADA DE MAESTROS (VERSIÓN 2) - CORREGIDO CON ORDEN ALFABÉTICO
  */
 public function maestrosDetalle(Request $request)
 {
@@ -988,6 +996,7 @@ public function maestrosDetalle(Request $request)
         // Cargar documentos para calcular progreso
         $query->with('documentos');
         
+        // ✅ ORDENAMIENTO ALFABÉTICO: Primero por apellido paterno, luego materno, luego nombres
         $maestros = $query->orderBy('apellido_paterno', 'asc')
             ->orderBy('apellido_materno', 'asc')
             ->orderBy('nombres', 'asc')
@@ -1125,5 +1134,477 @@ public function cambiarEstadoMaestro(Request $request, $maestroId)
         ], 500);
     }
 }
+/**
+ * ✅ MOSTRAR EXPEDIENTE DEL MAESTRO (SOLO INFORMACIÓN PERSONAL Y GRADOS ACADÉMICOS)
+ */
+public function expedienteMaestro($maestroId)
+{
+    try {
+        \Log::info('=== EXPEDIENTE DEL MAESTRO ===');
+        \Log::info('Maestro ID: ' . $maestroId);
+        
+        // Obtener usuario autenticado
+        $user = Auth::user();
+        
+        if (!$user) {
+            \Log::error('❌ Usuario no autenticado');
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión');
+        }
+        
+        // Obtener coordinación del usuario
+        $coordinacion = null;
+        if (!empty($user->coordinaciones_id)) {
+            $coordinacion = Coordinacion::find($user->coordinaciones_id);
+        }
+        
+        if (!$coordinacion) {
+            \Log::error('❌ No se encontró coordinación para el usuario');
+            return redirect()->route('coordinacion.dashboard')
+                ->with('error', 'No tienes una coordinación asignada.');
+        }
+        
+        \Log::info("🎯 Coordinación: {$coordinacion->nombre} (ID: {$coordinacion->id})");
+        
+        // ===== CARGAR MAESTRO CON SUS GRADOS ACADÉMICOS =====
+        $maestro = Maestro::where('id', $maestroId)
+            ->where('coordinaciones_id', $coordinacion->id) // Verificar que pertenezca a la coordinación
+            ->with([
+                'coordinacion',
+                'gradosAcademicos' // Solo grados académicos
+            ])
+            ->first();
+        
+        if (!$maestro) {
+            \Log::error("❌ Maestro ID {$maestroId} no encontrado en esta coordinación");
+            return redirect()->route('coordinaciones.maestros-detalle')
+                ->with('error', 'Maestro no encontrado en tu coordinación.');
+        }
+        
+        \Log::info("✅ Maestro encontrado: {$maestro->nombres} {$maestro->apellido_paterno}");
+        \Log::info("📚 Grados académicos cargados: " . $maestro->gradosAcademicos->count());
+        
+        // ===== RETORNAR VISTA CON SOLO LOS DATOS NECESARIOS =====
+        return view('coordinaciones.expediente-maestro', compact(
+            'maestro',
+            'coordinacion'
+        ));
+        
+    } catch (\Exception $e) {
+        \Log::error('💥 ERROR en expedienteMaestro: ' . $e->getMessage());
+        \Log::error('Archivo: ' . $e->getFile());
+        \Log::error('Línea: ' . $e->getLine());
+        \Log::error('Trace: ' . $e->getTraceAsString());
+        
+        return redirect()->route('coordinaciones.maestros-detalle')
+            ->with('error', 'Error al cargar el expediente: ' . $e->getMessage());
+    }
+}
+/**
+ * ✅ MOSTRAR DOCUMENTOS DE UN MAESTRO A DETALLE (PARA ROL COORDINACIÓN)
+ */
+public function showDocumentosMaestro($maestroId)
+{
+    try {
+        \Log::info('=== SHOW DOCUMENTOS MAESTRO (COORDINACIÓN) - INICIO ===');
+        \Log::info('Maestro ID: ' . $maestroId);
+        
+        // ===== 1. OBTENER USUARIO AUTENTICADO =====
+        $user = Auth::user();
+        
+        if (!$user) {
+            \Log::error('❌ Usuario no autenticado');
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión');
+        }
+        
+        // ===== 2. OBTENER COORDINACIÓN DEL USUARIO =====
+        $coordinacion = null;
+        if (!empty($user->coordinaciones_id)) {
+            $coordinacion = Coordinacion::find($user->coordinaciones_id);
+        }
+        
+        if (!$coordinacion) {
+            \Log::error('❌ No se encontró coordinación para el usuario');
+            return redirect()->route('coordinacion.dashboard')
+                ->with('error', 'No tienes una coordinación asignada.');
+        }
+        
+        \Log::info("🎯 Coordinación: {$coordinacion->nombre} (ID: {$coordinacion->id})");
+        
+        // ===== 3. OBTENER PERÍODO HABILITADO =====
+        $periodoHabilitado = $this->obtenerPeriodoHabilitado();
+        
+        if ($periodoHabilitado) {
+            \Log::info("📅 Período ACTIVO: {$periodoHabilitado->nombre} (ID: {$periodoHabilitado->id})");
+            \Log::info("   Activo: " . ($periodoHabilitado->activo ? 'SÍ' : 'NO'));
+        } else {
+            \Log::warning("⚠️ No hay período activo, se mostrarán todos los documentos");
+        }
+        
+        // ===== 4. OBTENER MAESTRO Y VERIFICAR QUE PERTENEZCA A LA COORDINACIÓN =====
+        $maestro = Maestro::where('id', $maestroId)
+            ->where('coordinaciones_id', $coordinacion->id)
+            ->first();
+        
+        if (!$maestro) {
+            \Log::error("❌ Maestro ID {$maestroId} no encontrado en esta coordinación");
+            return redirect()->route('coordinaciones.maestros', ['coordinacion' => $coordinacion->id])
+                ->with('error', 'Maestro no encontrado en tu coordinación.');
+        }
+        
+        \Log::info("✅ Maestro encontrado: {$maestro->nombres} {$maestro->apellido_paterno}");
+        
+        // ===== 5. CARGAR DOCUMENTOS FILTRADOS POR PERÍODO ACTIVO =====
+        // ✅ CORREGIDO: Usar DocumentoMaestro en lugar de Documento
+        $queryDocumentos = DocumentoMaestro::where('maestro_id', $maestro->id);
+        
+        // Si hay un período activo, filtrar por él
+        if ($periodoHabilitado && $periodoHabilitado->activo == 1) {
+            $queryDocumentos->where('periodo_id', $periodoHabilitado->id);
+            \Log::info("🔍 Filtrando documentos por período activo ID: {$periodoHabilitado->id}");
+        }
+        
+        // Cargar los documentos con sus relaciones
+        $documentos = $queryDocumentos
+            ->with(['periodo', 'revisadoPor'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+        
+        \Log::info("📄 Documentos encontrados para el período: " . $documentos->count());
+        
+        // Cargar el maestro con la coordinación (sin documentos para evitar duplicados)
+        $maestro->load('coordinacion');
+        
+        // ===== 6. DEFINIR TIPOS DE DOCUMENTOS =====
+        $tiposDocumentos = [
+            'cst' => [
+                'nombre' => 'CST',
+                'descripcion' => 'Constancia de Situación Fiscal',
+                'icono' => 'fa-file-invoice',
+                'color' => 'primary',
+                'ayuda' => 'Documento emitido por el SAT'
+            ],
+            'iufim' => [
+                'nombre' => 'IUFIM',
+                'descripcion' => 'Identificación Única de Firma',
+                'icono' => 'fa-id-card',
+                'color' => 'info',
+                'ayuda' => 'Identificación oficial con fotografía'
+            ],
+            'comprobante_domicilio' => [
+                'nombre' => 'Comprobante de Domicilio',
+                'descripcion' => 'Comprobante de domicilio reciente',
+                'icono' => 'fa-home',
+                'color' => 'success',
+                'ayuda' => 'No mayor a 3 meses (agua, luz, teléfono)'
+            ],
+            'oficio_ingresos' => [
+                'nombre' => 'Oficio de Ingresos',
+                'descripcion' => 'Oficio de ingresos o constancia laboral',
+                'icono' => 'fa-file-signature',
+                'color' => 'warning',
+                'ayuda' => 'Documento que acredite ingresos'
+            ],
+            'declaracion_anual' => [
+                'nombre' => 'Declaración Anual',
+                'descripcion' => 'Declaración anual de impuestos',
+                'icono' => 'fa-file-alt',
+                'color' => 'secondary',
+                'ayuda' => 'Declaración del último ejercicio fiscal'
+            ],
+            'comprobante_seguro_social' => [
+                'nombre' => 'Seguro Social',
+                'descripcion' => 'Comprobante de seguro social',
+                'icono' => 'fa-shield-alt',
+                'color' => 'danger',
+                'ayuda' => 'NSS o comprobante de IMSS/ISSSTE'
+            ],
+        ];
+        
+        // ===== 7. OBTENER DOCUMENTOS REQUERIDOS PARA ESTA COORDINACIÓN =====
+        $documentosRequeridos = $this->obtenerDocumentosRequeridos($coordinacion->id);
+        
+        // ===== 8. ORGANIZAR DOCUMENTOS POR TIPO PARA FÁCIL ACCESO =====
+        $documentosPorTipo = [];
+        foreach ($documentos as $documento) {
+            $documentosPorTipo[$documento->tipo][] = $documento;
+        }
+        
+        // ===== 9. CALCULAR ESTADO DEL MAESTRO (SOLO PARA EL PERÍODO ACTIVO) =====
+        $estadoMaestro = $this->calcularEstadoDocumentos(
+            $maestro, 
+            $periodoHabilitado, 
+            $coordinacion->id
+        );
+        
+        // ===== 10. RETORNAR VISTA CON TODOS LOS DATOS =====
+        return view('coordinaciones.show-documentos', compact(
+            'coordinacion',
+            'maestro',
+            'periodoHabilitado',
+            'tiposDocumentos',
+            'documentosRequeridos',
+            'documentosPorTipo',
+            'estadoMaestro'
+        ));
+        
+    } catch (\Exception $e) {
+        \Log::error('💥 ERROR en showDocumentosMaestro: ' . $e->getMessage());
+        \Log::error('Archivo: ' . $e->getFile());
+        \Log::error('Línea: ' . $e->getLine());
+        \Log::error('Trace: ' . $e->getTraceAsString());
+        
+        return redirect()->route('coordinacion.dashboard')
+            ->with('error', 'Error al cargar los documentos: ' . $e->getMessage());
+    }
+}
+/**
+ * Ver documento en el navegador - VERSIÓN CORREGIDA
+ */
+public function view($id)
+{
+       try {
+            $documento = DocumentoMaestro::findOrFail($id);
+            
+            if (!Storage::disk('public')->exists($documento->ruta_archivo)) {
+                abort(404, 'El archivo no existe en el almacenamiento.');
+            }
 
+            $rutaCompleta = Storage::disk('public')->path($documento->ruta_archivo);
+            $tipoMime = Storage::disk('public')->mimeType($documento->ruta_archivo);
+
+            return response()->file($rutaCompleta, [
+                'Content-Type' => $tipoMime,
+                'Content-Disposition' => 'inline; filename="' . $documento->nombre_archivo . '"'
+            ]);
+            
+        } catch (\Exception $e) {
+            Log::error('Error al ver documento: ' . $e->getMessage());
+            abort(404, 'Documento no encontrado');
+        }
+}
+/**
+ * Descargar documento
+ */
+public function download($id)
+{
+    try {
+        // ✅ CORREGIDO: Usar DocumentoMaestro
+        $documento = DocumentoMaestro::findOrFail($id);
+        
+        // Verificar que el archivo existe
+        if (!Storage::disk('public')->exists($documento->ruta_archivo)) {
+            abort(404, 'El archivo no existe en el servidor');
+        }
+        
+        // Obtener la ruta completa del archivo
+        $filePath = Storage::disk('public')->path($documento->ruta_archivo);
+        
+        // Devolver el archivo para descarga
+        return response()->download($filePath, $documento->nombre_original);
+        
+    } catch (\Exception $e) {
+        \Log::error('Error al descargar documento: ' . $e->getMessage());
+        return back()->with('error', 'Error al descargar el documento: ' . $e->getMessage());
+    }
+}
+
+public function estatus()
+{
+    try {
+        \Log::info('=== ESTADÍSTICAS DE HORARIOS COORDINACIÓN - INICIO ===');
+        
+        // ===== 1. OBTENER USUARIO Y COORDINACIÓN =====
+        $user = Auth::user();
+        
+        if (!$user) {
+            return redirect()->route('login')->with('error', 'Debes iniciar sesión');
+        }
+        
+        // Obtener coordinación del usuario
+        $coordinacionId = $user->coordinaciones_id ?? null;
+        $coordinacionNombre = 'Todas las Coordinaciones';
+        
+        if ($coordinacionId) {
+            $coordinacion = Coordinacion::find($coordinacionId);
+            $coordinacionNombre = $coordinacion ? $coordinacion->nombre : 'Coordinación Asignada';
+        }
+        
+        // ===== 2. OBTENER PERÍODO SELECCIONADO =====
+        $periodoHabilitado = $this->obtenerPeriodoHabilitado();
+        $periodoActivo = Periodo::where('subida_habilitada', true)->first();
+        $periodoSeleccionado = $periodoHabilitado ?? $periodoActivo ?? Periodo::latest()->first();
+        
+        \Log::info("📅 Período seleccionado: " . ($periodoSeleccionado ? $periodoSeleccionado->nombre : 'NINGUNO'));
+        
+        // ===== 3. CONSULTA BASE DE MAESTROS =====
+        $maestrosQuery = Maestro::query();
+        
+        if ($coordinacionId) {
+            $maestrosQuery->where('coordinaciones_id', $coordinacionId);
+        }
+        
+        // ===== 4. OBTENER MAESTROS Y SUS HORARIOS =====
+        $maestros = $maestrosQuery->get();
+        
+        // Cargar horarios del período seleccionado para cada maestro
+        if ($periodoSeleccionado) {
+            foreach ($maestros as $maestro) {
+                $maestro->horarios_periodo = Horario::where('maestro_id', $maestro->id)
+                    ->where('periodo_id', $periodoSeleccionado->id)
+                    ->get();
+            }
+        }
+        
+        // ===== 5. ESTADÍSTICAS DE GÉNERO =====
+        $totalMaestros = $maestros->count();
+        $hombres = $maestros->where('sexo', 'Masculino')->count();
+        $mujeres = $maestros->where('sexo', 'Femenino')->count();
+        $otros = $maestros->where('sexo', 'Otro')->count();
+        $sinSexo = $maestros->whereNull('sexo')->count();
+        
+        // ===== 6. ESTADÍSTICAS DE HORARIOS =====
+        $conHorario = 0;
+        $sinHorario = 0;
+        $conFoto = 0;
+        $sinFoto = 0;
+        $conHorarioYFoto = 0;
+        $conHorarioSinFoto = 0;
+        $totalHorasAsignadas = 0;
+
+        foreach ($maestros as $maestro) {
+            $tieneHorario = isset($maestro->horarios_periodo) && $maestro->horarios_periodo->count() > 0;
+            $tieneFoto = isset($maestro->horarios_periodo) && $maestro->horarios_periodo->whereNotNull('horario_foto')->count() > 0;
+            
+            if ($tieneHorario) {
+                $conHorario++;
+                // Calcular horas (cada registro cuenta como 1 hora si no hay campo duracion)
+                $totalHorasAsignadas += $maestro->horarios_periodo->count();
+            } else {
+                $sinHorario++;
+            }
+            
+            if ($tieneFoto) {
+                $conFoto++;
+            } else {
+                $sinFoto++;
+            }
+            
+            if ($tieneHorario && $tieneFoto) {
+                $conHorarioYFoto++;
+            } elseif ($tieneHorario && !$tieneFoto) {
+                $conHorarioSinFoto++;
+            }
+        }
+        
+        // ===== 7. DISTRIBUCIÓN DE HORAS =====
+        $distribucionHoras = [
+            '0-5' => 0,
+            '6-10' => 0,
+            '11-15' => 0,
+            '16-20' => 0,
+            '21-25' => 0,
+            '26+' => 0
+        ];
+        
+        foreach ($maestros as $maestro) {
+            $totalHorasMaestro = isset($maestro->horarios_periodo) ? $maestro->horarios_periodo->count() : 0;
+            
+            if ($totalHorasMaestro >= 0 && $totalHorasMaestro <= 5) {
+                $distribucionHoras['0-5']++;
+            } elseif ($totalHorasMaestro <= 10) {
+                $distribucionHoras['6-10']++;
+            } elseif ($totalHorasMaestro <= 15) {
+                $distribucionHoras['11-15']++;
+            } elseif ($totalHorasMaestro <= 20) {
+                $distribucionHoras['16-20']++;
+            } elseif ($totalHorasMaestro <= 25) {
+                $distribucionHoras['21-25']++;
+            } elseif ($totalHorasMaestro >= 26) {
+                $distribucionHoras['26+']++;
+            }
+        }
+        
+        $promedioHoras = $conHorario > 0 ? round($totalHorasAsignadas / $conHorario, 1) : 0;
+        
+        // ===== 8. DISTRIBUCIÓN DE EDADES =====
+        $edades18_30 = $maestros->where('edad', '>=', 18)->where('edad', '<=', 30)->count();
+        $edades31_40 = $maestros->where('edad', '>=', 31)->where('edad', '<=', 40)->count();
+        $edades41_50 = $maestros->where('edad', '>=', 41)->where('edad', '<=', 50)->count();
+        $edades51_60 = $maestros->where('edad', '>=', 51)->where('edad', '<=', 60)->count();
+        $edades61_plus = $maestros->where('edad', '>=', 61)->count();
+        
+        // ===== 9. TOP MATERIAS =====
+        $topMaterias = [];
+        if ($periodoSeleccionado) {
+            $topMaterias = DB::table('horarios')
+                ->select('materia_nombre', DB::raw('COUNT(*) as total_clases'))
+                ->where('periodo_id', $periodoSeleccionado->id);
+            
+            // Filtrar por coordinación si es necesario
+            if ($coordinacionId) {
+                $topMaterias->whereIn('maestro_id', function($query) use ($coordinacionId) {
+                    $query->select('id')->from('maestros')->where('coordinaciones_id', $coordinacionId);
+                });
+            }
+            
+            $topMaterias = $topMaterias->groupBy('materia_nombre')
+                ->orderBy('total_clases', 'desc')
+                ->limit(5)
+                ->get();
+        }
+        
+        // ===== 10. ACTIVIDAD =====
+        $maestrosActivos = $maestros->where('activo', 1)->count();
+        $maestrosInactivos = $maestros->where('activo', 0)->count();
+        
+        // ===== 11. NIVEL ACADÉMICO =====
+        $licenciatura = $maestros->where('maximo_grado_academico', 'Licenciatura')->count();
+        $maestria = $maestros->where('maximo_grado_academico', 'Maestría')->count();
+        $doctorado = $maestros->where('maximo_grado_academico', 'Doctorado')->count();
+        $especialidad = $maestros->where('maximo_grado_academico', 'Especialidad')->count();
+        
+        \Log::info("📊 Estadísticas: Total={$totalMaestros}, ConHorario={$conHorario}");
+        
+        return view('coordinaciones.horarios.estatus', compact(
+            'coordinacionId',
+            'coordinacionNombre',
+            'periodoSeleccionado',
+            'periodoHabilitado',
+            'periodoActivo',
+            'totalMaestros',
+            'hombres',
+            'mujeres',
+            'otros',
+            'sinSexo',
+            'conHorario',
+            'sinHorario',
+            'conFoto',
+            'sinFoto',
+            'conHorarioYFoto',
+            'conHorarioSinFoto',
+            'edades18_30',
+            'edades31_40',
+            'edades41_50',
+            'edades51_60',
+            'edades61_plus',
+            'totalHorasAsignadas',
+            'distribucionHoras',
+            'promedioHoras',
+            'topMaterias',
+            'maestrosActivos',
+            'maestrosInactivos',
+            'licenciatura',
+            'maestria',
+            'doctorado',
+            'especialidad',
+            'maestros'
+        ));
+        
+    } catch (\Exception $e) {
+        \Log::error('💥 ERROR: ' . $e->getMessage());
+        \Log::error('Archivo: ' . $e->getFile() . ' Línea: ' . $e->getLine());
+        
+        return redirect()->back()->with('error', 'Error al cargar estadísticas: ' . $e->getMessage());
+    }
+}
 }

@@ -55,7 +55,7 @@ class Periodo extends Model
         }
     }
 
-    // Generar períodos para los próximos 7 años
+    // Generar períodos para los próximos 2 años (4 períodos total: 2 años × 2 períodos)
     public static function generarPeriodosFuturosSiEsNecesario()
     {
         try {
@@ -63,9 +63,9 @@ class Periodo extends Model
             $ultimoPeriodo = self::orderBy('fecha_inicio', 'desc')->first();
             
             if (!$ultimoPeriodo) {
-                // Si no hay períodos, crear desde 2025 hasta 2032
-                $anioInicio = 2025;
-                $aniosFuturos = 7;
+                // Si no hay períodos, crear desde 2026 hasta 2027 (2 años)
+                $anioInicio = 2026;
+                $aniosFuturos = 1; // Solo 1 año adicional (2026 + 1 = 2027)
                 
                 for ($anio = $anioInicio; $anio <= $anioInicio + $aniosFuturos; $anio++) {
                     self::crearPeriodosParaAnio($anio);
@@ -78,7 +78,7 @@ class Periodo extends Model
             // Verificar si necesitamos crear más períodos
             $anioUltimoPeriodo = $ultimoPeriodo->fecha_fin->year;
             $anioActual = date('Y');
-            $aniosFuturos = 7; // Generar para 7 años adelante
+            $aniosFuturos = 2; // Generar para 2 años adelante (4 períodos)
             
             // Solo generar si faltan años
             if ($anioUltimoPeriodo < ($anioActual + $aniosFuturos)) {
@@ -97,15 +97,15 @@ class Periodo extends Model
     // Crear períodos A y B para un año específico
     private static function crearPeriodosParaAnio($anio)
     {
-        // Período A: Febrero - Julio
+        // Período A: Febrero - Junio
         $codigoA = "{$anio}-A";
         if (!self::where('codigo', $codigoA)->exists()) {
             try {
                 self::create([
-                    'nombre' => "Febrero-Julio {$anio}",
+                    'nombre' => "Febrero-Junio {$anio}",
                     'codigo' => $codigoA,
                     'fecha_inicio' => Carbon::create($anio, 2, 1), // 1 de Febrero
-                    'fecha_fin' => Carbon::create($anio, 7, 31),   // 31 de Julio
+                    'fecha_fin' => Carbon::create($anio, 6, 30),   // 30 de Junio
                     'estado' => 'inactivo',
                     'subida_habilitada' => false
                 ]);
@@ -115,15 +115,15 @@ class Periodo extends Model
             }
         }
         
-        // Período B: Agosto - Enero (del siguiente año)
+        // Período B: Agosto - Diciembre
         $codigoB = "{$anio}-B";
         if (!self::where('codigo', $codigoB)->exists()) {
             try {
                 self::create([
-                    'nombre' => "Agosto {$anio} - Enero " . ($anio + 1),
+                    'nombre' => "Agosto-Diciembre {$anio}",
                     'codigo' => $codigoB,
                     'fecha_inicio' => Carbon::create($anio, 8, 1),  // 1 de Agosto
-                    'fecha_fin' => Carbon::create($anio + 1, 1, 31), // 31 de Enero siguiente año
+                    'fecha_fin' => Carbon::create($anio, 12, 31), // 31 de Diciembre
                     'estado' => 'inactivo',
                     'subida_habilitada' => false
                 ]);

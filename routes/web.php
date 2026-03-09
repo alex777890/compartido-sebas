@@ -14,6 +14,7 @@ use App\Http\Controllers\PeriodoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ContratoIAController;
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\HorarioCoordinacionController;
 
 
 
@@ -103,11 +104,43 @@ Route::middleware(['auth'])->group(function () {
         
         return view('dashboard.coordinacion', compact('coordinacion'));
     })->name('dashboard.coordinacion');
-    
+// En routes/web.php
+
+
+    // Gestión de horarios
+Route::prefix('horarios')->name('horarios.')->group(function () {
+    Route::get('/', [HorarioCoordinacionController::class, 'index'])->name('index');
+    Route::get('/coordinacion/maestro/{maestroId}/asignacion', 
+        [HorarioCoordinacionController::class, 'mostrarFormulario'])
+        ->name('coordinacion.asignacion'); // Corregido el typo: "coordinacion" (con 'o')
+    // Ruta para ver/descargar foto del horario
+        // ✅ CORREGIDO: Sin /horarios duplicado
+    Route::get('foto/{maestroId}/{periodoId}', [HorarioCoordinacionController::class, 'verFotoHorario'])
+        ->name('ver-foto');
+
+
+    Route::post('/save', [HorarioCoordinacionController::class, 'guardarHorario'])->name('save');
+    Route::get('/ver/{maestroId}', [HorarioCoordinacionController::class, 'verHorario'])->name('ver');
+    Route::get('/api/horarios', [HorarioCoordinacionController::class, 'getHorariosPorPeriodo'])->name('api.horarios');
+});
+
+
     // ===== RUTAS PARA AUTHCONTROLLER =====
     // (Ya definidas en públicas)
+            // ✅ Ruta de estatus - SIN barra al principio (por el prefix)
+    Route::get('/coordinacion/estatus', [CoordinacionController::class, 'estatus'])->name('coordinaciones.estatus');
     
     // ===== RUTAS PARA COORDINACIONCONTROLLER =====
+      // ✅ RUTA PARA VER DOCUMENTOS DE MAESTRO (NUEVA)
+    Route::get('/coordinacion/maestro/{maestro}/documentos', 
+        [App\Http\Controllers\CoordinacionController::class, 'showDocumentosMaestro'])
+        ->name('coordinacion.maestros.documentos');
+    
+
+    // RUTA PARA EXPEDIENTE COMPLETO DEL MAESTRO
+Route::get('/coordinacion/maestros/{maestroId}/expediente', 
+    [CoordinacionController::class, 'expedienteMaestro'])
+    ->name('coordinaciones.maestros.expediente');
     Route::get('/coordinaciones/{id}', [CoordinacionController::class, 'show'])
         ->name('coordinaciones.show')
         ->middleware('admin');
@@ -115,6 +148,14 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/coordinaciones/{coordinacion}/estadisticas', [CoordinacionController::class, 'estadisticas'])
         ->name('coordinaciones.estadisticas')
         ->middleware('admin');
+    
+// Descargar documento - CORREGIDO (agregar la 'n' faltante)
+Route::get('/documentos/{id}/download', [CoordinacionController::class, 'download'])
+    ->name('documentos.download');
+
+// Ver documento en navegador - CORREGIDO
+Route::get('/documentos/{id}/view', [CoordinacionController::class, 'view'])
+    ->name('documentos.view');
     
     Route::put('/coordinaciones/{coordinacion}/maestros/{maestro}/status', 
         [CoordinacionController::class, 'updateMaestroStatus'])

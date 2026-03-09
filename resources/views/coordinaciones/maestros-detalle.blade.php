@@ -5,224 +5,323 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lista de Maestros | GEPROC GP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Agregar Bootstrap para el paginado simple -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- jQuery para DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables CSS y JS -->
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
     <style>
         :root {
-            --primary: #0744b6ff;
+            --primary: #1a4cba;
+            --primary-dark: #0a3a9e;
+            --primary-light: #2a5cd4;
             --secondary: #33CAE6;
             --accent: #26E63F;
             --dark-primary: #052e7a;
-            --light-primary: rgba(7, 68, 182, 0.08);
-            --light-bg: #ffffff;
+            --light-primary: rgba(26, 76, 186, 0.08);
+            --light-bg: #f8fafc;
             --card-bg: #ffffff;
-            --sidebar-bg: #ffffff;
             --border-color: #e1e5eb;
             --text-muted: #64748b;
             --text-dark: #1e293b;
-            --shadow-sm: 0 2px 8px rgba(7, 68, 182, 0.05);
-            --shadow-md: 0 4px 12px rgba(7, 68, 182, 0.08);
-            --shadow-lg: 0 8px 24px rgba(7, 68, 182, 0.12);
-            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, #0a5bda 100%);
-            --gradient-dark: linear-gradient(135deg, var(--dark-primary) 0%, #0744b6 100%);
-            --gradient-card: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
-            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            --shadow-sm: 0 2px 8px rgba(26, 76, 186, 0.05);
+            --shadow-md: 0 4px 12px rgba(26, 76, 186, 0.08);
+            --shadow-lg: 0 8px 24px rgba(26, 76, 186, 0.12);
+            --gradient-primary: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            --transition: all 0.3s ease;
+            --status-inactive-bg: #fee2e2;
+            --status-inactive-text: #991b1b;
+            --status-inactive-border: #fecaca;
+            --status-active-bg: #dcfce7;
+            --status-active-text: #166534;
+            --status-active-border: #bbf7d0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, sans-serif;
         }
 
         body {
-            background-color: #f8fafc;
+            background: #f5f7fb;
             color: var(--text-dark);
-            line-height: 1.5;
             min-height: 100vh;
         }
 
-        /* ========== SIDEBAR ========== */
-        .dashboard-container {
+        /* Top Bar Superior */
+        .top-bar {
+            background: white;
+            height: 70px;
+            border-bottom: 2px solid #e0e7ef;
             display: flex;
-            min-height: 100vh;
-            background: #f8fafc;
-        }
-
-        .sidebar {
-            width: 280px;
-            background: var(--sidebar-bg);
-            box-shadow: var(--shadow-md);
-            border-right: 1px solid var(--border-color);
+            align-items: center;
+            padding: 0 40px;
             position: fixed;
-            height: 100vh;
-            z-index: 1000;
-            display: flex;
-            flex-direction: column;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1001;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.03);
         }
 
-        .logo-section {
-            padding: 28px 24px;
-            background: var(--gradient-dark);
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .logo-circle {
-            width: 60px;
-            height: 60px;
-            background: white;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .logo-circle img {
-            width: 42px;
-            height: 42px;
-            object-fit: contain;
-        }
-
-        .logo-text {
-            flex: 1;
-        }
-
-        .logo-text h1 {
-            color: white;
-            font-size: 1.4rem;
-            font-weight: 700;
-            letter-spacing: -0.5px;
-            margin-bottom: 4px;
-        }
-
-        .logo-text span {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.8rem;
-            font-weight: 400;
-        }
-
-        .nav-menu {
-            flex: 1;
-            padding: 24px 0;
-            overflow-y: auto;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            padding: 14px 24px;
-            color: var(--text-muted);
-            text-decoration: none;
-            transition: var(--transition);
-            margin: 4px 12px;
-            border-radius: 10px;
-            font-weight: 500;
-        }
-
-        .nav-item:hover {
-            background: var(--light-primary);
-            color: var(--primary);
-            transform: translateX(4px);
-        }
-
-        .nav-item.active {
-            background: var(--light-primary);
-            color: var(--primary);
-            box-shadow: var(--shadow-sm);
-            border-left: 3px solid var(--primary);
-        }
-
-        .nav-item i {
-            width: 20px;
-            text-align: center;
-            font-size: 1.1rem;
-        }
-
-        .user-section {
-            padding: 24px;
-            border-top: 1px solid var(--border-color);
-            background: var(--light-bg);
-        }
-
-        .logout-btn {
+        .top-bar-content {
+            max-width: 1400px;
+            margin: 0 auto;
             width: 100%;
-            padding: 12px;
-            background: white;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--primary);
-            font-weight: 600;
-            cursor: pointer;
-            transition: var(--transition);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-        }
-
-        .logout-btn:hover {
-            background: var(--primary);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        /* ========== CONTENIDO PRINCIPAL ========== */
-        .main-content {
-            flex: 1;
-            margin-left: 280px;
-            padding: 20px;
-            background: #f8fafc;
-            min-height: 100vh;
-        }
-
-        .main-header {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px 24px;
-            margin-bottom: 20px;
-            box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
+        .header-logo {
+            display: flex;
+            align-items: center;
+            padding: 0;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            border: none;
+        }
+
+        .logo-img-header {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-right: 12px;
+        }
+
+        .header-logo span {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+        }
+
+        .top-bar-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .top-bar-divider {
+            width: 1px;
+            height: 30px;
+            background: #e0e7ef;
+        }
+
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            background: var(--light-primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-weight: 600;
+            font-size: 1rem;
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        }
+
+        .top-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            padding: 5px 10px;
+            border-radius: 30px;
+            transition: all 0.2s ease;
+        }
+
+        /* Top Navigation */
+        .top-nav {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            position: fixed;
+            top: 70px;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(26, 76, 186, 0.25);
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 70px;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+        }
+
+        .divider-white {
+            width: 2px;
+            height: 40px;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 2px;
+        }
+
+        .nav-menu {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 24px;
+            color: rgba(255, 255, 255, 0.85);
+            text-decoration: none;
+            border-radius: 10px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 1rem;
+            position: relative;
+        }
+
+        .nav-item i {
+            font-size: 1.1rem;
+        }
+
+        .nav-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .nav-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.12);
+            font-weight: 600;
+        }
+
+        .nav-item.active::after {
+            content: '';
+            position: absolute;
+            bottom: -18px;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: white;
+            border-radius: 3px 3px 0 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .nav-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 30px;
+            color: white;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            font-weight: 500;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .logout-btn i {
+            font-size: 1rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: translateY(-2px);
+            border-color: rgba(255, 255, 255, 0.3);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-top: 140px;
+            padding: 30px 40px;
+            min-height: calc(100vh - 140px);
+        }
+
+        .content-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        /* Header mejorado - IGUAL A VISTA 02 */
+        .main-header {
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-radius: 16px;
+            padding: 24px 30px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow-md);
+            border: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .main-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 6px;
+            height: 100%;
+            background: var(--gradient-primary);
+            border-radius: 6px 0 0 6px;
+        }
+
         .header-left h2 {
-            font-size: 1.4rem;
+            font-size: 1.8rem;
             color: var(--text-dark);
             font-weight: 700;
-            margin-bottom: 4px;
+            margin-bottom: 8px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .header-left p {
             color: var(--text-muted);
-            font-size: 0.9rem;
-        }
-
-        .date-display {
-            background: var(--light-primary);
-            color: var(--primary);
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 600;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             gap: 8px;
-            font-size: 0.85rem;
         }
 
-        /* ========== TABLA AJUSTADA AL MENU ========== */
+        .header-left p i {
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+
+        /* Sección de maestros */
         .maestros-section {
             background: var(--card-bg);
-            border-radius: 12px;
-            padding: 24px;
-            box-shadow: var(--shadow-sm);
+            border-radius: 20px;
+            padding: 25px;
+            box-shadow: var(--shadow-md);
             border: 1px solid var(--border-color);
-            margin-top: 0;
         }
 
         .section-header {
@@ -230,188 +329,252 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 20px;
-            padding-bottom: 16px;
-            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 15px;
+            border-bottom: 2px solid var(--border-color);
         }
 
         .section-header h2 {
-            font-size: 1.3rem;
+            font-size: 1.5rem;
             color: var(--primary);
             font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-header h2 i {
+            background: var(--light-primary);
+            padding: 8px;
+            border-radius: 10px;
+            color: var(--primary);
         }
 
         .maestros-count {
             background: var(--gradient-primary);
             color: white;
-            padding: 8px 16px;
-            border-radius: 8px;
-            font-weight: 700;
-            font-size: 0.85rem;
+            padding: 10px 20px;
+            border-radius: 30px;
+            font-weight: 600;
+            font-size: 0.9rem;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
+            box-shadow: var(--shadow-sm);
         }
 
-        /* Buscador */
-        .search-filter {
+        /* BUSCADOR - IDÉNTICO A VISTA 02 */
+        .search-filter-top {
             display: flex;
-            gap: 12px;
-            margin-bottom: 24px;
-            padding: 16px;
-            background: var(--gradient-card);
-            border-radius: 10px;
-            border: 1px solid var(--border-color);
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 20px;
         }
 
-        .search-box {
-            flex-grow: 1;
+        .search-box-large {
+            flex: 1;
             position: relative;
+            max-width: 500px;
         }
 
-        .search-box input {
+        .search-box-large input {
             width: 100%;
-            padding: 12px 16px 12px 44px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            font-size: 0.9rem;
+            padding: 15px 20px 15px 50px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
+            font-size: 1rem;
             background: white;
+            transition: var(--transition);
         }
 
-        .search-box i {
+        .search-box-large input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(26, 76, 186, 0.1);
+        }
+
+        .search-box-large i {
             position: absolute;
-            left: 16px;
+            left: 20px;
             top: 50%;
             transform: translateY(-50%);
             color: var(--text-muted);
-            font-size: 0.9rem;
+            font-size: 1.2rem;
         }
 
-        .filter-btn {
-            background: white;
-            border: 1px solid var(--border-color);
-            padding: 12px 16px;
-            border-radius: 8px;
-            color: var(--text-muted);
-            cursor: pointer;
+        .search-btn-large {
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 15px 35px;
+            border-radius: 12px;
+            font-weight: 600;
+            font-size: 1.1rem;
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-weight: 600;
+            gap: 10px;
+            cursor: pointer;
+            transition: var(--transition);
+            min-width: 140px;
+            justify-content: center;
+        }
+
+        .search-btn-large:hover {
+            background: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-md);
+        }
+
+        .search-btn-large i {
+            font-size: 1.2rem;
+        }
+
+        .clear-search {
+            color: var(--primary);
             text-decoration: none;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            border-radius: 20px;
+            transition: var(--transition);
         }
 
-        .primary-btn {
-            background: var(--gradient-primary);
-            color: white !important;
-            border: none !important;
+        .clear-search:hover {
+            background: rgba(26, 76, 186, 0.1);
         }
 
-        /* ========== TABLA OPTIMIZADA PARA 8 COLUMNAS ========== */
+        /* Nota informativa */
+        .info-note {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-left: 4px solid var(--primary);
+            border-radius: 8px;
+            padding: 16px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .info-note i {
+            font-size: 1.4rem;
+            color: var(--primary);
+            margin-top: 2px;
+        }
+
+        .info-note-content {
+            flex: 1;
+        }
+
+        .info-note-title {
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 4px;
+            font-size: 0.95rem;
+        }
+
+        .info-note-text {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .info-note-text strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* Tabla - ESTILOS DE VISTA 02 */
         .maestros-table-container {
             background: white;
-            border-radius: 10px;
+            border-radius: 16px;
             overflow: hidden;
             box-shadow: var(--shadow-sm);
             border: 1px solid var(--border-color);
-            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .table-header {
+            padding: 18px 22px;
+            background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
+            border-bottom: 2px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .table-header h3 {
+            color: var(--text-dark);
+            font-weight: 700;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .table-header h3 i {
+            color: var(--primary);
+        }
+
+        .search-active-badge {
+            background: var(--primary);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-active-badge a {
+            color: white;
+            text-decoration: none;
+            margin-left: 5px;
+            opacity: 0.8;
+        }
+
+        .search-active-badge a:hover {
+            opacity: 1;
         }
 
         .table-responsive {
             overflow-x: auto;
-            width: 100%;
-            max-width: calc(100vw - 320px); /* Resta el ancho del menú + padding */
         }
 
         .maestros-table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 1150px; /* Optimizado para 8 columnas */
-            table-layout: fixed; /* Distribuye el ancho equitativamente */
-        }
-
-        /* Distribución de columnas optimizada */
-        .maestros-table th:nth-child(1), /* # */
-        .maestros-table td:nth-child(1) {
-            width: 50px;
-            min-width: 50px;
-            max-width: 50px;
-        }
-
-        .maestros-table th:nth-child(2), /* Maestro */
-        .maestros-table td:nth-child(2) {
-            width: 180px;
-            min-width: 180px;
-            max-width: 180px;
-        }
-
-        .maestros-table th:nth-child(3), /* Email */
-        .maestros-table td:nth-child(3) {
-            width: 200px;
-            min-width: 200px;
-            max-width: 200px;
-        }
-
-        .maestros-table th:nth-child(4), /* Teléfono */
-        .maestros-table td:nth-child(4) {
-            width: 120px;
-            min-width: 120px;
-            max-width: 120px;
-        }
-
-        .maestros-table th:nth-child(5), /* Grado Académico */
-        .maestros-table td:nth-child(5) {
-            width: 150px;
-            min-width: 150px;
-            max-width: 150px;
-        }
-
-        .maestros-table th:nth-child(6), /* Estado */
-        .maestros-table td:nth-child(6) {
-            width: 100px;
-            min-width: 100px;
-            max-width: 100px;
-        }
-
-        .maestros-table th:nth-child(7), /* Horario clase */
-        .maestros-table td:nth-child(7) {
-            width: 100px;
-            min-width: 100px;
-            max-width: 100px;
-        }
-
-        .maestros-table th:nth-child(8), /* Expediente */
-        .maestros-table td:nth-child(8) {
-            width: 100px;
-            min-width: 100px;
-            max-width: 100px;
+            min-width: 1100px;
+            font-size: 0.95rem;
         }
 
         .maestros-table th {
-            padding: 14px 10px;
+            padding: 16px 14px;
             text-align: left;
             font-weight: 700;
             color: var(--primary);
             border-bottom: 2px solid var(--border-color);
             text-transform: uppercase;
-            font-size: 0.75rem;
-            background: var(--light-primary);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 0.8rem;
+            letter-spacing: 0.5px;
+            background: linear-gradient(135deg, #f8fafc 0%, #ffffff 100%);
         }
 
         .maestros-table td {
-            padding: 14px 10px;
+            padding: 16px 14px;
             border-bottom: 1px solid var(--border-color);
             vertical-align: middle;
-            font-size: 0.85rem;
-            height: 56px;
-            overflow: hidden;
-            text-overflow: ellipsis;
         }
 
-        /* Información del maestro */
+        .maestros-table tbody tr:hover {
+            background: var(--light-primary);
+            transition: var(--transition);
+        }
+
         .maestro-info {
             display: flex;
             align-items: center;
@@ -419,55 +582,70 @@
         }
 
         .maestro-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 8px;
-            background: var(--gradient-primary);
+            width: 45px;
+            height: 45px;
+            border-radius: 12px;
+            background: white;
+            border: 2px solid var(--primary);
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--primary);
             font-weight: 700;
-            font-size: 0.9rem;
+            font-size: 1.1rem;
             flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(26, 76, 186, 0.1);
         }
 
         .maestro-name h4 {
             font-weight: 700;
             color: #333;
             margin-bottom: 4px;
-            font-size: 0.9rem;
-            line-height: 1.2;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
+            font-size: 1rem;
+            /* ELIMINADO max-width Y text-overflow PARA QUE SE VEA COMPLETO */
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
         }
 
         .maestro-name p {
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             color: var(--text-muted);
-            line-height: 1.2;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            /* ELIMINADO max-width Y text-overflow PARA QUE SE VEA COMPLETO */
+            white-space: normal;
+            overflow: visible;
+            text-overflow: clip;
         }
 
-        /* Información adicional */
+        .maestro-name p i {
+            font-size: 0.8rem;
+            color: var(--primary);
+        }
+
         .maestro-detalle {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 4px;
         }
 
         .detalle-item {
             display: flex;
             align-items: center;
-            gap: 6px;
-            font-size: 0.8rem;
-            line-height: 1.2;
+            gap: 8px;
+            font-size: 0.9rem;
+            line-height: 1.3;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         .detalle-item i {
-            width: 14px;
+            width: 16px;
             color: var(--text-muted);
-            font-size: 0.75rem;
+            font-size: 0.85rem;
             flex-shrink: 0;
         }
 
@@ -481,46 +659,76 @@
         .status-badge {
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            padding: 5px 10px;
-            border-radius: 15px;
-            font-size: 0.75rem;
-            font-weight: 700;
+            justify-content: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
             white-space: nowrap;
+            border: 1px solid transparent;
+            min-width: 85px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
 
-        .status-active {
-            background: rgba(38, 230, 63, 0.15);
-            color: #1a9c2a;
-            border: 1px solid rgba(38, 230, 63, 0.3);
+        .status-badge i {
+            font-size: 0.8rem;
         }
 
-        .status-inactive {
-            background: rgba(108, 117, 125, 0.15);
-            color: var(--text-muted);
-            border: 1px solid rgba(108, 117, 125, 0.3);
+        .status-badge.status-active {
+            background: var(--status-active-bg);
+            color: var(--status-active-text);
+            border-color: var(--status-active-border);
         }
 
-        /* Acciones */
+        .status-badge.status-active:hover {
+            background: #bbf7d0;
+            border-color: #86efac;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(22, 101, 52, 0.2);
+        }
+
+        .status-badge.status-inactive {
+            background: var(--status-inactive-bg);
+            color: var(--status-inactive-text);
+            border-color: var(--status-inactive-border);
+        }
+
+        .status-badge.status-inactive:hover {
+            background: #fecaca;
+            border-color: #fca5a5;
+            transform: translateY(-1px);
+            box-shadow: 0 2px 5px rgba(153, 27, 27, 0.2);
+        }
+
+        .status-badge:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+            box-shadow: none !important;
+        }
+
+        /* Acciones - IGUAL A VISTA 02 */
         .action-icons {
             display: flex;
             gap: 6px;
-            justify-content: center;
         }
 
         .icon-btn {
-            width: 34px;
-            height: 34px;
-            border-radius: 6px;
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
             justify-content: center;
-            background: var(--light-bg);
+            background: white;
             color: var(--text-muted);
             cursor: pointer;
-            border: 1px solid var(--border-color);
+            border: 2px solid var(--border-color);
             text-decoration: none;
-            font-size: 0.8rem;
+            font-size: 0.9rem;
             transition: var(--transition);
         }
 
@@ -528,247 +736,479 @@
             background: var(--primary);
             color: white;
             border-color: var(--primary);
-        }
-
-        /* Paginación */
-        .pagination {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 5px;
-            margin-top: 24px;
-            padding-top: 16px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .page-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: 6px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: white;
-            color: var(--text-muted);
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            font-weight: 600;
-            text-decoration: none;
-            font-size: 0.85rem;
-            transition: var(--transition);
-        }
-
-        .page-btn:hover,
-        .page-btn.active {
-            background: var(--primary);
-            color: white;
-            border-color: var(--primary);
-        }
-
-        /* Footer */
-        .footer-info {
-            margin-top: 30px;
-            padding: 16px;
-            background: var(--card-bg);
-            border-radius: 10px;
-            color: var(--text-muted);
-            font-size: 0.8rem;
-            text-align: center;
+            transform: translateY(-2px);
             box-shadow: var(--shadow-sm);
-            border: 1px solid var(--border-color);
         }
 
-        /* FAB */
-        .fab {
+        /* Para botones con texto */
+        .icon-btn[style*="width: auto"] {
+            width: auto !important;
+            padding: 0 15px !important;
+            gap: 5px;
+        }
+
+        /* PAGINACIÓN DE DATATABLES - IDÉNTICA A VISTA 02 */
+        .dataTables_wrapper .dataTables_paginate {
+            padding-top: 20px !important;
+            display: flex !important;
+            justify-content: center !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .pagination {
+            margin-bottom: 0 !important;
+            font-size: 0.8rem !important;
+            gap: 3px;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .pagination .page-item .page-link {
+            color: var(--primary) !important;
+            font-size: 0.8rem !important;
+            padding: 6px 12px !important;
+            border-radius: 6px !important;
+            border: 1px solid var(--border-color) !important;
+            margin: 0 2px !important;
+            min-width: 36px !important;
+            height: 36px !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: var(--transition) !important;
+            background: white !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .pagination .page-item.active .page-link {
+            background-color: var(--primary) !important;
+            border-color: var(--primary) !important;
+            color: white !important;
+        }
+
+        .dataTables_wrapper .dataTables_paginate .pagination .page-link:hover {
+            background-color: rgba(26, 76, 186, 0.1) !important;
+            border-color: var(--primary) !important;
+            color: var(--primary) !important;
+            transform: translateY(-2px);
+        }
+
+        .dataTables_wrapper .dataTables_paginate .pagination .page-item.disabled .page-link {
+            color: #6c757d !important;
+            background: #f8f9fa !important;
+            border-color: var(--border-color) !important;
+            opacity: 0.6;
+        }
+
+        /* Ocultar info de DataTables */
+        .dataTables_info {
+            display: none !important;
+        }
+
+        /* Estilo para el buscador de DataTables - OCULTO porque usamos el nuestro */
+        .dataTables_filter {
+            display: none !important;
+        }
+
+        .dataTables_length {
+            margin-bottom: 15px;
+        }
+
+        .dataTables_length select {
+            padding: 6px 10px;
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 0.9rem;
+            margin: 0 5px;
+        }
+
+        /* Modal de confirmación */
+        .modal-overlay {
             position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 56px;
-            height: 56px;
-            border-radius: 12px;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 11000;
+            backdrop-filter: blur(4px);
+            animation: fadeIn 0.2s ease;
+        }
+
+        .modal-container {
+            background: white;
+            border-radius: 16px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: var(--shadow-lg);
+            animation: slideUp 0.3s ease;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            padding: 20px 24px 0;
+        }
+
+        .modal-header h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+
+        .modal-header p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .modal-header p strong {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .modal-divider {
+            height: 1px;
+            background: var(--border-color);
+            margin: 16px 24px;
+        }
+
+        .modal-actions {
+            padding: 0 24px 24px;
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+        }
+
+        .modal-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: none;
+        }
+
+        .modal-btn.cancel {
+            background: #f1f5f9;
+            color: var(--text-muted);
+        }
+
+        .modal-btn.cancel:hover {
+            background: #e2e8f0;
+        }
+
+        .modal-btn.confirm {
             background: var(--gradient-primary);
             color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 1.2rem;
-            cursor: pointer;
+        }
+
+        .modal-btn.confirm:hover {
+            transform: translateY(-2px);
             box-shadow: var(--shadow-md);
-            text-decoration: none;
-            transition: var(--transition);
-            z-index: 999;
         }
 
-        .fab:hover {
-            transform: scale(1.05);
-            box-shadow: var(--shadow-lg);
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
-        /* Responsive */
+        @keyframes slideUp {
+            from {
+                transform: translateY(20px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Alert Container */
+        #alertMessage {
+            position: fixed;
+            top: 160px;
+            right: 25px;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-left: 5px solid var(--accent);
+            z-index: 10000;
+            display: none;
+            font-size: 1rem;
+            font-weight: 500;
+            animation: slideIn 0.3s ease;
+        }
+
+        .toggle-estado-btn {
+            cursor: pointer !important;
+            transition: all 0.3s ease !important;
+            border: none !important;
+            width: 100% !important;
+            text-align: center !important;
+            background: transparent !important;
+            font-family: inherit;
+        }
+        
+        .toggle-estado-btn:hover {
+            transform: scale(1.02);
+            filter: brightness(0.95);
+        }
+        
+        .toggle-estado-btn:disabled {
+            opacity: 0.7;
+            cursor: not-allowed !important;
+        }
+
         @media (max-width: 1200px) {
-            .sidebar { 
-                width: 80px; 
-            }
-            .main-content { 
-                margin-left: 80px; 
-                padding: 16px;
-            }
-            .logo-text, .nav-item span { 
-                display: none; 
-            }
-            .nav-item { 
-                justify-content: center; 
-                padding: 16px; 
-            }
             .table-responsive {
-                max-width: calc(100vw - 112px); /* Ajuste para menú colapsado */
+                max-width: calc(100vw - 80px);
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .top-bar-right .top-bar-item span:not(.user-avatar) {
+                display: none;
             }
         }
 
         @media (max-width: 768px) {
-            .main-content { 
-                padding: 12px;
-                margin-left: 0;
+            .nav-menu {
+                display: none;
             }
-            .sidebar {
-                transform: translateX(-100%);
+            
+            .main-content {
+                padding: 20px;
+                margin-top: 140px;
             }
-            .maestros-section {
-                padding: 16px;
+            
+            .top-bar {
+                padding: 0 20px;
             }
-            .search-filter { 
-                flex-direction: column; 
+            
+            .top-bar-right {
+                gap: 10px;
             }
-            .filter-btn { 
-                width: 100%; 
-                justify-content: center; 
+            
+            .search-filter-top {
+                flex-direction: column;
+                align-items: stretch;
             }
+            
+            .search-box-large {
+                max-width: 100%;
+            }
+            
+            .search-btn-large {
+                width: 100%;
+            }
+            
             .table-responsive {
                 max-width: 100vw;
+            }
+            
+            .info-note {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .modal-actions {
+                flex-direction: column;
+            }
+            
+            .modal-btn {
+                width: 100%;
             }
         }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
 <body>
-    <div class="dashboard-container">
-        <!-- SIDEBAR -->
-        <aside class="sidebar">
-            <div class="logo-section">
-                <div class="logo-circle">
-                    <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo" class="logo-img">
-                </div>
-                <div class="logo-text">
-                    <h1>GEPROC GP</h1>
+
+    @php
+        use Illuminate\Support\Facades\Auth;
+        use App\Models\Coordinacion;
+        use App\Models\Maestro;
+        
+        $user = Auth::user();
+        $coordinacion = $user->coordinaciones_id ? Coordinacion::find($user->coordinaciones_id) : null;
+        
+        if (isset($coordinacionControlador) && $coordinacionControlador) {
+            $coordinacion = $coordinacionControlador;
+        }
+        
+        if ($coordinacion) {
+            if (!isset($totalMaestros)) {
+                $totalMaestros = Maestro::where('coordinaciones_id', $coordinacion->id)->count();
+            }
+            if (!isset($maestrosActivos)) {
+                $maestrosActivos = Maestro::where('coordinaciones_id', $coordinacion->id)
+                    ->where('activo', 1)
+                    ->count();
+            }
+        }
+        
+        // Iniciales del usuario para el avatar
+        $userInitials = '';
+        if ($user && $user->name) {
+            $names = explode(' ', $user->name);
+            foreach ($names as $name) {
+                if (!empty($name)) {
+                    $userInitials .= strtoupper(substr($name, 0, 1));
+                }
+            }
+            $userInitials = substr($userInitials, 0, 2);
+        }
+    @endphp
+
+    <!-- Top Bar Superior -->
+    <div class="top-bar">
+        <div class="top-bar-content">
+            <div class="header-logo">
+                <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img-header">
+                <span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Navigation - Menú principal -->
+    <nav class="top-nav">
+        <div class="nav-container">
+            <div class="nav-left">
+                <div class="divider-white"></div>
+                
+                <div class="nav-menu">
+                    <a href="{{ route('coordinacion.dashboard') }}" class="nav-item">
+                        <i class="fas fa-home"></i>
+                        <span>Inicio</span>
+                    </a>
+                    <a href="{{ route('coordinaciones.maestros-detalle') }}" class="nav-item active">
+                        <i class="fas fa-users"></i>
+                        <span>Maestros</span>
+                    </a>
+                    <a href="{{ route('coordinaciones.maestros') }}" class="nav-item">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Documentos</span>
+                    </a>
+                    <a href="{{ route('coordinaciones.estatus') }}" class="nav-item">
+                        <i class="fas fa-chart-bar"></i>
+                        <span>Estadísticas</span>
+                    </a>
+                    <a href="{{ route('coordinaciones.show', $coordinacion->id ?? '#') }}" class="nav-item">
+                        <i class="fas fa-building"></i>
+                        <span>Mi Coordinación</span>
+                    </a>
                 </div>
             </div>
             
-            <nav class="nav-menu">
-                <a href="{{ route('coordinacion.dashboard') }}" class="nav-item">
-                    <i class="fas fa-home"></i>
-                    <span>Inicio</span>
-                </a>
-                <a href="{{ route('coordinaciones.maestros-detalle') }}" class="nav-item active">
-                    <i class="fas fa-users"></i>
-                    <span>Maestros</span>
-                </a>
-                <a href="{{ route('coordinaciones.maestros') }}" class="nav-item">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Documentos</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-chart-bar"></i>
-                    <span>Estadísticas</span>
-                </a>
-                <a href="#" class="nav-item">
-                    <i class="fas fa-building"></i>
-                    <span>Mi Coordinación</span>
-                </a>
-            </nav>
-            
-            <div class="user-section">
-                <form method="POST" action="{{ route('logout') }}">
+            <div class="nav-right">                
+                <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                     @csrf
                     <button type="submit" class="logout-btn">
                         <i class="fas fa-sign-out-alt"></i>
-                        <span>Cerrar Sesión</span>
+                        <span>Cerrar sesión</span>
                     </button>
                 </form>
             </div>
-        </aside>
+        </div>
+    </nav>
 
-        <!-- CONTENIDO PRINCIPAL -->
-        <main class="main-content">
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="content-container">
+            
+            
+            <!-- HEADER - IGUAL A VISTA 02 -->
             <div class="main-header">
                 <div class="header-left">
-                    <h2>Lista Completa de Maestros</h2>
-                    <p>Información detallada del personal académico</p>
+                    <h2>Registro de Maestros</h2>
+                    <p><i class="fas fa-users"></i> Gestión de maestros de la coordinación</p>
                 </div>
                 <div class="header-right">
-                    <div class="date-display">
-                        <i class="fas fa-calendar-alt"></i>
-                        {{ now()->format('d/m/Y') }}
-                    </div>
                 </div>
             </div>
 
             @if($coordinacion)
                 <div class="maestros-section">
                     <div class="section-header">
-                        <h2>Registro de Maestros</h2>
+                        <h2><i class="fas fa-chalkboard-teacher"></i> Lista de Maestros</h2>
                         <div class="maestros-count">
                             <i class="fas fa-users"></i> 
-                            {{ $totalMaestros ?? 0 }} Registrados
+                            <span id="totalMaestros">{{ $totalMaestros ?? 0 }}</span> Maestros
                         </div>
                     </div>
 
-                    <div class="search-filter">
-                        <form method="GET" action="{{ route('coordinaciones.maestros-detalle') }}" class="search-box">
+                    <!-- FILTRO DE BÚSQUEDA - IGUAL A VISTA 02 -->
+                    <div class="search-filter-top">
+                        <div class="search-box-large">
                             <i class="fas fa-search"></i>
-                            <input type="hidden" name="coordinaciones_id" value="{{ $coordinacion->id }}">
-                            <input type="text" name="search" placeholder="Buscar por nombre, email, especialidad..." 
-                                   value="{{ request('search') }}">
-                        </form>
-                        <button class="filter-btn" onclick="toggleFilters()">
-                            <i class="fas fa-filter"></i> Filtros
+                            <input type="text" id="searchInput" placeholder="Buscar maestro por nombre, email o teléfono..." value="" autocomplete="off">
+                        </div>
+                        <button type="button" class="search-btn-large" id="searchButton">
+                            <i class="fas fa-search"></i> Buscar
                         </button>
-                        <a href="{{ route('maestros.create') }}?coordinaciones_id={{ $coordinacion->id }}" 
-                           class="filter-btn primary-btn">
-                            <i class="fas fa-plus"></i> Nuevo Maestro
+                        <a href="{{ route('coordinaciones.maestros-detalle', ['coordinaciones_id' => $coordinacion->id]) }}" class="clear-search" id="clearSearch" style="display: none;">
+                            <i class="fas fa-times-circle"></i> Limpiar
                         </a>
                     </div>
 
+                    <!-- NOTA INFORMATIVA SOBRE EL ESTADO -->
+                    <div class="info-note">
+                        <i class="fas fa-info-circle"></i>
+                        <div class="info-note-content">
+                            <div class="info-note-title">Sobre el estado del maestro</div>
+                            <div class="info-note-text">
+                                <strong>Inactivo:</strong> El maestro se encuentra con una <strong>baja temporal en el instituto</strong>. 
+                                Puede reactivarse en cualquier momento cuando se reincorpore a sus actividades académicas.
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="maestros-table-container">
+                        <div class="table-header">
+                            <h3><i class="fas fa-list"></i> Maestros registrados</h3>
+                            <div class="search-active-badge" id="searchBadge" style="display: none;">
+                                <i class="fas fa-filter"></i> Filtrado: <span id="searchTermDisplay"></span>
+                                <a href="#" id="removeSearch"><i class="fas fa-times"></i></a>
+                            </div>
+                        </div>
                         <div class="table-responsive">
-                            <table class="maestros-table">
+                            <table class="maestros-table" id="maestrosTable">
                                 <thead>
                                     <tr>
                                         <th>#</th>
                                         <th>Maestro</th>
-                                        <th>Email</th>
                                         <th>Teléfono</th>
                                         <th>Grado Académico</th>
                                         <th>Estado</th>
-                                        <th>Horario clase</th>
+                                        <th>Horario</th>
                                         <th>Expediente</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @forelse($maestros as $index => $maestro)
                                     <tr>
-                                        <td>{{ $maestros->firstItem() + $index }}</td>
+                                        <td>{{ $loop->iteration }}</td>
                                         <td>
                                             <div class="maestro-info">
+                                                <div class="maestro-avatar">
+                                                    <i class="fas fa-user"></i>
+                                                </div>
                                                 <div class="maestro-name">
                                                     <h4>{{ $maestro->nombres ?? '' }} {{ $maestro->apellido_paterno ?? '' }}</h4>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td>
-                                            <div class="maestro-detalle">
-                                                <div class="detalle-item">
-                                                    <i class="fas fa-envelope"></i>
-                                                    <span>{{ $maestro->email ?? 'No especificado' }}</span>
+                                                    <p><i class="fas fa-envelope"></i> {{ $maestro->email ?? '' }}</p>
                                                 </div>
                                             </div>
                                         </td>
@@ -781,54 +1221,55 @@
                                             </div>
                                         </td>
                                         <td>
-                                            <strong style="font-size: 0.9rem;">{{ $maestro->maximo_grado_academico ?? 'N/A' }}</strong>
+                                            <strong>{{ $maestro->maximo_grado_academico ?? 'N/A' }}</strong>
                                             @if($maestro->titulo_obtenido)
                                             <div class="detalle-item" style="margin-top: 4px;">
                                                 <i class="fas fa-graduation-cap"></i>
-                                                <span style="font-size: 0.75rem;">{{ $maestro->titulo_obtenido }}</span>
+                                                <span>{{ $maestro->titulo_obtenido }}</span>
                                             </div>
                                             @endif
                                         </td>
-                                        <!-- En la tabla, en la columna de Estado (columna 6) -->
-<td>
-    @if($maestro->activo ?? false)
-        <button type="button" 
-                class="status-badge status-active toggle-estado-btn"
-                data-maestro-id="{{ $maestro->id }}"
-                data-estado-actual="1"
-                title="Haz clic para cambiar estado">
-            <i class="fas fa-check-circle"></i> Activo
-        </button>
-    @else
-        <button type="button" 
-                class="status-badge status-inactive toggle-estado-btn"
-                data-maestro-id="{{ $maestro->id }}"
-                data-estado-actual="0"
-                title="Haz clic para cambiar estado">
-            <i class="fas fa-times-circle"></i> Inactivo
-        </button>
-    @endif
-</td>
+                                        <td>
+                                            @if($maestro->activo ?? false)
+                                                <button type="button" 
+                                                        class="status-badge status-active toggle-estado-btn"
+                                                        data-maestro-id="{{ $maestro->id }}"
+                                                        data-maestro-nombre="{{ $maestro->nombres ?? '' }} {{ $maestro->apellido_paterno ?? '' }}"
+                                                        data-estado-actual="1"
+                                                        title="Haz clic para cambiar estado">
+                                                    <i class="fas fa-check-circle"></i> Activo
+                                                </button>
+                                            @else
+                                                <button type="button" 
+                                                        class="status-badge status-inactive toggle-estado-btn"
+                                                        data-maestro-id="{{ $maestro->id }}"
+                                                        data-maestro-nombre="{{ $maestro->nombres ?? '' }} {{ $maestro->apellido_paterno ?? '' }}"
+                                                        data-estado-actual="0"
+                                                        title="Haz clic para cambiar estado">
+                                                    <i class="fas fa-times-circle"></i> Inactivo
+                                                </button>
+                                            @endif
+                                        </td>
                                         <td>
                                             <div class="action-icons">
-                                                <a href="#" class="icon-btn" title="Asignar Horario">
-                                                    <i class="fas fa-edit"></i>
+                                                <a href="{{ route('horarios.coordinacion.asignacion', $maestro->id) }}" class="icon-btn" title="Asignar horario" style="width: auto; padding: 0 15px;">
+                                                    <i class="fas fa-clock"></i> Asignar
                                                 </a>
                                             </div>
                                         </td>
                                         <td>
                                             <div class="action-icons">
-                                                <a href="{{ route('maestros.show', $maestro->id) }}" class="icon-btn" title="Ver Expediente">
-                                                    <i class="fas fa-eye"></i>
+                                                <a href="{{ route('coordinaciones.maestros.expediente', $maestro->id) }}" class="icon-btn" title="Ver documentos" style="width: auto; padding: 0 15px;">
+                                                    <i class="fas fa-eye"></i> Ver Exp
                                                 </a>
                                             </div>
                                         </td>
                                     </tr>
                                     @empty
                                     <tr>
-                                        <td colspan="8" style="text-align: center; padding: 40px;">
-                                            <i class="fas fa-users-slash" style="font-size: 2rem; margin-bottom: 10px; opacity: 0.5; color: var(--text-muted);"></i>
-                                            <p style="font-size: 0.9rem; color: var(--text-muted);">No hay maestros registrados</p>
+                                        <td colspan="7" style="text-align: center; padding: 40px;">
+                                            <i class="fas fa-users-slash" style="font-size: 3rem; margin-bottom: 15px; opacity: 0.3; color: var(--text-muted);"></i>
+                                            <p style="font-size: 1.1rem; color: var(--text-muted);">No hay maestros registrados en esta coordinación</p>
                                         </td>
                                     </tr>
                                     @endforelse
@@ -837,290 +1278,201 @@
                         </div>
                     </div>
 
-                    @if($maestros->hasPages())
-                    <div class="pagination">
-                        @if(!$maestros->onFirstPage())
-                            <a href="{{ $maestros->previousPageUrl() }}" class="page-btn"><i class="fas fa-chevron-left"></i></a>
-                        @endif
-                        
-                        @foreach(range(1, $maestros->lastPage()) as $page)
-                            @if($page == $maestros->currentPage())
-                                <span class="page-btn active">{{ $page }}</span>
-                            @else
-                                <a href="{{ $maestros->url($page) }}" class="page-btn">{{ $page }}</a>
-                            @endif
-                        @endforeach
-                        
-                        @if($maestros->hasMorePages())
-                            <a href="{{ $maestros->nextPageUrl() }}" class="page-btn"><i class="fas fa-chevron-right"></i></a>
-                        @endif
-                    </div>
-                    @endif
+                    <!-- DataTables se encarga de la paginación automáticamente -->
+                    <div class="dataTables_info" style="display: none;"></div>
                 </div>
             @endif
+        </div>
+    </main>
 
-            <div class="footer-info">
-                <p>GEPROC - Sistema de Gestión de Procesos</p>
-                @if($coordinacion && $maestros->total() > 0)
-                <p>Mostrando {{ $maestros->firstItem() }}-{{ $maestros->lastItem() }} de {{ $maestros->total() }} maestros</p>
-                @endif
+    <!-- Modal de confirmación personalizado -->
+    <div id="confirmModal" class="modal-overlay" style="display: none;">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h3 id="modalTitle">Cambiar estado</h3>
+                <p id="modalMessage">¿Está seguro que desea cambiar el estado del maestro?</p>
             </div>
-        </main>
+            <div class="modal-divider"></div>
+            <div class="modal-actions">
+                <button class="modal-btn cancel" onclick="hideModal()">Cancelar</button>
+                <button class="modal-btn confirm" id="confirmBtn">Confirmar</button>
+            </div>
+        </div>
     </div>
 
-    <a href="{{ route('maestros.create') }}?coordinaciones_id={{ $coordinacion->id ?? '' }}" class="fab">
-        <i class="fas fa-plus"></i>
-    </a>
-<script>
-    function toggleFilters() {
-        alert('Funcionalidad de filtros avanzados');
-    }
-</script>
+    <!-- Alert Container -->
+    <div id="alertMessage"></div>
 
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('✅ Script de cambio de estado cargado');
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-    // Obtener el token CSRF para las peticiones
-    const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-    
-    if (!csrfToken) {
-        console.error('❌ No se encontró el token CSRF');
-        return;
-    }
-    
-    console.log('✅ Token CSRF encontrado');
-
-    // Función para depurar la URL
-    function construirUrl(maestroId) {
-        // Construir URL relativa
-        return `/coordinacion/maestros/${maestroId}/cambiar-estado`;
-    }
-
-    // Seleccionar todos los botones de cambio de estado
-    const botonesEstado = document.querySelectorAll('.toggle-estado-btn');
-    console.log(`✅ Se encontraron ${botonesEstado.length} botones de estado`);
-    
-    botonesEstado.forEach((boton, index) => {
-        console.log(`Botón ${index + 1}:`, boton);
-        
-        boton.addEventListener('click', function(e) {
-            e.preventDefault();
-            e.stopPropagation();
+    <script>
+        function showAlert(message, type = 'success') {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = message;
+            alertDiv.style.borderLeftColor = type === 'success' ? '#26E63F' : '#ff6b6b';
+            alertDiv.style.display = 'block';
             
-            const maestroId = this.dataset.maestroId;
-            const estadoActual = parseInt(this.dataset.estadoActual);
-            const nuevoEstado = estadoActual === 1 ? 0 : 1;
-            
-            // Obtener nombre del maestro de manera más robusta
-            const fila = this.closest('tr');
-            const nombreElement = fila?.querySelector('.maestro-name h4');
-            const nombreMaestro = nombreElement?.textContent?.trim() || 'este maestro';
-            
-            console.log('📝 Datos:', { maestroId, estadoActual, nuevoEstado, nombreMaestro });
-            
-            // Mostrar confirmación
-            const accion = nuevoEstado === 1 ? 'activar' : 'desactivar';
-            
-            if (!confirm(`¿Estás seguro de que deseas ${accion} a ${nombreMaestro}?`)) {
-                return;
-            }
-            
-            // Cambiar estado del botón (deshabilitar mientras se procesa)
-            const botonOriginal = this;
-            const textoOriginal = this.innerHTML;
-            this.disabled = true;
-            this.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-            
-            const url = construirUrl(maestroId);
-            console.log('🌐 Haciendo fetch a:', url);
-            
-            // Hacer la petición AJAX
-            fetch(url, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': csrfToken,
-                    'Accept': 'application/json',
-                    'X-Requested-With': 'XMLHttpRequest'
-                },
-                body: JSON.stringify({
-                    activo: nuevoEstado
-                })
-            })
-            .then(async response => {
-                console.log('📥 Respuesta recibida:', response.status);
-                
-                // Intentar parsear la respuesta como JSON
-                const contentType = response.headers.get('content-type');
-                if (contentType && contentType.includes('application/json')) {
-                    const data = await response.json();
-                    
-                    if (!response.ok) {
-                        throw new Error(data.message || `Error ${response.status}`);
-                    }
-                    
-                    return data;
-                } else {
-                    // Si no es JSON, puede ser un error HTML
-                    const text = await response.text();
-                    console.error('Respuesta no JSON:', text.substring(0, 200));
-                    throw new Error('Respuesta del servidor no válida');
-                }
-            })
-            .then(data => {
-                console.log('✅ Datos recibidos:', data);
-                
-                if (data.success) {
-                    // Actualizar el botón con el nuevo estado
-                    botonOriginal.className = `status-badge ${data.data.badge_class} toggle-estado-btn`;
-                    botonOriginal.innerHTML = `<i class="fas ${data.data.icono}"></i> ${data.data.estado_texto}`;
-                    botonOriginal.dataset.estadoActual = data.data.activo;
-                    botonOriginal.disabled = false;
-                    
-                    // Mostrar mensaje de éxito
-                    mostrarNotificacion(data.message, 'success');
-                } else {
-                    throw new Error(data.message || 'Error al cambiar estado');
-                }
-            })
-            .catch(error => {
-                console.error('❌ Error:', error);
-                
-                // Restaurar botón original en caso de error
-                botonOriginal.disabled = false;
-                botonOriginal.innerHTML = textoOriginal;
-                
-                // Mostrar mensaje de error
-                mostrarNotificacion(error.message || 'Error al cambiar el estado del maestro', 'error');
-            });
-        });
-    });
-    
-    // Función para mostrar notificaciones
-    function mostrarNotificacion(mensaje, tipo) {
-        console.log(`🔔 Notificación ${tipo}:`, mensaje);
-        
-        // Verificar si ya existe un contenedor de notificaciones
-        let contenedor = document.querySelector('.notificacion-contenedor');
-        
-        if (!contenedor) {
-            contenedor = document.createElement('div');
-            contenedor.className = 'notificacion-contenedor';
-            contenedor.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                z-index: 9999;
-            `;
-            document.body.appendChild(contenedor);
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 3000);
         }
-        
-        // Crear notificación
-        const notificacion = document.createElement('div');
-        notificacion.className = `notificacion notificacion-${tipo}`;
-        notificacion.style.cssText = `
-            background-color: ${tipo === 'success' ? '#10b981' : '#ef4444'};
-            color: white;
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin-bottom: 10px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            animation: slideIn 0.3s ease;
-            font-size: 0.9rem;
-            min-width: 250px;
-            max-width: 400px;
-        `;
-        
-        notificacion.innerHTML = `
-            <i class="fas ${tipo === 'success' ? 'fa-check-circle' : 'fa-exclamation-circle'}" style="font-size: 1.2rem;"></i>
-            <span style="flex: 1;">${mensaje}</span>
-            <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; opacity: 0.8;">
-                <i class="fas fa-times"></i>
-            </button>
-        `;
-        
-        contenedor.appendChild(notificacion);
-        
-        // Eliminar después de 4 segundos
-        setTimeout(() => {
-            if (notificacion.parentNode) {
-                notificacion.style.animation = 'slideOut 0.3s ease';
-                setTimeout(() => {
-                    if (notificacion.parentNode) {
-                        notificacion.remove();
-                        if (contenedor.children.length === 0) {
-                            contenedor.remove();
+
+        // Funciones para el modal personalizado
+        function showModal(title, message, onConfirm) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('confirmModal').style.display = 'flex';
+            
+            document.getElementById('confirmBtn').onclick = function() {
+                hideModal();
+                if (onConfirm) onConfirm();
+            };
+        }
+
+        function hideModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Inicializar DataTable - IGUAL QUE EN VISTA 02
+            if ($('#maestrosTable').length) {
+                var table = $('#maestrosTable').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json",
+                        "paginate": {
+                            "first": "«",
+                            "last": "»",
+                            "next": "›",
+                            "previous": "‹"
+                        },
+                        "lengthMenu": "Mostrar _MENU_ registros por página",
+                        "zeroRecords": "No se encontraron maestros"
+                    },
+                    "order": [[0, "asc"]],
+                    "pageLength": 10,
+                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                    "responsive": true,
+                    "dom": '<"row"<"col-sm-12"l>>rt<"row"<"col-sm-12"p>>',
+                    "drawCallback": function() {
+                        var info = table.page.info();
+                        $('#totalMaestros').text(info.recordsDisplay);
+                        
+                        // Mostrar/ocultar badge de búsqueda
+                        var searchTerm = table.search();
+                        if (searchTerm) {
+                            $('#searchBadge').show();
+                            $('#searchTermDisplay').text('"' + searchTerm + '"');
+                            $('#clearSearch').show();
+                        } else {
+                            $('#searchBadge').hide();
+                            $('#clearSearch').hide();
                         }
                     }
-                }, 300);
+                });
+
+                // Búsqueda con el botón
+                $('#searchButton').on('click', function() {
+                    var searchTerm = $('#searchInput').val();
+                    table.search(searchTerm).draw();
+                });
+
+                // Búsqueda con Enter
+                $('#searchInput').on('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        table.search($(this).val()).draw();
+                    }
+                });
+
+                // Limpiar búsqueda
+                $('#clearSearch, #removeSearch').on('click', function(e) {
+                    e.preventDefault();
+                    $('#searchInput').val('');
+                    table.search('').draw();
+                });
+
+                // Ajustar estilos del select
+                $('.dataTables_length select').addClass('form-select form-select-sm');
             }
-        }, 4000);
-    }
-    
-    // Agregar estilos para las animaciones si no existen
-    if (!document.getElementById('estilos-notificaciones')) {
-        const style = document.createElement('style');
-        style.id = 'estilos-notificaciones';
-        style.textContent = `
-            @keyframes slideIn {
-                from {
-                    transform: translateX(100%);
-                    opacity: 0;
+
+            // Script para cambio de estado con modal personalizado
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
+            
+            function construirUrl(maestroId) {
+                return `/maestros/${maestroId}/cambiar-estado`;
+            }
+
+            const botonesEstado = document.querySelectorAll('.toggle-estado-btn');
+            
+            botonesEstado.forEach((boton) => {
+                boton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const maestroId = this.dataset.maestroId;
+                    const maestroNombre = this.dataset.maestroNombre || 'este maestro';
+                    const estadoActual = parseInt(this.dataset.estadoActual);
+                    const nuevoEstado = estadoActual === 1 ? 0 : 1;
+                    
+                    const accion = nuevoEstado === 1 ? 'activar' : 'desactivar';
+                    const accionTexto = nuevoEstado === 1 ? 'ACTIVAR' : 'DESACTIVAR';
+                    
+                    const botonOriginal = this;
+                    const textoOriginal = this.innerHTML;
+                    
+                    showModal(
+                        `${accionTexto} MAESTRO`,
+                        `¿Está seguro que desea ${accion} al maestro "${maestroNombre}"?`,
+                        function() {
+                            botonOriginal.disabled = true;
+                            botonOriginal.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+                            
+                            const url = construirUrl(maestroId);
+                            
+                            fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': csrfToken,
+                                    'Accept': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: JSON.stringify({
+                                    activo: nuevoEstado
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    botonOriginal.className = `status-badge ${data.data.badge_class} toggle-estado-btn`;
+                                    botonOriginal.innerHTML = `<i class="fas ${data.data.icono}"></i> ${data.data.estado_texto}`;
+                                    botonOriginal.dataset.estadoActual = data.data.activo;
+                                    botonOriginal.disabled = false;
+                                    
+                                    showAlert(data.message, 'success');
+                                } else {
+                                    throw new Error(data.message || 'Error al cambiar estado');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                botonOriginal.disabled = false;
+                                botonOriginal.innerHTML = textoOriginal;
+                                showAlert(error.message || 'Error al cambiar el estado del maestro', 'error');
+                            });
+                        }
+                    );
+                });
+            });
+
+            // Cerrar modal si se hace clic fuera de él
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('confirmModal');
+                if (event.target === modal) {
+                    hideModal();
                 }
-                to {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-            }
-            
-            @keyframes slideOut {
-                from {
-                    transform: translateX(0);
-                    opacity: 1;
-                }
-                to {
-                    transform: translateX(100%);
-                    opacity: 0;
-                }
-            }
-            
-            .toggle-estado-btn {
-                cursor: pointer !important;
-                transition: all 0.3s ease !important;
-                border: none !important;
-                width: 100% !important;
-                text-align: left !important;
-                background: transparent !important;
-            }
-            
-            .toggle-estado-btn:hover {
-                transform: scale(1.02);
-                filter: brightness(0.95);
-            }
-            
-            .toggle-estado-btn:disabled {
-                opacity: 0.7;
-                cursor: not-allowed !important;
-            }
-            
-            .status-active, .status-inactive {
-                display: inline-flex !important;
-                align-items: center !important;
-                gap: 5px !important;
-                padding: 5px 10px !important;
-                border-radius: 15px !important;
-                font-size: 0.75rem !important;
-                font-weight: 700 !important;
-                white-space: nowrap !important;
-            }
-        `;
-        document.head.appendChild(style);
-    }
-});
-</script>
+            });
+        });
+    </script>
 </body>
 </html>

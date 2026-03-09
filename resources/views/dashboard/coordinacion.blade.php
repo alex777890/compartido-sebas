@@ -76,8 +76,8 @@
 }
 
 .logo-img-header {
-    width: 45px;
-    height: 45px;
+    width: 80px;
+    height: 80px;
     object-fit: contain;
     margin-right: 12px;
 }
@@ -638,18 +638,7 @@
             <!-- Logo en barra blanca - AHORA A LA IZQUIERDA -->
             <div class="header-logo">
                 <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img-header">
-                <span>SISTEMA GEPROC</span>
-            </div>
-            
-            <!-- Elementos de la derecha -->
-            <div class="top-bar-right">
-                <div class="top-bar-divider"></div>
-                <div class="top-bar-item">
-                    <div class="user-avatar">
-                        {{ $userInitials ?: 'U' }}
-                    </div>
-                    <span>{{ $user->name ?? 'Usuario' }}</span>
-                </div>
+                <span></span>
             </div>
         </div>
     </div>
@@ -675,7 +664,7 @@
                         <i class="fas fa-file-alt"></i>
                         <span>Documentos</span>
                     </a>
-                    <a href="{{ route('coordinaciones.estadisticas', $coordinacion->id ?? '#') }}" class="nav-item">
+                    <a href="{{ route('coordinaciones.estatus') }}" class="nav-item">
                         <i class="fas fa-chart-bar"></i>
                         <span>Estadísticas</span>
                     </a>
@@ -710,7 +699,7 @@
                         <h1>
                             Hola, <span>{{ $user->name }}</span>
                         </h1>
-                        <p>Tu Coordinacion {{ $coordinacion->nombre }}</p>
+                        <p>Coordinacion <span>{{ $coordinacion->nombre }}</span>
                     </div>
                 
                 </div>
@@ -723,9 +712,6 @@
                         <div class="stat-icon">
                             <i class="fas fa-user-check"></i>
                         </div>
-                        <span class="stat-trend">
-                            <i class="fas fa-arrow-up"></i> 5%
-                        </span>
                     </div>
                     <div class="stat-content">
                         <h3>Maestros Activos</h3>

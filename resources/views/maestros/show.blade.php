@@ -740,7 +740,7 @@
                     <i class="fas fa-calculator"></i>
                     <span>Horario Clase</span>
                 </a>
-                <a href="{{ route('maestros.calcular-antiguedad', $maestro) }}" class="quick-action-btn">
+                <a href="{{ route('maestros.historial-antiguedad', $maestro) }}" class="quick-action-btn">
                     <i class="fas fa-history"></i>
                     <span>Antigüedad</span>
                 </a>

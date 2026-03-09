@@ -5,8 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cálculo de Antigüedad</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <style>
     :root {
@@ -16,20 +15,22 @@
             --light-bg: #F8F9FA;
             --border-color: #E9ECEF;
             --text-muted: #6C757D;
-            --card-shadow: 0 5px 15px rgba(7, 68, 182, 0.08);
+            --card-shadow: 0 10px 30px rgba(7, 68, 182, 0.08);
             --transition: all 0.3s ease;
             --success-color: #28a745;
             --warning-color: #FFC107;
             --danger-color: #dc3545;
+            --gradient-primary: linear-gradient(135deg, #0744b6 0%, #0a5ad1 100%);
         }
         
         body { 
-            background: white; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            color: #333; 
+            background: linear-gradient(135deg, #f5f7fa 0%, #e9ecef 100%);
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            color: #2c3e50; 
             line-height: 1.6;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
         }
         
 /* ========== ESTILOS DE BARRA Y MENÚ DEL PRIMER CSS CON COLORES DEL SEGUNDO ========== */
@@ -184,6 +185,331 @@
 .navbar-menu .logout-btn:active {
     background: rgba(255, 255, 255, 0.2);
 }
+
+/* ========== NUEVOS ESTILOS PARA EL CUERPO ========== */
+.container-fluid.py-4 {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 1.5rem 2rem !important;
+}
+
+.card {
+    border: none;
+    border-radius: 20px;
+    box-shadow: var(--card-shadow);
+    overflow: hidden;
+    transition: var(--transition);
+    background: white;
+}
+
+.card:hover {
+    box-shadow: 0 15px 40px rgba(7, 68, 182, 0.12);
+}
+
+.card-header {
+    border-bottom: 1px solid rgba(0,0,0,0.05);
+    padding: 1.25rem 1.5rem;
+    background: var(--gradient-primary) !important;
+}
+
+.card-header h4, .card-header h5 {
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.card-header h4 i, .card-header h5 i {
+    font-size: 1.25em;
+}
+
+.card-header.bg-primary {
+    background: var(--gradient-primary) !important;
+}
+
+.card-header.bg-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+}
+
+.card-header.bg-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+}
+
+.card-body {
+    padding: 1.75rem;
+}
+
+/* Tarjetas de información */
+.bg-light {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    border: none;
+    border-radius: 16px;
+}
+
+.bg-light .card-title {
+    color: var(--primary);
+    font-weight: 600;
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.bg-light .card-title i {
+    color: var(--primary);
+}
+
+.badge {
+    padding: 0.5rem 0.75rem;
+    font-weight: 500;
+    border-radius: 8px;
+    font-size: 0.85rem;
+}
+
+.badge.bg-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%) !important;
+    color: white;
+}
+
+.badge.bg-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #e0a800 100%) !important;
+    color: #2c3e50;
+}
+
+/* Formularios */
+.form-group {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    font-weight: 600;
+    color: #2c3e50;
+    margin-bottom: 0.5rem;
+    display: block;
+}
+
+.form-control, .form-select {
+    border: 2px solid var(--border-color);
+    border-radius: 12px;
+    padding: 0.6rem 1rem;
+    font-size: 0.95rem;
+    transition: var(--transition);
+    background: white;
+}
+
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(7, 68, 182, 0.1);
+    outline: none;
+}
+
+.form-text {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    margin-top: 0.25rem;
+}
+
+/* Botones */
+.btn {
+    padding: 0.6rem 1.5rem;
+    font-weight: 500;
+    border-radius: 12px;
+    transition: var(--transition);
+    border: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.95rem;
+}
+
+.btn-success {
+    background: linear-gradient(135deg, #28a745 0%, #218838 100%);
+    color: white;
+}
+
+.btn-success:hover {
+    background: linear-gradient(135deg, #218838 0%, #1e7e34 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(40, 167, 69, 0.3);
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: linear-gradient(135deg, #0a5ad1 0%, #0744b6 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(7, 68, 182, 0.3);
+}
+
+.btn-info {
+    background: linear-gradient(135deg, #17a2b8 0%, #138496 100%);
+    color: white;
+}
+
+.btn-info:hover {
+    background: linear-gradient(135deg, #138496 0%, #117a8b 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(23, 162, 184, 0.3);
+}
+
+.btn-secondary {
+    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+    color: white;
+}
+
+.btn-secondary:hover {
+    background: linear-gradient(135deg, #5a6268 0%, #545b62 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(108, 117, 125, 0.3);
+}
+
+.btn-lg {
+    padding: 0.75rem 2rem;
+    font-size: 1rem;
+}
+
+/* CALENDARIO - Versión más compacta */
+#calendario-periodos {
+    max-height: 500px;
+    overflow-y: auto;
+    padding-right: 10px;
+}
+
+#calendario-periodos::-webkit-scrollbar {
+    width: 6px;
+}
+
+#calendario-periodos::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+#calendario-periodos::-webkit-scrollbar-thumb {
+    background: var(--primary);
+    border-radius: 10px;
+}
+
+.periodo-card {
+    background: white;
+    border: 1px solid var(--border-color) !important;
+    border-radius: 16px !important;
+    transition: var(--transition);
+}
+
+.periodo-card:hover {
+    border-color: var(--primary) !important;
+    box-shadow: 0 5px 15px rgba(7, 68, 182, 0.05);
+}
+
+.periodo-card h6 {
+    color: var(--primary);
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+/* Meses más pequeños y compactos */
+.mes-calendario {
+    font-size: 0.7rem;
+    padding: 0.25rem 0 !important;
+    text-align: center;
+    border-radius: 6px !important;
+    transition: var(--transition);
+    font-weight: 500;
+    background: white;
+    border: 1px solid var(--border-color);
+}
+
+.mes-calendario[data-disponible="true"] {
+    cursor: pointer;
+}
+
+.mes-calendario[data-disponible="true"]:hover:not([style*="background-color"]) {
+    background: rgba(7, 68, 182, 0.05) !important;
+    border-color: var(--primary);
+    transform: translateY(-1px);
+}
+
+.mes-calendario[data-disponible="false"] {
+    background: #f8f9fa;
+    color: #adb5bd;
+    border-color: #dee2e6;
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+/* Checkbox personalizado */
+.form-check-input {
+    width: 1.2rem;
+    height: 1.2rem;
+    border: 2px solid var(--border-color);
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.form-check-input:checked {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+.form-check-label {
+    color: var(--text-muted);
+    font-size: 0.85rem;
+    cursor: pointer;
+}
+
+/* Resumen */
+.bg-light.rounded {
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%) !important;
+    border-radius: 16px !important;
+    padding: 1.25rem !important;
+}
+
+#resumen-seleccion {
+    font-size: 0.9rem;
+}
+
+#resumen-seleccion .badge {
+    font-size: 0.75rem;
+    padding: 0.35rem 0.6rem;
+}
+
+/* Alertas */
+.alert {
+    border: none;
+    border-radius: 16px;
+    padding: 1rem 1.25rem;
+}
+
+.alert-warning {
+    background: linear-gradient(135deg, #fff3cd 0%, #ffe69c 100%);
+    color: #856404;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .container-fluid.py-4 {
+        padding: 1rem !important;
+    }
+    
+    .card-body {
+        padding: 1.25rem;
+    }
+    
+    .mes-calendario {
+        font-size: 0.6rem;
+        padding: 0.2rem 0 !important;
+    }
+    
+    .col-1 {
+        width: 20%;
+        flex: 0 0 auto;
+    }
+}
 </style>
 <body>
     <!-- Primera barra - Logo y título -->
@@ -231,12 +557,14 @@
             </div>
         </div>
     </nav>
+    
     <div class="container-fluid py-4">
         <div class="row">
             <div class="col-12">
                 <div class="card">
                     <div class="card-header bg-primary text-white">
                         <h4 class="mb-0">
+                            <i class="fas fa-calendar-alt"></i>
                             Cálculo de Antigüedad - {{ $maestro->nombres }} {{ $maestro->apellido_paterno }} {{ $maestro->apellido_materno }}
                         </h4>
                     </div>
@@ -246,8 +574,10 @@
                             <div class="col-md-6">
                                 <div class="card bg-light">
                                     <div class="card-body">
-                                        <h6 class="card-title">Información del Maestro</h6>
-                                        <p class="mb-1"><strong>Nombre completo:</strong> {{ $maestro->nombres }} {{ $maestro->apellido_paterno }} {{ $maestro->apellido_materno }}</p>
+                                        <h6 class="card-title">
+                                            <i class="fas fa-chalkboard-teacher"></i>
+                                            Información del Maestro
+                                        </h6>
                                         @if($maestro->anio_ingreso)
                                             <p class="mb-1"><strong>Año de ingreso:</strong> <span class="badge bg-info">{{ $maestro->anio_ingreso }}</span></p>
                                         @else
@@ -265,7 +595,10 @@
                             <div class="col-12">
                                 <div class="card border-warning">
                                     <div class="card-header bg-warning text-dark">
-                                        <h5 class="mb-0">Registrar Año de Ingreso</h5>
+                                        <h5 class="mb-0">
+                                            <i class="fas fa-exclamation-triangle"></i>
+                                            Registrar Año de Ingreso
+                                        </h5>
                                     </div>
                                     <div class="card-body">
                                         <p class="text-muted">El maestro no tiene registrado un año de ingreso. Por favor, ingréselo para continuar con el cálculo de antigüedad.</p>
@@ -288,12 +621,10 @@
                                                     </div>
                                                 </div>
                                                 <div class="col-md-8 d-flex align-items-end">
-                                            
-                                                <div class="col-md-8 d-flex align-items-end">
                                                     <button type="button" id="btn-guardar-anio" class="btn btn-success">
-                                                            Guardar Año de Ingreso
+                                                        <i class="fas fa-save"></i>
+                                                        Guardar Año de Ingreso
                                                     </button>
-                                                </div>
                                                 </div>
                                             </div>
                                         </form>
@@ -312,7 +643,10 @@
                             <div class="row mb-4">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label for="periodo_actual" class="form-label fw-bold">Periodo Actual:</label>
+                                        <label for="periodo_actual" class="form-label fw-bold">
+                                            <i class="fas fa-clock"></i>
+                                            Periodo Actual:
+                                        </label>
                                         <select name="periodo_actual" id="periodo_actual" class="form-select" required>
                                             <option value="">Seleccione el periodo actual</option>
                                             @foreach($periodos as $periodo)
@@ -331,7 +665,10 @@
                                 <div class="col-12">
                                     <div class="card">
                                         <div class="card-header bg-info text-white">
-                                            <h5 class="mb-0">Selección de Periodos Trabajados</h5>
+                                            <h5 class="mb-0">
+                                                <i class="fas fa-calendar-check"></i>
+                                                Selección de Periodos Trabajados
+                                            </h5>
                                         </div>
                                         <div class="card-body">
                                             <h6 class="fw-bold mb-3" id="titulo-calendario">Seleccione los periodos y meses trabajados:</h6>
@@ -342,7 +679,10 @@
 
                                             <!-- Resumen de selección -->
                                             <div class="mt-3 p-3 bg-light rounded">
-                                                <h6 class="fw-bold">Resumen de Selección:</h6>
+                                                <h6 class="fw-bold">
+                                                    <i class="fas fa-chart-pie"></i>
+                                                    Resumen de Selección:
+                                                </h6>
                                                 <div id="resumen-seleccion">
                                                     <p class="text-muted mb-0">No hay meses seleccionados</p>
                                                 </div>
@@ -355,13 +695,13 @@
 
                             <div class="d-grid gap-2 d-md-flex justify-content-md-end">
                                 <button type="submit" class="btn btn-primary btn-lg">
+                                    <i class="fas fa-calculator"></i>
                                     Calcular y Guardar Antigüedad
                                 </button>
-                                
-                                <a href="{{ route('maestros.historial-antiguedad', $maestro) }}" class="btn btn-info btn-lg">
-                                    Ver Historial
+                                <a href="{{ route('maestros.show', $maestro) }}" class="btn btn-secondary btn-lg">
+                                    <i class="fas fa-times"></i>
+                                    Cancelar
                                 </a>
-                                <a href="{{ route('maestros.show', $maestro) }}" class="btn btn-secondary btn-lg">Cancelar</a>
                             </div>
                         </form>
                         @endif
@@ -471,7 +811,7 @@
                                 </label>
                             </div>
                         </div>
-                        <div class="row">
+                        <div class="row g-1">
                             ${generarMeses(anio, mesesParaEsteAnio, esUltimoAnio)}
                         </div>
                     `;
@@ -500,8 +840,8 @@
                         'cursor: pointer;';
                     
                     return `
-                        <div class="col-1 text-center p-1">
-                            <div class="mes-calendario border rounded p-2" 
+                        <div class="col-1 px-1">
+                            <div class="mes-calendario border rounded p-2 text-center" 
                                  data-anio="${anio}"
                                  data-mes="${numero}"
                                  data-disponible="${estaDisponible}"
@@ -628,45 +968,43 @@
                 });
             }
         });
-document.addEventListener('DOMContentLoaded', function() {
-    // Guardar año de ingreso si no existe (usando AJAX)
-    const btnGuardarAnio = document.getElementById('btn-guardar-anio');
-    if (btnGuardarAnio) {
-        btnGuardarAnio.addEventListener('click', function() {
-            const anioIngreso = document.getElementById('anio_ingreso').value;
-            
-            if (!anioIngreso) {
-                alert('Por favor ingrese el año de ingreso');
-                return;
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // Guardar año de ingreso si no existe (usando AJAX)
+            const btnGuardarAnio = document.getElementById('btn-guardar-anio');
+            if (btnGuardarAnio) {
+                btnGuardarAnio.addEventListener('click', function() {
+                    const anioIngreso = document.getElementById('anio_ingreso').value;
+                    
+                    if (!anioIngreso) {
+                        alert('Por favor ingrese el año de ingreso');
+                        return;
+                    }
+
+                    // Enviar formulario para guardar el año de ingreso
+                    const formData = new FormData();
+                    formData.append('anio_ingreso', anioIngreso);
+                    formData.append('_token', '{{ csrf_token() }}');
+
+                    fetch('{{ route("maestros.actualizar-anio-ingreso", $maestro->id) }}', {
+                        method: 'POST',
+                        body: formData
+                    })
+                    .then(response => response.json())
+                    .then(data => {
+                        if (data.success) {
+                            location.reload();
+                        } else {
+                            alert('Error al guardar el año de ingreso');
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        alert('Error al guardar el año de ingreso');
+                    });
+                });
             }
-
-            // Enviar formulario para guardar el año de ingreso
-            const formData = new FormData();
-            formData.append('anio_ingreso', anioIngreso);
-            formData.append('_token', '{{ csrf_token() }}');
-
-            fetch('{{ route("maestros.actualizar-anio-ingreso", $maestro->id) }}', {
-                method: 'POST',
-                body: formData
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    location.reload();
-                } else {
-                    alert('Error al guardar el año de ingreso');
-                }
-            })
-            .catch(error => {
-                console.error('Error:', error);
-                alert('Error al guardar el año de ingreso');
-            });
         });
-    }
-
-    // ... el resto de tu código JavaScript existente
-});
-
     </script>
 </body>
 </html>
