@@ -17,16 +17,8 @@ class UserController extends Controller
 {
     // Iniciar query cargando explícitamente la relación
     $query = User::with(['coordinacion' => function($query) {
-        // Especifica qué columnas necesitas
         $query->select('id', 'nombre');
     }]);
-    
-    // DEPURACIÓN: Registrar información
-    \Log::info('Iniciando consulta de usuarios', [
-        'search' => $request->search,
-        'role' => $request->role,
-        'coordinacion' => $request->coordinacion
-    ]);
     
     // Aplicar filtro por nombre/apellidos si se proporciona
     if ($request->has('search') && !empty($request->search)) {
@@ -37,7 +29,7 @@ class UserController extends Controller
         });
     }
     
-    // Aplicar filtro por rol si se proporciona
+    // Aplicar filtro por rol si se proporciona - ACTUALIZADO
     if ($request->has('role') && !empty($request->role)) {
         $query->where('role', $request->role);
     }
@@ -53,24 +45,12 @@ class UserController extends Controller
     // Obtener usuarios con paginación
     $users = $query->paginate(10)->withQueryString();
     
-    // DEPURACIÓN: Verificar qué obtuvimos
-    if ($users->count() > 0) {
-        $firstUser = $users->first();
-        \Log::info('Primer usuario obtenido', [
-            'id' => $firstUser->id,
-            'name' => $firstUser->name,
-            'coordinaciones_id' => $firstUser->coordinaciones_id,
-            'tiene_relacion' => $firstUser->relationLoaded('coordinacion') ? 'SÍ' : 'NO',
-            'coordinacion' => $firstUser->coordinacion ? $firstUser->coordinacion->toArray() : 'NULL'
-        ]);
-    }
-    
     // Obtener todas las coordinaciones activas para el filtro
     $coordinaciones = Coordinacion::where('activo', true)
         ->select('id', 'nombre')
         ->get();
     
-    // Estadísticas
+    // Estadísticas - ACTUALIZADO con directivos
     $totalQuery = User::query();
     $totalUsers = $totalQuery->count();
     $activeUsers = $totalUsers;
@@ -78,6 +58,7 @@ class UserController extends Controller
     $adminUsers = $totalQuery->clone()->where('role', 'admin')->count();
     $profesorUsers = $totalQuery->clone()->where('role', 'profesor')->count();
     $coordinacionUsers = $totalQuery->clone()->where('role', 'coordinacion')->count();
+    $directivosUsers = $totalQuery->clone()->where('role', 'directivos')->count(); // NUEVO
 
     return view('crud.index', compact(
         'users',
@@ -87,7 +68,8 @@ class UserController extends Controller
         'inactiveUsers',
         'adminUsers',
         'profesorUsers',
-        'coordinacionUsers'
+        'coordinacionUsers',
+        'directivosUsers' // NUEVO
     ));
 }
 
@@ -97,13 +79,13 @@ class UserController extends Controller
     public function create()
     {
         $coordinaciones = Coordinacion::where('activo', true)
-            ->select('id', 'nombre') // Remover 'display_name' si no existe
+            ->select('id', 'nombre')
             ->get();
         return view('crud.create', compact('coordinaciones'));
     }
 
     /**
-     * Guardar un nuevo usuario.
+     * Guardar un nuevo usuario - CORREGIDO (directivos sin coordinación)
      */
     public function store(Request $request)
     {
@@ -111,13 +93,14 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => 'required|in:admin,profesor,coordinacion',
+            'role' => 'required|in:admin,profesor,coordinacion,directivos', // ACTUALIZADO
             'coordinaciones_id' => 'nullable|exists:coordinaciones,id'
         ]);
 
+        // Solo coordinación requiere seleccionar una coordinación
         if ($request->role === 'coordinacion' && empty($request->coordinaciones_id)) {
             return back()->withErrors([
-                'coordinaciones_id' => 'Debe seleccionar una coordinación para este rol.'
+                'coordinaciones_id' => 'Debe seleccionar una coordinación para el rol de Coordinación.'
             ])->withInput();
         }
 
@@ -126,6 +109,7 @@ class UserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
+            // Solo coordinación guarda coordinaciones_id, los demás roles no
             'coordinaciones_id' => $request->role === 'coordinacion' ? $request->coordinaciones_id : null,
         ]);
 
@@ -138,27 +122,28 @@ class UserController extends Controller
     public function edit(User $user)
     {
         $coordinaciones = Coordinacion::where('activo', true)
-            ->select('id', 'nombre') // Remover 'display_name' si no existe
+            ->select('id', 'nombre')
             ->get();
         return view('crud.edit', compact('user', 'coordinaciones'));
     }
 
     /**
-     * Actualizar un usuario existente.
+     * Actualizar un usuario existente - CORREGIDO (directivos sin coordinación)
      */
     public function update(Request $request, User $user)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'role' => 'required|in:admin,profesor,coordinacion',
+            'role' => 'required|in:admin,profesor,coordinacion,directivos', // ACTUALIZADO
             'coordinaciones_id' => 'nullable|exists:coordinaciones,id',
             'password' => 'nullable|confirmed|min:8'
         ]);
 
+        // Solo coordinación requiere seleccionar una coordinación
         if ($request->role === 'coordinacion' && empty($request->coordinaciones_id)) {
             return back()->withErrors([
-                'coordinaciones_id' => 'Debe seleccionar una coordinación para este rol.'
+                'coordinaciones_id' => 'Debe seleccionar una coordinación para el rol de Coordinación.'
             ])->withInput();
         }
 
@@ -166,6 +151,7 @@ class UserController extends Controller
             'name' => $request->name,
             'email' => $request->email,
             'role' => $request->role,
+            // Solo coordinación guarda coordinaciones_id
             'coordinaciones_id' => $request->role === 'coordinacion' ? $request->coordinaciones_id : null,
         ];
 

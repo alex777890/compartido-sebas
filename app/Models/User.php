@@ -30,14 +30,13 @@ class User extends Authenticatable
 
     /**
      * Relación: Un usuario pertenece a una coordinación
-     * IMPORTANTE: Especificar la clave foránea porque no sigue la convención
      */
     public function coordinacion()
     {
         return $this->belongsTo(
             Coordinacion::class, 
-            'coordinaciones_id', // Nombre de la columna en la tabla users
-            'id' // Nombre de la columna en la tabla coordinaciones (por defecto es id)
+            'coordinaciones_id',
+            'id'
         );
     }
 
@@ -63,6 +62,14 @@ class User extends Authenticatable
     public function isCoordinacion()
     {
         return $this->role === 'coordinacion';
+    }
+
+    /**
+     * Verificar si el usuario es directivo
+     */
+    public function isDirectivo()
+    {
+        return $this->role === 'directivos';
     }
 
     /**

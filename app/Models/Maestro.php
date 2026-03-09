@@ -209,5 +209,11 @@ public function calcularAntiguedadAcumulada()
         return $this->horarios()->where('periodo_id', $periodoId);
     }
 
+
+    public function user(): BelongsTo
+{
+    return $this->belongsTo(User::class, 'user_id');
+}
+
 }
 

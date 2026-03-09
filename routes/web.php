@@ -14,6 +14,7 @@ use App\Http\Controllers\PeriodoController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ContratoIAController;
 use App\Http\Controllers\ContractController;
+use App\Http\Controllers\DirectivosController;
 use App\Http\Controllers\HorarioCoordinacionController;
 
 
@@ -428,3 +429,27 @@ Route::prefix('maestros')->group(function () {
 
 Route::get('/contracts/get-teachers/{coordinacionId}', [App\Http\Controllers\ContractController::class, 'getTeachersByCoordination']);
 Route::get('/contracts/get-teacher-info/{teacherId}', [App\Http\Controllers\ContractController::class, 'getTeacherInfo']);
+
+
+// ==================== RUTAS PARA DIRECTIVOS ====================
+Route::middleware(['auth'])->group(function () {
+    // Dashboard de directivos
+    Route::get('/directivos/dashboard', [App\Http\Controllers\DirectivosController::class, 'dashboard'])
+        ->name('directivos.dashboard')
+        ->middleware('directivos'); // Crearemos este middleware
+    
+    // Lista de maestros con filtros
+    Route::get('/directivos/maestros', [App\Http\Controllers\DirectivosController::class, 'maestros'])
+        ->name('directivos.maestros')
+        ->middleware('directivos');
+    
+    // Ver detalles de un maestro específico
+    Route::get('/directivos/maestro/{id}', [App\Http\Controllers\DirectivosController::class, 'verMaestro'])
+        ->name('directivos.ver-maestro')
+        ->middleware('directivos');
+    
+    // Módulo de antigüedad (pendiente)
+    Route::get('/directivos/antiguedad', [App\Http\Controllers\DirectivosController::class, 'antiguedad'])
+        ->name('directivos.antiguedad')
+        ->middleware('directivos');
+});

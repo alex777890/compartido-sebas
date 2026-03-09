@@ -28,7 +28,7 @@
         margin: 0;
     }
 
-    /* Barra superior - TAMAÑO ORIGINAL */
+    /* Barra superior */
     .navbar-top { 
         background: white; 
         border-bottom: 1px solid var(--border-color);
@@ -74,7 +74,7 @@
         object-fit: contain;
     }
 
-    /* Barra de menú - TAMAÑO ORIGINAL */
+    /* Barra de menú */
     .navbar-menu { 
         background: var(--primary); 
         padding: 0.7rem 0;
@@ -175,7 +175,7 @@
         border-color: rgba(255, 255, 255, 0.6);
     }
 
-    /* Contenido principal - MÁS COMPACTO */
+    /* Contenido principal */
     .main-content { 
         padding: 20px;
         min-height: calc(100vh - 110px);
@@ -319,7 +319,39 @@
         gap: 0.3rem;
     }
 
-    /* Información del usuario actual - Compacta */
+    /* Badges compactos */
+    .badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        border-radius: 3px;
+    }
+
+    .role-badge-admin {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    .role-badge-profesor {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .role-badge-coordinacion {
+        background: rgba(7, 68, 182, 0.1);
+        color: var(--primary);
+        border: 1px solid rgba(7, 68, 182, 0.2);
+    }
+
+    .role-badge-directivos {
+        background: rgba(32, 201, 151, 0.1);
+        color: #20c997;
+        border: 1px solid rgba(32, 201, 151, 0.2);
+    }
+
+    /* Información del usuario actual */
     .user-current-info {
         background: rgba(7, 68, 182, 0.02);
         border: 1px solid var(--border-color);
@@ -359,33 +391,7 @@
         font-size: 0.9rem;
     }
 
-    /* Badges compactos */
-    .badge {
-        padding: 0.25rem 0.5rem;
-        font-size: 0.75rem;
-        font-weight: 500;
-        border-radius: 3px;
-    }
-
-    .role-badge-admin {
-        background: rgba(220, 53, 69, 0.1);
-        color: #dc3545;
-        border: 1px solid rgba(220, 53, 69, 0.2);
-    }
-
-    .role-badge-profesor {
-        background: rgba(40, 167, 69, 0.1);
-        color: #28a745;
-        border: 1px solid rgba(40, 167, 69, 0.2);
-    }
-
-    .role-badge-coordinacion {
-        background: rgba(7, 68, 182, 0.1);
-        color: var(--primary);
-        border: 1px solid rgba(7, 68, 182, 0.2);
-    }
-
-    /* Coordinación especial */
+    /* Coordinación especial - SOLO PARA COORDINACION */
     .coordinacion-required {
         border-left: 3px solid var(--primary);
         padding-left: 0.8rem;
@@ -400,7 +406,7 @@
         background: rgba(40, 167, 69, 0.03);
     }
 
-    /* Botones más compactos */
+    /* Botones */
     .btn-primary-custom {
         background: var(--primary);
         border: none;
@@ -471,7 +477,7 @@
         justify-content: flex-end;
     }
 
-    /* Alertas compactas */
+    /* Alertas */
     .alert {
         border-radius: 4px;
         padding: 0.8rem;
@@ -497,6 +503,16 @@
 
     .field-container.visible {
         display: block;
+    }
+
+    /* Información de ayuda */
+    .role-info {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
     }
 
     /* Responsive */
@@ -612,7 +628,7 @@
         </div>
     </nav>
 
-    <!-- Segunda barra - Menú (SIN MODIFICAR) -->
+    <!-- Segunda barra - Menú -->
     <nav class="navbar navbar-expand-lg navbar-menu">
         <div class="container">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -666,7 +682,7 @@
                         </div>
                     </div>
 
-                    <!-- Información actual del usuario (compacta) -->
+                    <!-- Información actual del usuario -->
                     <div class="user-current-info">
                         <h5 class="mb-2"><i class="fas fa-info-circle me-1 text-primary"></i>Información Actual</h5>
                         <div class="user-info-grid">
@@ -687,6 +703,8 @@
                                         <span class="badge role-badge-profesor"><i class="fas fa-chalkboard-teacher me-1"></i>Profesor</span>
                                     @elseif($user->role === 'coordinacion')
                                         <span class="badge role-badge-coordinacion"><i class="fas fa-building me-1"></i>Coordinación</span>
+                                    @elseif($user->role === 'directivos')
+                                        <span class="badge role-badge-directivos"><i class="fas fa-user-tie me-1"></i>Directivos</span>
                                     @endif
                                 </span>
                             </div>
@@ -724,7 +742,7 @@
                         </div>
                     @endif
 
-                    <!-- Formulario en GRID de 2 columnas -->
+                    <!-- Formulario en GRID de 2 columnas - CORREGIDO -->
                     <form method="POST" action="{{ route('users.update', $user) }}" id="userForm">
                         @csrf
                         @method('PUT')
@@ -772,13 +790,13 @@
                                 </div>
                             </div>
 
-                            <!-- Grupo 2: Rol y permisos -->
+                            <!-- Grupo 2: Rol y permisos - CORREGIDO (directivos NO tiene coordinación) -->
                             <div class="form-group">
                                 <h4 class="form-group-title">
                                     <i class="fas fa-user-tag"></i> Permisos y Acceso
                                 </h4>
                                 <div class="fields-grid">
-                                    <!-- Rol -->
+                                    <!-- Rol - AGREGADO directivos -->
                                     <div class="field-container full-width">
                                         <label for="role" class="form-label">
                                             <i class="fas fa-user-shield"></i>Tipo de Usuario
@@ -789,14 +807,31 @@
                                             <option value="admin" {{ old('role', $user->role) == 'admin' ? 'selected' : '' }}>Administrador</option>
                                             <option value="profesor" {{ old('role', $user->role) == 'profesor' ? 'selected' : '' }}>Profesor</option>
                                             <option value="coordinacion" {{ old('role', $user->role) == 'coordinacion' ? 'selected' : '' }}>Coordinación</option>
+                                            <option value="directivos" {{ old('role', $user->role) == 'directivos' ? 'selected' : '' }}>Directivos</option> <!-- NUEVO - SIN COORDINACIÓN -->
                                         </select>
                                         @error('role')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
+                                        <div class="role-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            <span id="roleInfo">
+                                                @if(old('role', $user->role) == 'admin')
+                                                    Acceso total al sistema, puede gestionar usuarios, coordinaciones y maestros
+                                                @elseif(old('role', $user->role) == 'profesor')
+                                                    Acceso a su perfil personal, documentos y horarios
+                                                @elseif(old('role', $user->role) == 'coordinacion')
+                                                    Debe seleccionar una coordinación para gestionar sus maestros
+                                                @elseif(old('role', $user->role) == 'directivos')
+                                                    Acceso de solo lectura para ver información de todos los maestros
+                                                @else
+                                                    Seleccione un rol para ver más información
+                                                @endif
+                                            </span>
+                                        </div>
                                     </div>
 
-                                    <!-- Coordinación (condicional) -->
-                                    <div class="field-container full-width coordinacion-required {{ (old('role', $user->role) == 'coordinacion' || old('coordinaciones_id', $user->coordinaciones_id)) ? 'visible' : 'hidden' }}" id="coordinacionField">
+                                    <!-- Coordinación (SOLO para rol coordinación) -->
+                                    <div class="field-container full-width coordinacion-required {{ (old('role', $user->role) == 'coordinacion') ? 'visible' : 'hidden' }}" id="coordinacionField">
                                         <label for="coordinaciones_id" class="form-label">
                                             <i class="fas fa-university"></i>Asignar a Coordinación
                                             <span class="text-danger">*</span>
@@ -817,7 +852,7 @@
                                 </div>
                             </div>
 
-                            <!-- Grupo 3: Seguridad (opcional - ocupa las 2 columnas) -->
+                            <!-- Grupo 3: Seguridad (opcional) -->
                             <div class="form-group full-width password-optional">
                                 <h4 class="form-group-title">
                                     <i class="fas fa-lock"></i> Cambio de Contraseña (Opcional)
@@ -881,12 +916,32 @@
                 }
             });
 
-            // Función para mostrar/ocultar campo de coordinación
+            // Función para mostrar/ocultar campo de coordinación - SOLO para coordinación
             function toggleCoordinacionField() {
                 const roleSelect = document.getElementById('role');
                 const coordinacionField = document.getElementById('coordinacionField');
                 const coordinacionSelect = document.getElementById('coordinaciones_id');
+                const roleInfo = document.getElementById('roleInfo');
                 
+                // Actualizar información del rol
+                switch(roleSelect.value) {
+                    case 'admin':
+                        roleInfo.textContent = 'Acceso total al sistema, puede gestionar usuarios, coordinaciones y maestros';
+                        break;
+                    case 'profesor':
+                        roleInfo.textContent = 'Acceso a su perfil personal, documentos y horarios';
+                        break;
+                    case 'coordinacion':
+                        roleInfo.textContent = 'Debe seleccionar una coordinación para gestionar sus maestros';
+                        break;
+                    case 'directivos':
+                        roleInfo.textContent = 'Acceso de solo lectura para ver información de todos los maestros';
+                        break;
+                    default:
+                        roleInfo.textContent = 'Seleccione un rol para ver más información';
+                }
+                
+                // Solo mostrar coordinación para el rol coordinacion
                 if (roleSelect.value === 'coordinacion') {
                     coordinacionField.classList.remove('hidden');
                     coordinacionField.classList.add('visible');

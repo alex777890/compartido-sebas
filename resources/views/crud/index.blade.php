@@ -215,40 +215,44 @@
         background: var(--primary);
     }
 
-    /* Estadísticas */
+    /* Estadísticas - ACTUALIZADO con nuevo rol */
     .stats-container {
         display: grid;
-        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
         gap: 1rem;
         margin: 2rem 0;
     }
 
     .stat-card {
         background: white;
-        padding: 1.5rem;
+        padding: 1.2rem;
         border-radius: 8px;
         text-align: center;
         border: 1px solid var(--border-color);
         transition: var(--transition);
     }
 
-    
+    .stat-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 8px 20px rgba(7, 68, 182, 0.1);
+        border-color: var(--primary);
+    }
 
     .stat-icon {
-        font-size: 2.5rem;
-        margin-bottom: 1rem;
+        font-size: 2rem;
+        margin-bottom: 0.5rem;
     }
 
     .stat-value {
-        font-size: 1.8rem;
+        font-size: 1.6rem;
         font-weight: 650;
-        margin-bottom: 0.3rem;
+        margin-bottom: 0.2rem;
         color: var(--primary);
     }
 
     .stat-label {
         color: var(--text-muted);
-        font-size: 1.3rem;
+        font-size: 0.9rem;
         font-weight: 500;
     }
 
@@ -256,6 +260,7 @@
     .admins-icon { color: #dc3545; }
     .profesores-icon { color: #ffc107; }
     .coordinacion-icon { color: #6f42c1; }
+    .directivos-icon { color: #20c997; } /* NUEVO COLOR */
 
     /* Filtros */
     .filter-card {
@@ -363,7 +368,7 @@
         background: rgba(7, 68, 182, 0.02);
     }
 
-    /* Badges */
+    /* Badges - ACTUALIZADO */
     .badge {
         font-weight: 500;
         padding: 0.4rem 0.8rem;
@@ -382,6 +387,11 @@
 
     .role-badge-coordinacion {
         background: linear-gradient(135deg, var(--primary), #0056b3);
+        color: white;
+    }
+
+    .role-badge-directivos { /* NUEVO ESTILO */
+        background: linear-gradient(135deg, #20c997, #0ca678);
         color: white;
     }
 
@@ -546,15 +556,15 @@
         }
         
         .stat-card {
-            padding: 1.2rem;
+            padding: 1rem;
         }
         
         .stat-value {
-            font-size: 1.8rem;
+            font-size: 1.6rem;
         }
         
         .stat-icon {
-            font-size: 2rem;
+            font-size: 1.8rem;
         }
         
         .table thead {
@@ -678,17 +688,17 @@
                         </div>
                     @endif
 
-                    <!-- Estadísticas -->
+                    <!-- Estadísticas - ACTUALIZADAS con directivos -->
                     <div class="stats-container">
                         <div class="stat-card">
                             <div class="stat-icon users-icon"><i class="fas fa-users"></i></div>
-                            <div class="stat-value">{{ $adminUsers }}</div>
-                            <div class="stat-label">Administradores</div>
+                            <div class="stat-value">{{ $totalUsers }}</div>
+                            <div class="stat-label">Usuarios Totales</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon admins-icon"><i class="fas fa-user-shield"></i></div>
-                            <div class="stat-value">{{ $coordinacionUsers }}</div>
-                            <div class="stat-label">Coordinaciones</div>
+                            <div class="stat-value">{{ $adminUsers }}</div>
+                            <div class="stat-label">Administradores</div>
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon profesores-icon"><i class="fas fa-chalkboard-teacher"></i></div>
@@ -697,16 +707,21 @@
                         </div>
                         <div class="stat-card">
                             <div class="stat-icon coordinacion-icon"><i class="fas fa-building"></i></div>
-                            <div class="stat-value">{{ $totalUsers }}</div>
-                            <div class="stat-label">Usuarios Totales</div>
+                            <div class="stat-value">{{ $coordinacionUsers }}</div>
+                            <div class="stat-label">Coordinación</div>
+                        </div>
+                        <div class="stat-card"> <!-- NUEVA TARJETA -->
+                            <div class="stat-icon directivos-icon"><i class="fas fa-user-tie"></i></div>
+                            <div class="stat-value">{{ $directivosUsers ?? 0 }}</div>
+                            <div class="stat-label">Directivos</div>
                         </div>
                     </div>
 
-                    <!-- Filtros de búsqueda -->
+                    <!-- Filtros de búsqueda - ACTUALIZADOS -->
                     <div class="filter-card">
                         <div class="card-body">
                             <form method="GET" action="{{ route('users.index') }}" class="row g-3">
-                                <div class="col-md-5">
+                                <div class="col-md-4">
                                     <label for="search" class="form-label-filter">
                                         <i class="fas fa-search me-1"></i>Buscar por nombre o email
                                     </label>
@@ -741,6 +756,7 @@
                                         <option value="admin" {{ request('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
                                         <option value="profesor" {{ request('role') == 'profesor' ? 'selected' : '' }}>Profesor</option>
                                         <option value="coordinacion" {{ request('role') == 'coordinacion' ? 'selected' : '' }}>Coordinación</option>
+                                        <option value="directivos" {{ request('role') == 'directivos' ? 'selected' : '' }}>Directivos</option> <!-- NUEVO -->
                                     </select>
                                 </div>
                                 
@@ -758,12 +774,12 @@
                                     </select>
                                 </div>
                                 
-                                <div class="col-md-1 d-flex align-items-end">
+                                <div class="col-md-2 d-flex align-items-end">
                                     @if(request()->anyFilled(['search', 'role', 'coordinacion']))
                                     <a href="{{ route('users.index') }}" 
                                        class="btn btn-outline-danger w-100" 
                                        title="Limpiar todos los filtros">
-                                        <i class="fas fa-filter-circle-xmark"></i>
+                                        <i class="fas fa-filter-circle-xmark"></i> Limpiar
                                     </a>
                                     @endif
                                 </div>
@@ -824,7 +840,7 @@
                     </div>
                     @endif
 
-                    <!-- Tabla de usuarios -->
+                    <!-- Tabla de usuarios - ACTUALIZADA -->
                     <div class="table-responsive">
                         <table class="table table-hover">
                             <thead>
@@ -860,6 +876,8 @@
                                                 <span class="badge role-badge-profesor"><i class="fas fa-chalkboard-teacher me-1"></i>Profesor</span>
                                             @elseif($user->role === 'coordinacion')
                                                 <span class="badge role-badge-coordinacion"><i class="fas fa-building me-1"></i>Coordinación</span>
+                                            @elseif($user->role === 'directivos') <!-- NUEVO -->
+                                                <span class="badge role-badge-directivos"><i class="fas fa-user-tie me-1"></i>Directivos</span>
                                             @else
                                                 <span class="badge bg-secondary">{{ $user->role }}</span>
                                             @endif
@@ -989,17 +1007,6 @@
                         searchInput.select();
                     }
                 }
-            });
-
-            // Limpiar filtros individuales
-            document.querySelectorAll('.btn-filter-clear').forEach(button => {
-                button.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const param = this.getAttribute('data-param');
-                    const url = new URL(window.location.href);
-                    url.searchParams.delete(param);
-                    window.location.href = url.toString();
-                });
             });
 
         })();
