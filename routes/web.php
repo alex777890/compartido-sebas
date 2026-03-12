@@ -503,7 +503,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // ==================== RUTAS PARA ADMIN - GESTIÓN DE ADMINISTRATIVOS ====================
-Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+Route::middleware(['auth','admin'])->prefix('admin')->name('admin.')->group(function () {
     
     // Panel principal de administrativos
     Route::get('/administrativos', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'index'])

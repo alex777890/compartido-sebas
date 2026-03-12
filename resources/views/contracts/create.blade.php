@@ -477,6 +477,7 @@
                         <a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" 
                            href="{{ route('users.index') }}">Accesos</a>
                     </li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.administrativos.*') ? 'active' : '' }}"href="{{ route('admin.administrativos.index') }}">Administrativos</a></ul>
                 </ul>
                 
                 <!-- Información de usuario y cerrar sesión -->
