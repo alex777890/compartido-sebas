@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+// 👇 IMPORTAR EL MODELO ADMINISTRATIVO (esto es lo único que faltaba)
+use App\Models\Administrativo;
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -41,6 +44,14 @@ class User extends Authenticatable
     }
 
     /**
+     * Relación con administrativos (si aplica)
+     */
+    public function administrativo()
+    {
+        return $this->hasOne(Administrativo::class, 'user_id');
+    }
+
+    /**
      * Verificar si el usuario es admin
      */
     public function isAdmin()
@@ -70,6 +81,14 @@ class User extends Authenticatable
     public function isDirectivo()
     {
         return $this->role === 'directivos';
+    }
+
+    /**
+     * Verificar si el usuario es administrativo (NUEVO)
+     */
+    public function isAdministrativo()
+    {
+        return $this->role === 'administrativos';
     }
 
     /**
@@ -103,5 +122,17 @@ class User extends Authenticatable
     {
         return $query->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
+    }
+
+    /**
+     * Verificar si el perfil de administrativo está completo
+     */
+    public function perfilAdministrativoCompleto()
+    {
+        if ($this->role !== 'administrativos') {
+            return true;
+        }
+        
+        return $this->administrativo()->exists();
     }
 }

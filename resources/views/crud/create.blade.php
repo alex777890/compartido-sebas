@@ -319,7 +319,48 @@
         gap: 0.3rem;
     }
 
-    /* Coordinación especial - SOLO PARA COORDINACION */
+    /* Badges para roles */
+    .badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        border-radius: 3px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .role-badge-admin {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    .role-badge-profesor {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .role-badge-coordinacion {
+        background: rgba(7, 68, 182, 0.1);
+        color: var(--primary);
+        border: 1px solid rgba(7, 68, 182, 0.2);
+    }
+
+    .role-badge-directivos {
+        background: rgba(32, 201, 151, 0.1);
+        color: #20c997;
+        border: 1px solid rgba(32, 201, 151, 0.2);
+    }
+
+    .role-badge-administrativos {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
+    /* Coordinación especial */
     .coordinacion-required {
         border-left: 3px solid var(--primary);
         padding-left: 0.8rem;
@@ -608,7 +649,7 @@
                         </div>
                     @endif
 
-                    <!-- Formulario en GRID de 2 columnas - CORREGIDO -->
+                    <!-- Formulario en GRID de 2 columnas -->
                     <form method="POST" action="{{ route('users.store') }}" id="userForm">
                         @csrf
 
@@ -655,13 +696,13 @@
                                 </div>
                             </div>
 
-                            <!-- Grupo 2: Rol y permisos - CORREGIDO (directivos NO tiene coordinación) -->
+                            <!-- Grupo 2: Rol y permisos -->
                             <div class="form-group">
                                 <h4 class="form-group-title">
                                     <i class="fas fa-user-tag"></i> Permisos y Acceso
                                 </h4>
                                 <div class="fields-grid">
-                                    <!-- Rol - AGREGADO directivos -->
+                                    <!-- Rol -->
                                     <div class="field-container full-width">
                                         <label for="role" class="form-label">
                                             <i class="fas fa-user-shield"></i>Tipo de Usuario
@@ -672,7 +713,8 @@
                                             <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
                                             <option value="profesor" {{ old('role') == 'profesor' ? 'selected' : '' }}>Profesor</option>
                                             <option value="coordinacion" {{ old('role') == 'coordinacion' ? 'selected' : '' }}>Coordinación</option>
-                                            <option value="directivos" {{ old('role') == 'directivos' ? 'selected' : '' }}>Directivos</option> <!-- NUEVO - SIN COORDINACIÓN -->
+                                            <option value="directivos" {{ old('role') == 'directivos' ? 'selected' : '' }}>Directivos</option>
+                                            <option value="administrativos" {{ old('role') == 'administrativos' ? 'selected' : '' }}>Administrativos</option>
                                         </select>
                                         @error('role')
                                             <div class="invalid-feedback">{{ $message }}</div>
@@ -769,7 +811,7 @@
                 }
             });
 
-            // Función para mostrar/ocultar campo de coordinación - SOLO para coordinación
+            // Función para mostrar/ocultar campo de coordinación
             function toggleCoordinacionField() {
                 const roleSelect = document.getElementById('role');
                 const coordinacionField = document.getElementById('coordinacionField');
@@ -789,6 +831,9 @@
                         break;
                     case 'directivos':
                         roleInfo.textContent = 'Acceso de solo lectura para ver información de todos los maestros';
+                        break;
+                    case 'administrativos':
+                        roleInfo.textContent = 'Acceso para gestión de expedientes y documentos personales';
                         break;
                     default:
                         roleInfo.textContent = 'Seleccione un rol para ver más información';

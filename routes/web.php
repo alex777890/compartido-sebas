@@ -16,7 +16,7 @@ use App\Http\Controllers\ContratoIAController;
 use App\Http\Controllers\ContractController;
 use App\Http\Controllers\DirectivosController;
 use App\Http\Controllers\HorarioCoordinacionController;
-
+use App\Http\Controllers\AdminDocumentosController;
 
 
 // ==================== RUTAS PÚBLICAS ====================
@@ -452,4 +452,85 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/directivos/antiguedad', [App\Http\Controllers\DirectivosController::class, 'antiguedad'])
         ->name('directivos.antiguedad')
         ->middleware('directivos');
+});
+
+
+
+// ==================== RUTAS PARA ADMINISTRATIVOS (perfil propio) ====================
+Route::middleware(['auth'])->group(function () {
+    // Dashboard
+    Route::get('/administrativos/dashboard', [App\Http\Controllers\AdministrativosController::class, 'dashboard'])
+        ->name('administrativos.dashboard')
+        ->middleware('administrativos');
+    
+    // Completar perfil (cuestionario inicial)
+    Route::get('/administrativos/completar-perfil', [App\Http\Controllers\AdministrativosController::class, 'mostrarFormularioPerfil'])
+        ->name('administrativos.completar-perfil')
+        ->middleware('administrativos');
+    
+    // Guardar perfil
+    Route::post('/administrativos/guardar-perfil', [App\Http\Controllers\AdministrativosController::class, 'guardarPerfil'])
+        ->name('administrativos.guardar-perfil')
+        ->middleware('administrativos');
+    
+    // Ver documentos propios
+    Route::get('/administrativos/documentos', [App\Http\Controllers\AdministrativosController::class, 'documentos'])
+        ->name('administrativos.documentos')
+        ->middleware('administrativos');
+    
+    // Subir documentos
+    Route::post('/administrativos/subir-documentos', [App\Http\Controllers\AdministrativosController::class, 'subirDocumentos'])
+        ->name('administrativos.subir-documentos')
+        ->middleware('administrativos');
+    
+    // Editar perfil
+    Route::get('/administrativos/editar-perfil', [App\Http\Controllers\AdministrativosController::class, 'editarPerfil'])
+        ->name('administrativos.editar-perfil')
+        ->middleware('administrativos');
+    
+    // Actualizar perfil
+    Route::put('/administrativos/actualizar-perfil', [App\Http\Controllers\AdministrativosController::class, 'actualizarPerfil'])
+        ->name('administrativos.actualizar-perfil')
+        ->middleware('administrativos');
+
+    Route::get('/administrativos/documentos/{id}/ver', [App\Http\Controllers\AdministrativosController::class, 'verDocumento'])
+        ->name('administrativos.documentos.ver')
+        ->middleware('administrativos');
+    
+    Route::get('/administrativos/documentos/{id}/descargar', [App\Http\Controllers\AdministrativosController::class, 'descargarDocumento'])
+        ->name('administrativos.documentos.descargar')
+        ->middleware('administrativos');    
+});
+
+// ==================== RUTAS PARA ADMIN - GESTIÓN DE ADMINISTRATIVOS ====================
+Route::middleware(['auth', 'admin'])->prefix('admin')->name('admin.')->group(function () {
+    
+    // Panel principal de administrativos
+    Route::get('/administrativos', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'index'])
+        ->name('administrativos.index');
+    
+    // Ver detalles de un administrativo
+    Route::get('/administrativos/{id}', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'show'])
+        ->name('administrativos.show');
+    
+    // Ver todos los documentos de un administrativo
+    Route::get('/administrativos/{id}/documentos', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'documentos'])
+        ->name('administrativos.documentos');
+    
+    // Estadísticas
+    Route::get('/administrativos-estadisticas', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'estadisticas'])
+        ->name('administrativos.estadisticas');
+    
+    // Acciones sobre documentos
+    Route::post('/documentos/{id}/aprobar', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'aprobarDocumento'])
+        ->name('documentos.aprobar');
+    
+    Route::post('/documentos/{id}/rechazar', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'rechazarDocumento'])
+        ->name('documentos.rechazar');
+    
+    Route::get('/documentos/{id}/ver', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'verDocumento'])
+        ->name('documentos.ver');
+    
+    Route::get('/documentos/{id}/descargar', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'descargarDocumento'])
+        ->name('documentos.descargar');
 });

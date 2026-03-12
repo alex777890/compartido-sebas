@@ -50,7 +50,7 @@ class UserController extends Controller
         ->select('id', 'nombre')
         ->get();
     
-    // Estadísticas - ACTUALIZADO con directivos
+    // Estadísticas - ACTUALIZADO con todos los roles
     $totalQuery = User::query();
     $totalUsers = $totalQuery->count();
     $activeUsers = $totalUsers;
@@ -58,7 +58,8 @@ class UserController extends Controller
     $adminUsers = $totalQuery->clone()->where('role', 'admin')->count();
     $profesorUsers = $totalQuery->clone()->where('role', 'profesor')->count();
     $coordinacionUsers = $totalQuery->clone()->where('role', 'coordinacion')->count();
-    $directivosUsers = $totalQuery->clone()->where('role', 'directivos')->count(); // NUEVO
+    $directivosUsers = $totalQuery->clone()->where('role', 'directivos')->count();
+    $administrativosUsers = $totalQuery->clone()->where('role', 'administrativos')->count(); // 👈 NUEVO
 
     return view('crud.index', compact(
         'users',
@@ -69,7 +70,8 @@ class UserController extends Controller
         'adminUsers',
         'profesorUsers',
         'coordinacionUsers',
-        'directivosUsers' // NUEVO
+        'directivosUsers',
+        'administrativosUsers' // 👈 NUEVO
     ));
 }
 
@@ -85,7 +87,7 @@ class UserController extends Controller
     }
 
     /**
-     * Guardar un nuevo usuario - CORREGIDO (directivos sin coordinación)
+     * Guardar un nuevo usuario - CORREGIDO (con administrativos)
      */
     public function store(Request $request)
     {
@@ -93,7 +95,7 @@ class UserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-            'role' => 'required|in:admin,profesor,coordinacion,directivos', // ACTUALIZADO
+            'role' => 'required|in:admin,profesor,coordinacion,directivos,administrativos', // 👈 AGREGADO administrativos
             'coordinaciones_id' => 'nullable|exists:coordinaciones,id'
         ]);
 
@@ -128,14 +130,14 @@ class UserController extends Controller
     }
 
     /**
-     * Actualizar un usuario existente - CORREGIDO (directivos sin coordinación)
+     * Actualizar un usuario existente - CORREGIDO (con administrativos)
      */
     public function update(Request $request, User $user)
     {
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users,email,' . $user->id,
-            'role' => 'required|in:admin,profesor,coordinacion,directivos', // ACTUALIZADO
+            'role' => 'required|in:admin,profesor,coordinacion,directivos,administrativos', // 👈 AGREGADO administrativos
             'coordinaciones_id' => 'nullable|exists:coordinaciones,id',
             'password' => 'nullable|confirmed|min:8'
         ]);
