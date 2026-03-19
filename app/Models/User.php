@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
+// 👇 IMPORTAR EL MODELO ADMINISTRATIVO (esto es lo único que faltaba)
+use App\Models\Administrativo;
+
 class User extends Authenticatable
 {
     use HasFactory, Notifiable;
@@ -30,15 +33,22 @@ class User extends Authenticatable
 
     /**
      * Relación: Un usuario pertenece a una coordinación
-     * IMPORTANTE: Especificar la clave foránea porque no sigue la convención
      */
     public function coordinacion()
     {
         return $this->belongsTo(
             Coordinacion::class, 
-            'coordinaciones_id', // Nombre de la columna en la tabla users
-            'id' // Nombre de la columna en la tabla coordinaciones (por defecto es id)
+            'coordinaciones_id',
+            'id'
         );
+    }
+
+    /**
+     * Relación con administrativos (si aplica)
+     */
+    public function administrativo()
+    {
+        return $this->hasOne(Administrativo::class, 'user_id');
     }
 
     /**
@@ -63,6 +73,22 @@ class User extends Authenticatable
     public function isCoordinacion()
     {
         return $this->role === 'coordinacion';
+    }
+
+    /**
+     * Verificar si el usuario es directivo
+     */
+    public function isDirectivo()
+    {
+        return $this->role === 'directivos';
+    }
+
+    /**
+     * Verificar si el usuario es administrativo (NUEVO)
+     */
+    public function isAdministrativo()
+    {
+        return $this->role === 'administrativos';
     }
 
     /**
@@ -96,5 +122,17 @@ class User extends Authenticatable
     {
         return $query->where('name', 'like', "%{$search}%")
                     ->orWhere('email', 'like', "%{$search}%");
+    }
+
+    /**
+     * Verificar si el perfil de administrativo está completo
+     */
+    public function perfilAdministrativoCompleto()
+    {
+        if ($this->role !== 'administrativos') {
+            return true;
+        }
+        
+        return $this->administrativo()->exists();
     }
 }

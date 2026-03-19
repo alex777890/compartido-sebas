@@ -209,8 +209,6 @@ public function calcularAntiguedadAcumulada()
         return $this->horarios()->where('periodo_id', $periodoId);
     }
 
-    // app/Models/Maestro.php - Agrega esto al final de la clase
-
 public function documentosIngreso()
 {
     return $this->hasMany(DocumentoMaestro::class);
@@ -225,7 +223,12 @@ public function documentosActuales()
               ->where('maestro_id', $this->id)
               ->groupBy('tipo_documento_id');
         });
-}
 
+}
+    public function user(): BelongsTo
+{
+    return $this->belongsTo(User::class, 'user_id');
+
+}
 }
 

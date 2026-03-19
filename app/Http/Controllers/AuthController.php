@@ -16,7 +16,7 @@ class AuthController extends Controller
         return view('inicio');
     }
 
-    // Procesa el login
+    // Procesa el login - ACTUALIZADO con nuevo rol
     public function login(Request $request)
     {
         $credentials = $request->validate([
@@ -31,7 +31,7 @@ class AuthController extends Controller
             // GUARDAR EL ROL ACTUAL EN SESIÓN
             session(['user_current_role' => $user->role]);
 
-            // Redirección por rol
+            // Redirección por rol - AGREGADO ADMINISTRATIVOS
             switch($user->role) {
                 case 'admin':
                     return redirect()->route('dashboard.admin');
@@ -39,6 +39,15 @@ class AuthController extends Controller
                     return redirect()->route('profesor.completar-perfil');
                 case 'coordinacion':
                     return redirect()->route('dashboard.coordinacion');
+                case 'directivos':
+                    return redirect()->route('directivos.dashboard');
+                case 'administrativos': // NUEVO ROL
+                    // Verificar si ya completó su perfil
+                    if ($user->perfilAdministrativoCompleto()) {
+                        return redirect()->route('administrativos.dashboard');
+                    } else {
+                        return redirect()->route('administrativos.completar-perfil');
+                    }
                 default:
                     Auth::logout();
                     return back()->withErrors([
@@ -52,15 +61,14 @@ class AuthController extends Controller
         ]);
     }
    
-    // Muestra el formulario de registro
+    // Muestra el formulario de registro - SIN CAMBIOS
     public function showRegistrationForm()
     {
-        // Obtener todas las coordinaciones activas para el formulario
         $coordinaciones = Coordinacion::activas()->get();
         return view('auth.register', compact('coordinaciones'));
     }
 
-    // Procesa el registro - VERSIÓN CORREGIDA
+    // Procesa el registro - SIN CAMBIOS
     public function register(Request $request)
     {
         $validatedData = $request->validate([
@@ -70,13 +78,9 @@ class AuthController extends Controller
             'coordinaciones_id'     => 'nullable|exists:coordinaciones,id'
         ]);
 
-        // Crear el usuario con rol 'profesor' por defecto
-        // Si se seleccionó una coordinación, asumimos que es de coordinación
         $role = !empty($validatedData['coordinaciones_id']) ? 'coordinacion' : 'profesor';
 
-        // Validar que si se seleccionó coordinación, sea válida
         if ($role === 'coordinacion') {
-            // Verificar que la coordinación existe y está activa
             $coordinacion = Coordinacion::find($validatedData['coordinaciones_id']);
             if (!$coordinacion || !$coordinacion->activa) {
                 return back()->withErrors([
@@ -85,7 +89,6 @@ class AuthController extends Controller
             }
         }
 
-        // Crear el usuario
         $user = User::create([
             'name'           => $validatedData['name'],
             'email'          => $validatedData['email'],
@@ -94,14 +97,11 @@ class AuthController extends Controller
             'coordinaciones_id' => $validatedData['coordinaciones_id'] ?? null,
         ]);
 
-        // Redirigir según el rol
         if ($role === 'profesor') {
-            // Iniciar sesión automáticamente y redirigir a completar perfil
             Auth::login($user);
             return redirect()->route('profesor.completar-perfil')
                 ->with('success', 'Cuenta creada exitosamente. Por favor completa tu perfil.');
         } else {
-            // Para coordinación, redirigir al login
             return redirect()->route('login')
                 ->with('success', 'Cuenta de coordinación creada exitosamente. Ahora puedes iniciar sesión.');
         }
@@ -110,7 +110,6 @@ class AuthController extends Controller
     // Logout
     public function logout(Request $request)
     {
-        // Limpiar la sesión del rol
         $request->session()->forget('user_current_role');
         
         Auth::logout();
@@ -119,11 +118,11 @@ class AuthController extends Controller
         return redirect('/');
     }
 
-    // Actualizar rol de usuario (solo para admin)
+    // Actualizar rol de usuario (solo para admin) - ACTUALIZADO
     public function actualizarRol(Request $request, User $user)
     {
         $request->validate([
-            'role' => 'required|in:admin,profesor,coordinacion'
+            'role' => 'required|in:admin,profesor,coordinacion,directivos,administrativos' // AGREGADO administrativos
         ]);
 
         $rolAnterior = $user->role;

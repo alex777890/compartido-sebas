@@ -28,154 +28,154 @@
         margin: 0;
     }
 
-    /* Barra superior - TAMAÑO ORIGINAL */
-.navbar-top { 
-    background: white; 
-    border-bottom: 1px solid var(--border-color);
-    padding: 0.8rem 0;
-    position: sticky;
-    top: 0;
-    z-index: 1000;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
-}
+    /* Barra superior */
+    .navbar-top { 
+        background: white; 
+        border-bottom: 1px solid var(--border-color);
+        padding: 0.8rem 0;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    }
 
-.navbar-top.scrolled {
-    padding: 0.6rem 0;
-    box-shadow: 0 5px 20px rgba(15, 126, 230, 0.15);
-}
+    .navbar-top.scrolled {
+        padding: 0.6rem 0;
+        box-shadow: 0 5px 20px rgba(15, 126, 230, 0.15);
+    }
 
-.navbar-brand { 
-    color: var(--primary) !important; 
-    font-weight: 600; 
-    font-size: 1.4rem;
-    display: flex;
-    align-items: center;
-    gap: 12px;
-}
+    .navbar-brand { 
+        color: var(--primary) !important; 
+        font-weight: 600; 
+        font-size: 1.4rem;
+        display: flex;
+        align-items: center;
+        gap: 12px;
+    }
 
-.navbar-brand::before {
-    content: "";
-    display: block;
-    width: 6px;
-    height: 28px;
-    background: var(--primary);
-    border-radius: 2px;
-}
+    .navbar-brand::before {
+        content: "";
+        display: block;
+        width: 6px;
+        height: 28px;
+        background: var(--primary);
+        border-radius: 2px;
+    }
 
-.logo-container {
-    display: flex;
-    align-items: center;
-    gap: 15px;
-}
+    .logo-container {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
 
-.logo-img {
-    height: 50px;
-    width: auto;
-    object-fit: contain;
-}
+    .logo-img {
+        height: 50px;
+        width: auto;
+        object-fit: contain;
+    }
 
-/* Barra de menú - TAMAÑO ORIGINAL */
-.navbar-menu { 
-    background: var(--primary); 
-    padding: 0.7rem 0;
-    position: sticky;
-    top: 68px;
-    z-index: 999;
-}
+    /* Barra de menú */
+    .navbar-menu { 
+        background: var(--primary); 
+        padding: 0.7rem 0;
+        position: sticky;
+        top: 68px;
+        z-index: 999;
+    }
 
-.navbar-menu .navbar-toggler {
-    border: 1px solid rgba(255, 255, 255, 0.3);
-    padding: 0.25rem 0.5rem;
-}
+    .navbar-menu .navbar-toggler {
+        border: 1px solid rgba(255, 255, 255, 0.3);
+        padding: 0.25rem 0.5rem;
+    }
 
-.navbar-menu .navbar-toggler-icon {
-    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
-}
+    .navbar-menu .navbar-toggler-icon {
+        background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+    }
 
-.navbar-menu .nav-link {
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.9) !important;
-    padding: 0.6rem 1.5rem !important;
-    margin: 0 0.1rem;
-    border-radius: 4px;
-    transition: var(--transition);
-    position: relative;
-    font-size: 0.95rem;
-}
+    .navbar-menu .nav-link {
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9) !important;
+        padding: 0.6rem 1.5rem !important;
+        margin: 0 0.1rem;
+        border-radius: 4px;
+        transition: var(--transition);
+        position: relative;
+        font-size: 0.95rem;
+    }
 
-.navbar-menu .nav-link:hover, 
-.navbar-menu .nav-link.active {
-    color: white !important;
-    background-color: rgba(255, 255, 255, 0.12);
-}
+    .navbar-menu .nav-link:hover, 
+    .navbar-menu .nav-link.active {
+        color: white !important;
+        background-color: rgba(255, 255, 255, 0.12);
+    }
 
-.navbar-menu .nav-link::after {
-    content: '';
-    position: absolute;
-    bottom: -7px;
-    left: 50%;
-    width: 0;
-    height: 2px;
-    background: white;
-    transition: var(--transition);
-    transform: translateX(-50%);
-}
+    .navbar-menu .nav-link::after {
+        content: '';
+        position: absolute;
+        bottom: -7px;
+        left: 50%;
+        width: 0;
+        height: 2px;
+        background: white;
+        transition: var(--transition);
+        transform: translateX(-50%);
+    }
 
-.navbar-menu .nav-link:hover::after, 
-.navbar-menu .nav-link.active::after {
-    width: 60%;
-}
+    .navbar-menu .nav-link:hover::after, 
+    .navbar-menu .nav-link.active::after {
+        width: 60%;
+    }
 
-.navbar-menu .user-info-container {
-    display: flex;
-    align-items: center;
-    margin-left: auto;
-    gap: 15px;
-}
+    .navbar-menu .user-info-container {
+        display: flex;
+        align-items: center;
+        margin-left: auto;
+        gap: 15px;
+    }
 
-.navbar-menu .user-info {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    color: white;
-}
+    .navbar-menu .user-info {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: white;
+    }
 
-.navbar-menu .user-name {
-    font-weight: 500;
-    color: rgba(255, 255, 255, 0.9);
-    font-size: 0.95rem;
-}
+    .navbar-menu .user-name {
+        font-weight: 500;
+        color: rgba(255, 255, 255, 0.9);
+        font-size: 0.95rem;
+    }
 
-.navbar-menu .user-avatar {
-    font-size: 1.3rem;
-    color: rgba(255, 255, 255, 0.9);
-}
+    .navbar-menu .user-avatar {
+        font-size: 1.3rem;
+        color: rgba(255, 255, 255, 0.9);
+    }
 
-.navbar-menu .logout-form {
-    margin: 0;
-}
+    .navbar-menu .logout-form {
+        margin: 0;
+    }
 
-.navbar-menu .logout-btn {
-    background: transparent;
-    border: 1px solid rgba(255, 255, 255, 0.4);
-    color: rgba(255, 255, 255, 0.9);
-    padding: 0.4rem 1rem;
-    border-radius: 4px;
-    font-weight: 500;
-    transition: var(--transition);
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-}
+    .navbar-menu .logout-btn {
+        background: transparent;
+        border: 1px solid rgba(255, 255, 255, 0.4);
+        color: rgba(255, 255, 255, 0.9);
+        padding: 0.4rem 1rem;
+        border-radius: 4px;
+        font-weight: 500;
+        transition: var(--transition);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        font-size: 0.9rem;
+    }
 
-.navbar-menu .logout-btn:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-    border-color: rgba(255, 255, 255, 0.6);
-}
+    .navbar-menu .logout-btn:hover {
+        background: rgba(255, 255, 255, 0.1);
+        color: white;
+        border-color: rgba(255, 255, 255, 0.6);
+    }
 
-    /* Contenido principal - AHORA MÁS COMPACTO */
+    /* Contenido principal */
     .main-content { 
         padding: 20px;
         min-height: calc(100vh - 110px);
@@ -319,6 +319,47 @@
         gap: 0.3rem;
     }
 
+    /* Badges para roles */
+    .badge {
+        padding: 0.25rem 0.5rem;
+        font-size: 0.75rem;
+        font-weight: 500;
+        border-radius: 3px;
+        display: inline-flex;
+        align-items: center;
+        gap: 0.25rem;
+    }
+
+    .role-badge-admin {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.2);
+    }
+
+    .role-badge-profesor {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.2);
+    }
+
+    .role-badge-coordinacion {
+        background: rgba(7, 68, 182, 0.1);
+        color: var(--primary);
+        border: 1px solid rgba(7, 68, 182, 0.2);
+    }
+
+    .role-badge-directivos {
+        background: rgba(32, 201, 151, 0.1);
+        color: #20c997;
+        border: 1px solid rgba(32, 201, 151, 0.2);
+    }
+
+    .role-badge-administrativos {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+    }
+
     /* Coordinación especial */
     .coordinacion-required {
         border-left: 3px solid var(--primary);
@@ -426,6 +467,16 @@
         display: block;
     }
 
+    /* Información de ayuda */
+    .role-info {
+        margin-top: 0.5rem;
+        font-size: 0.8rem;
+        color: var(--text-muted);
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+    }
+
     /* Responsive */
     @media (max-width: 992px) {
         .form-grid {
@@ -514,7 +565,7 @@
     </style>
 </head>
 <body>
-    <!-- Primera barra - Logo y título (más compacta) -->
+    <!-- Primera barra - Logo y título -->
     <nav class="navbar navbar-expand-lg navbar-top">
         <div class="container">
             <div class="logo-container">
@@ -526,7 +577,7 @@
         </div>
     </nav>
 
-   <!-- Segunda barra - Menú -->
+    <!-- Segunda barra - Menú -->
     <nav class="navbar navbar-expand-lg navbar-menu">
         <div class="container">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -538,7 +589,8 @@
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('coordinaciones.*') ? 'active' : '' }}" href="{{ route('coordinaciones.index') }}">Coordinaciones</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('maestros.*') ? 'active' : '' }}" href="{{ route('maestros.index') }}">Maestros</a></li>
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('contratos.*') ? 'active' : '' }}" href="{{ route('contracts.index') }}">Contratos</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">Accesos</a></li>
+                    <li class="nav-item"><a class="nav-link active {{ request()->routeIs('users.*') ? 'active' : '' }}" href="{{ route('users.index') }}">Accesos</a></li>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.administrativos.*') ? 'active' : '' }}"href="{{ route('admin.administrativos.index') }}">Administrativos</a></ul>
                 </ul>
                 
                 <!-- Información de usuario y cerrar sesión -->
@@ -560,7 +612,6 @@
         </div>
     </nav>
 
-
     <div class="container-fluid">
         <div class="row">
             <div class="col-12 main-content">
@@ -581,7 +632,7 @@
                         </div>
                     </div>
 
-                    <!-- Alertas de errores (más compactas) -->
+                    <!-- Alertas de errores -->
                     @if($errors->any())
                         <div class="alert alert-danger alert-dismissible fade show">
                             <div class="d-flex">
@@ -663,13 +714,19 @@
                                             <option value="admin" {{ old('role') == 'admin' ? 'selected' : '' }}>Administrador</option>
                                             <option value="profesor" {{ old('role') == 'profesor' ? 'selected' : '' }}>Profesor</option>
                                             <option value="coordinacion" {{ old('role') == 'coordinacion' ? 'selected' : '' }}>Coordinación</option>
+                                            <option value="directivos" {{ old('role') == 'directivos' ? 'selected' : '' }}>Directivos</option>
+                                            <option value="administrativos" {{ old('role') == 'administrativos' ? 'selected' : '' }}>Administrativos</option>
                                         </select>
                                         @error('role')
                                             <div class="invalid-feedback">{{ $message }}</div>
                                         @enderror
+                                        <div class="role-info">
+                                            <i class="fas fa-info-circle"></i>
+                                            <span id="roleInfo">Seleccione un rol para ver más información</span>
+                                        </div>
                                     </div>
 
-                                    <!-- Coordinación (condicional) -->
+                                    <!-- Coordinación (SOLO para rol coordinación) -->
                                     <div class="field-container full-width coordinacion-required {{ old('role') == 'coordinacion' ? 'visible' : 'hidden' }}" id="coordinacionField">
                                         <label for="coordinaciones_id" class="form-label">
                                             <i class="fas fa-university"></i>Asignar a Coordinación
@@ -691,7 +748,7 @@
                                 </div>
                             </div>
 
-                            <!-- Grupo 3: Seguridad (ocupa las 2 columnas) -->
+                            <!-- Grupo 3: Seguridad -->
                             <div class="form-group full-width">
                                 <h4 class="form-group-title">
                                     <i class="fas fa-lock"></i> Seguridad y Acceso
@@ -760,7 +817,30 @@
                 const roleSelect = document.getElementById('role');
                 const coordinacionField = document.getElementById('coordinacionField');
                 const coordinacionSelect = document.getElementById('coordinaciones_id');
+                const roleInfo = document.getElementById('roleInfo');
                 
+                // Actualizar información del rol
+                switch(roleSelect.value) {
+                    case 'admin':
+                        roleInfo.textContent = 'Acceso total al sistema, puede gestionar usuarios, coordinaciones y maestros';
+                        break;
+                    case 'profesor':
+                        roleInfo.textContent = 'Acceso a su perfil personal, documentos y horarios';
+                        break;
+                    case 'coordinacion':
+                        roleInfo.textContent = 'Debe seleccionar una coordinación para gestionar sus maestros';
+                        break;
+                    case 'directivos':
+                        roleInfo.textContent = 'Acceso de solo lectura para ver información de todos los maestros';
+                        break;
+                    case 'administrativos':
+                        roleInfo.textContent = 'Acceso para gestión de expedientes y documentos personales';
+                        break;
+                    default:
+                        roleInfo.textContent = 'Seleccione un rol para ver más información';
+                }
+                
+                // Solo mostrar coordinación para el rol coordinacion
                 if (roleSelect.value === 'coordinacion') {
                     coordinacionField.classList.remove('hidden');
                     coordinacionField.classList.add('visible');
@@ -808,6 +888,11 @@
                 const roleSelect = document.getElementById('role');
                 if (roleSelect.value === 'coordinacion') {
                     toggleCoordinacionField();
+                } else {
+                    // Mostrar información inicial si hay un valor seleccionado
+                    if (roleSelect.value) {
+                        toggleCoordinacionField();
+                    }
                 }
                 
                 roleSelect.addEventListener('change', toggleCoordinacionField);

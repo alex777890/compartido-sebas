@@ -69,5 +69,15 @@ class Kernel extends HttpKernel
     // ↓↓↓ ¡AGREGA ESTA LÍNEA! ↓↓↓
     'admin' => \App\Http\Middleware\AdminMiddleware::class,
     ];
+
+
+
+    protected $routeMiddleware = [
+    // ... otros middlewares
+    'directivos' => \App\Http\Middleware\DirectivosMiddleware::class,
+    'administrativos' => \App\Http\Middleware\AdministrativosMiddleware::class,
+    
+
+];
     
 }
