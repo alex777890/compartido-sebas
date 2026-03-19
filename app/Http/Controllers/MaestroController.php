@@ -6,8 +6,11 @@ use App\Models\Maestro;
 use App\Models\Periodo;
 use App\Models\Coordinacion;
 use App\Models\DocumentoMaestro; // ✅ AGREGAR ESTE
+use App\Models\DocumentoIngreso; // ✅ AGREGAR ESTE
 use Illuminate\Http\Request;
+use App\Models\ProcesoDocumento; // <-- IMPORTANTE: Agrega esta línea
 use Illuminate\Support\Facades\Auth;
+use App\Models\TipoDocumento;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator; // ✅ AGREGAR ESTE
 use Illuminate\Support\Facades\Log;
@@ -1449,4 +1452,570 @@ private function verificarYConfigurarPeriodo()
                              ->with('error', 'Error al cargar el historial: ' . $e->getMessage());
         }
     }
+
+        // =============================================
+    // FUNCIONES PARA ACTIVAR DOCUMENTOS (ADMIN)
+    // =============================================
+
+    /**
+     * Activar proceso de documentos para un maestro
+     */
+    public function activarDocumentos($maestroId)
+    {
+        try {
+            Log::info('=== ACTIVAR DOCUMENTOS ===');
+            Log::info('Maestro ID: ' . $maestroId);
+            Log::info('Admin ID: ' . auth()->id());
+            
+            $maestro = Maestro::findOrFail($maestroId);
+            
+            // Buscar si ya existe un proceso activo
+            $procesoExistente = ProcesoDocumento::where('maestro_id', $maestroId)
+                ->where('activo', true)
+                ->first();
+                
+            if ($procesoExistente) {
+                Log::info('Ya existe proceso activo ID: ' . $procesoExistente->id);
+                return redirect()->back()
+                    ->with('info', 'El maestro ya tiene un proceso de documentos activo.');
+            }
+            
+            // Crear nuevo proceso activo
+            $proceso = ProcesoDocumento::create([
+                'maestro_id' => $maestroId,
+                'activo' => true,
+                'fecha_activacion' => now(),
+                'activado_por' => auth()->id()
+            ]);
+            
+            Log::info('Proceso creado exitosamente. ID: ' . $proceso->id);
+            
+            return redirect()->back()
+                ->with('success', "Proceso de documentos ACTIVADO para {$maestro->nombres} {$maestro->apellido_paterno}. Ahora podrá subir los 13 documentos.");
+                
+        } catch (\Exception $e) {
+            Log::error('ERROR en activarDocumentos: ' . $e->getMessage());
+            Log::error('Trace: ' . $e->getTraceAsString());
+            
+            return redirect()->back()
+                ->with('error', 'Error al activar proceso: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Desactivar proceso de documentos
+     */
+    public function desactivarDocumentos($maestroId)
+    {
+        try {
+            Log::info('=== DESACTIVAR DOCUMENTOS ===');
+            Log::info('Maestro ID: ' . $maestroId);
+            
+            $proceso = ProcesoDocumento::where('maestro_id', $maestroId)
+                ->where('activo', true)
+                ->first();
+                
+            if ($proceso) {
+                $proceso->update(['activo' => false]);
+                Log::info('Proceso desactivado ID: ' . $proceso->id);
+                
+                return redirect()->back()
+                    ->with('success', 'Proceso de documentos desactivado correctamente.');
+            }
+            
+            Log::warning('No se encontró proceso activo para el maestro ' . $maestroId);
+            return redirect()->back()
+                ->with('warning', 'No hay proceso activo para este maestro.');
+                
+        } catch (\Exception $e) {
+            Log::error('ERROR en desactivarDocumentos: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Error: ' . $e->getMessage());
+        }
+    }
+
+    // =============================================
+    // FUNCIONES PARA EL PROFESOR (DASHBOARD)
+    // =============================================
+    
+    /**
+     * Mostrar documentos del profesor (vista del profesor)
+     */
+    public function misDocumentos()
+    {
+        try {
+            Log::info('=== MIS DOCUMENTOS - PROFESOR ===');
+            Log::info('User ID: ' . auth()->id());
+            Log::info('User Email: ' . auth()->user()->email);
+            
+            // Buscar maestro por email o user_id
+            $maestro = Maestro::where('email', auth()->user()->email)
+                ->orWhere('user_id', auth()->id())
+                ->first();
+
+            if (!$maestro) {
+                Log::warning('Maestro no encontrado para el usuario: ' . auth()->user()->email);
+                return redirect()->route('profesor.completar-perfil')
+                    ->with('error', 'Completa tu perfil primero');
+            }
+            
+            Log::info('Maestro encontrado ID: ' . $maestro->id . ' - ' . $maestro->nombres);
+
+            // Verificar si el admin activó el proceso (buscar en proceso_documentos)
+            $procesoActivo = ProcesoDocumento::where('maestro_id', $maestro->id)
+                ->where('activo', true)
+                ->exists();
+
+            Log::info('Proceso activo: ' . ($procesoActivo ? 'SI' : 'NO'));
+
+            // Obtener TODOS los tipos de documentos (13)
+            $todosLosDocumentos = TipoDocumento::orderBy('id')->get();
+            Log::info('Total tipos documentos encontrados: ' . $todosLosDocumentos->count());
+
+            // Obtener los documentos actuales del maestro (última versión de cada tipo)
+            $documentosMaestro = [];
+            foreach ($maestro->documentosActuales as $doc) {
+                $documentosMaestro[$doc->tipo_documento_id] = $doc;
+            }
+            
+            Log::info('Documentos subidos por maestro: ' . count($documentosMaestro));
+
+            // Preparar array para la vista
+            $documentosParaVista = [];
+            foreach ($todosLosDocumentos as $tipo) {
+                $doc = $documentosMaestro[$tipo->id] ?? null;
+                
+                $documentoItem = [
+                    'id' => $tipo->id,
+                    'nombre' => $tipo->nombre,
+                    'tiene_documento' => $doc ? true : false,
+                    'estado' => $doc ? $doc->estado : 'faltante',
+                    'archivo' => $doc ? $doc->archivo : null,
+                    'archivo_original' => $doc ? $doc->archivo_original : null,
+                    'fecha_subida' => $doc ? $doc->fecha_subida : null,
+                    'observaciones' => $doc ? $doc->observaciones : null,
+                    'version' => $doc ? $doc->version : 0,
+                    'icono' => $this->getIconoPorDocumento($tipo->id)
+                ];
+                
+                $documentosParaVista[] = $documentoItem;
+                
+                // Log para depuración
+                Log::info('Documento preparado: ' . $tipo->nombre . ' - Estado: ' . $documentoItem['estado']);
+            }
+
+            // Calcular estadísticas
+            $totalRequeridos = $procesoActivo ? 13 : 6;
+            $totalSubidos = collect($documentosParaVista)->where('tiene_documento', true)->count();
+            $aprobados = collect($documentosParaVista)->where('estado', 'aprobado')->count();
+            $rechazados = collect($documentosParaVista)->where('estado', 'rechazado')->count();
+            $pendientes = collect($documentosParaVista)->where('estado', 'pendiente')->count();
+            $faltantes = $totalRequeridos - $totalSubidos;
+            $porcentaje = $totalRequeridos > 0 ? round(($totalSubidos / $totalRequeridos) * 100) : 0;
+
+            $estadisticas = [
+                'total_requeridos' => $totalRequeridos,
+                'total_subidos' => $totalSubidos,
+                'aprobados' => $aprobados,
+                'rechazados' => $rechazados,
+                'pendientes' => $pendientes,
+                'faltantes' => $faltantes,
+                'porcentaje' => $porcentaje
+            ];
+            
+            Log::info('Estadísticas calculadas: ' . json_encode($estadisticas));
+            Log::info('Total documentos para vista: ' . count($documentosParaVista));
+
+            return view('dashboard.mis-documentos', compact(
+                'maestro',
+                'procesoActivo',
+                'documentosParaVista',
+                'estadisticas'
+            ));
+
+        } catch (\Exception $e) {
+            Log::error('Error CRÍTICO en misDocumentos: ' . $e->getMessage());
+            Log::error('Trace: ' . $e->getTraceAsString());
+            
+            return redirect()->back()
+                ->with('error', 'Error al cargar documentos: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Helper para obtener icono según tipo de documento
+     */
+    private function getIconoPorDocumento($tipoId)
+    {
+        $iconos = [
+            1 => 'file-signature',      // Formato IUFIM
+            2 => 'file-alt',            // Curriculum
+            3 => 'birthday-cake',       // Acta
+            4 => 'id-card',             // CURP
+            5 => 'money-bill-wave',     // Oficio ingresos
+            6 => 'file-contract',       // Constancia fiscal
+            7 => 'file-invoice',        // Declaración anual
+            8 => 'id-card',             // INE
+            9 => 'certificate',         // Actualizaciones
+            10 => 'heartbeat',          // Certificado médico
+            11 => 'home',               // Comprobante domicilio
+            12 => 'university',         // Estado cuenta
+            13 => 'shield-alt',         // Seguro social
+        ];
+        
+        return $iconos[$tipoId] ?? 'file';
+    }
+
+    /**
+ * Subir documentos de NUEVO INGRESO (13 documentos)
+ */
+public function subirDocumentosIngreso(Request $request)
+{
+    try {
+        Log::info('=== SUBIR DOCUMENTOS NUEVO INGRESO - INICIO ===');
+        Log::info('User ID: ' . auth()->id());
+        Log::info('Files recibidos: ' . count($request->file('documentos', [])));
+        
+        $maestro = Maestro::where('email', auth()->user()->email)
+            ->orWhere('user_id', auth()->id())
+            ->first();
+
+        if (!$maestro) {
+            Log::error('Maestro no encontrado');
+            return redirect()->back()->with('error', 'Maestro no encontrado');
+        }
+        
+        Log::info('Maestro ID: ' . $maestro->id);
+
+        // Validar que haya archivos
+        $request->validate([
+            'documentos' => 'required|array',
+            'documentos.*' => 'file|mimes:pdf,jpg,jpeg,png|max:5120'
+        ]);
+
+        $subidos = 0;
+        $errores = [];
+
+        foreach ($request->file('documentos') as $tipoId => $archivo) {
+            try {
+                Log::info('Procesando documento - Tipo ID: ' . $tipoId . ', Archivo: ' . $archivo->getClientOriginalName());
+                
+                // Verificar que el tipo de documento existe
+                $tipoDocumento = TipoDocumento::find($tipoId);
+                if (!$tipoDocumento) {
+                    Log::error('Tipo documento no encontrado ID: ' . $tipoId);
+                    continue;
+                }
+
+                // ✅ USAR MODELO DocumentoIngreso (NO DocumentoMaestro)
+                // Verificar si existe el modelo, si no, usar DB
+                if (class_exists('App\Models\DocumentoIngreso')) {
+                    // Usar modelo si existe
+                    $ultimoDoc = DocumentoIngreso::where('maestro_id', $maestro->id)
+                        ->where('tipo_documento_id', $tipoId)
+                        ->orderBy('version', 'desc')
+                        ->first();
+                } else {
+                    // Usar DB directo si no hay modelo
+                    $ultimoDoc = DB::table('documentos_ingreso')
+                        ->where('maestro_id', $maestro->id)
+                        ->where('tipo_documento_id', $tipoId)
+                        ->orderBy('version', 'desc')
+                        ->first();
+                }
+
+                $nuevaVersion = $ultimoDoc ? $ultimoDoc->version + 1 : 1;
+                Log::info('Versión: ' . $nuevaVersion);
+
+                // Guardar archivo
+                $nombreArchivo = time() . '_' . $tipoId . '_v' . $nuevaVersion . '.' . $archivo->getClientOriginalExtension();
+                $ruta = $archivo->storeAs('documentos_ingreso/' . $maestro->id, $nombreArchivo, 'public');
+                
+                Log::info('Archivo guardado en: ' . $ruta);
+
+                // ✅ INSERTAR EN TABLA documentos_ingreso
+                if (class_exists('App\Models\DocumentoIngreso')) {
+                    // Usar modelo si existe
+                    $documento = DocumentoIngreso::create([
+                        'maestro_id' => $maestro->id,
+                        'tipo_documento_id' => $tipoId,
+                        'archivo' => $ruta,
+                        'archivo_original' => $archivo->getClientOriginalName(),
+                        'version' => $nuevaVersion,
+                        'estado' => 'pendiente',
+                        'fecha_subida' => now()
+                    ]);
+                } else {
+                    // Usar DB directo si no hay modelo
+                    $documentoId = DB::table('documentos_ingreso')->insertGetId([
+                        'maestro_id' => $maestro->id,
+                        'tipo_documento_id' => $tipoId,
+                        'archivo' => $ruta,
+                        'archivo_original' => $archivo->getClientOriginalName(),
+                        'version' => $nuevaVersion,
+                        'estado' => 'pendiente',
+                        'fecha_subida' => now(),
+                        'created_at' => now(),
+                        'updated_at' => now()
+                    ]);
+                    Log::info('Documento creado ID: ' . $documentoId);
+                }
+                
+                $subidos++;
+
+            } catch (\Exception $e) {
+                Log::error('Error procesando documento: ' . $e->getMessage());
+                $errores[] = "Error con tipo ID $tipoId: " . $e->getMessage();
+            }
+        }
+
+        Log::info('Total subidos: ' . $subidos);
+        
+        if ($subidos > 0) {
+            $mensaje = "$subidos documento(s) subido(s) correctamente";
+            if (!empty($errores)) {
+                $mensaje .= ". Algunos documentos no se pudieron procesar.";
+            }
+            return redirect()->route('profesor.mis-documentos')
+                ->with('success', $mensaje);
+        } else {
+            return redirect()->route('profesor.mis-documentos')
+                ->with('error', 'No se pudo subir ningún documento: ' . implode(', ', $errores));
+        }
+
+    } catch (\Exception $e) {
+        Log::error('Error GENERAL en subirDocumentosIngreso: ' . $e->getMessage());
+        Log::error('Trace: ' . $e->getTraceAsString());
+        
+        return redirect()->back()
+            ->with('error', 'Error al subir documentos: ' . $e->getMessage());
+    }
+}
+    
+    /**
+     * Ver documentos del maestro (para admin)
+     */
+    public function verDocumentosMaestro($maestroId)
+    {
+        try {
+            Log::info('=== VER DOCUMENTOS MAESTRO (ADMIN) ===');
+            Log::info('Maestro ID: ' . $maestroId);
+            
+            $maestro = Maestro::with(['documentos.tipo'])->findOrFail($maestroId);
+            
+            // Verificar proceso activo
+            $procesoActivo = ProcesoDocumento::where('maestro_id', $maestroId)
+                ->where('activo', true)
+                ->first();
+                
+            Log::info('Proceso activo: ' . ($procesoActivo ? 'SI' : 'NO'));
+            
+            // Obtener todos los tipos de documentos
+            $tiposDocumentos = TipoDocumento::orderBy('id')->get();
+            
+            // Agrupar documentos por tipo
+            $documentosPorTipo = [];
+            foreach ($maestro->documentos as $doc) {
+                $documentosPorTipo[$doc->tipo_documento_id][] = $doc;
+            }
+            
+            return view('admin.documentos.ver-maestro', compact(
+                'maestro',
+                'procesoActivo',
+                'tiposDocumentos',
+                'documentosPorTipo'
+            ));
+            
+        } catch (\Exception $e) {
+            Log::error('Error en verDocumentosMaestro: ' . $e->getMessage());
+            return redirect()->back()
+                ->with('error', 'Error: ' . $e->getMessage());
+        }
+    }
+
+
+    /**
+ * ✅ MÉTODO UNIFICADO - Maneja tanto documentos periódicos como de nuevo ingreso
+ */
+public function verDocumentosUnificado()
+{
+    try {
+        Log::info('=== VER DOCUMENTOS UNIFICADO ===');
+        Log::info('User ID: ' . auth()->id());
+        Log::info('User Email: ' . auth()->user()->email);
+        
+        // Buscar maestro
+        $maestro = Maestro::where('email', auth()->user()->email)
+            ->orWhere('user_id', auth()->id())
+            ->first();
+
+        if (!$maestro) {
+            return redirect()->route('profesor.completar-perfil')
+                ->with('error', 'Completa tu perfil primero');
+        }
+        
+        Log::info('Maestro encontrado ID: ' . $maestro->id);
+
+        // ✅ VERIFICAR SI HAY PROCESO ACTIVO (13 documentos)
+        $procesoActivo = ProcesoDocumento::where('maestro_id', $maestro->id)
+            ->where('activo', true)
+            ->exists();
+
+        Log::info('Proceso activo (13 docs): ' . ($procesoActivo ? 'SI' : 'NO'));
+
+        // ✅ VERIFICAR PERÍODO HABILITADO (6 documentos)
+        $periodoHabilitado = Periodo::getPeriodoSubidaHabilitada();
+        $hayPeriodoHabilitado = $periodoHabilitado ? true : false;
+        
+        Log::info('Período habilitado: ' . ($hayPeriodoHabilitado ? $periodoHabilitado->nombre : 'NO'));
+
+        // ✅ DECISIÓN: ¿Qué documentos mostrar?
+        if ($procesoActivo) {
+            // =============================================
+            // CASO 1: 13 DOCUMENTOS DE NUEVO INGRESO
+            // Usa la tabla 'documentos_ingreso'
+            // =============================================
+            Log::info('🔵 Mostrando 13 documentos de NUEVO INGRESO');
+            
+            // Obtener TODOS los tipos de documentos (13)
+            $todosLosDocumentos = TipoDocumento::orderBy('id')->get();
+            
+            // Obtener documentos de la tabla documentos_ingreso
+            // Ajusta esto según tu modelo real para documentos_ingreso
+            $documentosMaestro = [];
+            
+            // Si tienes un modelo para documentos_ingreso, úsalo así:
+            if (class_exists('App\Models\DocumentoIngreso')) {
+                $documentosIngreso = DocumentoIngreso::where('maestro_id', $maestro->id)->get();
+                foreach ($documentosIngreso as $doc) {
+                    $documentosMaestro[$doc->tipo_documento_id] = $doc;
+                }
+            } else {
+                // Si no tienes modelo, usa DB directo
+                $documentosIngreso = DB::table('documentos_ingreso')
+                    ->where('maestro_id', $maestro->id)
+                    ->get();
+                foreach ($documentosIngreso as $doc) {
+                    $documentosMaestro[$doc->tipo_documento_id] = $doc;
+                }
+            }
+            
+            $documentosParaVista = [];
+            foreach ($todosLosDocumentos as $tipo) {
+                $doc = $documentosMaestro[$tipo->id] ?? null;
+                
+                $documentosParaVista[] = [
+                    'id' => $tipo->id,
+                    'nombre' => $tipo->nombre,
+                    'tiene_documento' => $doc ? true : false,
+                    'estado' => $doc ? ($doc->estado ?? 'pendiente') : 'faltante',
+                    'archivo' => $doc ? ($doc->archivo ?? null) : null,
+                    'archivo_original' => $doc ? ($doc->archivo_original ?? null) : null,
+                    'fecha_subida' => $doc ? ($doc->fecha_subida ?? $doc->created_at ?? null) : null,
+                    'observaciones' => $doc ? ($doc->observaciones ?? null) : null,
+                    'version' => $doc ? ($doc->version ?? 1) : 0,
+                    'icono' => $this->getIconoPorDocumento($tipo->id),
+                    'tipo_flujo' => 'ingreso'
+                ];
+            }
+            
+            $totalRequeridos = 13;
+            $rutaSubida = 'profesor.subir-documentos-ingreso';
+            
+        } elseif ($hayPeriodoHabilitado) {
+            // =============================================
+            // CASO 2: 6 DOCUMENTOS PERIÓDICOS
+            // Usa la tabla 'documentos_maestros'
+            // =============================================
+            Log::info('🟢 Mostrando 6 documentos del PERÍODO: ' . $periodoHabilitado->nombre);
+            
+            $tiposDocumentos = [
+                'cst' => ['nombre' => 'Constancia de Situación Fiscal (CST)', 'id' => 5, 'icono' => 'file-contract'],
+                'iufim' => ['nombre' => 'Documento IUFIM', 'id' => 1, 'icono' => 'file-invoice'],
+                'comprobante_domicilio' => ['nombre' => 'Comprobante de Domicilio', 'id' => 11, 'icono' => 'home'],
+                'oficio_ingresos' => ['nombre' => 'Oficio de Ingresos', 'id' => 5, 'icono' => 'money-bill-wave'],
+                'declaracion_anual' => ['nombre' => 'Declaración Anual', 'id' => 7, 'icono' => 'file-alt'],
+                'comprobante_seguro_social' => ['nombre' => 'Comprobante de Seguro Social', 'id' => 13, 'icono' => 'shield-alt']
+            ];
+            
+            // Cargar documentos del período desde documentos_maestros
+            $documentosDelPeriodo = DocumentoMaestro::where('maestro_id', $maestro->id)
+                ->where('periodo_id', $periodoHabilitado->id)
+                ->get()
+                ->keyBy('tipo');
+            
+            $documentosParaVista = [];
+            foreach ($tiposDocumentos as $tipo => $info) {
+                $doc = $documentosDelPeriodo[$tipo] ?? null;
+                
+                $documentosParaVista[] = [
+                    'id' => $info['id'],
+                    'tipo' => $tipo,
+                    'nombre' => $info['nombre'],
+                    'tiene_documento' => $doc ? true : false,
+                    'estado' => $doc ? $doc->estado : 'faltante',
+                    'archivo' => $doc ? $doc->ruta_archivo : null,
+                    'archivo_original' => $doc ? $doc->nombre_archivo : null,
+                    'fecha_subida' => $doc ? $doc->created_at : null,
+                    'observaciones' => $doc ? $doc->observaciones_admin : null,
+                    'version' => 1,
+                    'icono' => $info['icono'],
+                    'tipo_flujo' => 'periodico',
+                    'periodo_id' => $periodoHabilitado->id
+                ];
+            }
+            
+            $totalRequeridos = 6;
+            $rutaSubida = 'profesor.subir-documentos';
+            
+        } else {
+            // CASO 3: No hay nada que mostrar
+            Log::info('🔴 NO HAY DOCUMENTOS PARA MOSTRAR');
+            return view('dashboard.mis-documentos', [
+                'maestro' => $maestro,
+                'procesoActivo' => false,
+                'documentosParaVista' => [],
+                'estadisticas' => [
+                    'total_requeridos' => 0,
+                    'total_subidos' => 0,
+                    'faltantes' => 0,
+                    'porcentaje' => 0
+                ],
+                'mensaje' => 'No hay documentos disponibles en este momento.',
+                'hayPeriodoHabilitado' => false
+            ]);
+        }
+
+        // Calcular estadísticas
+        $totalSubidos = collect($documentosParaVista)->where('tiene_documento', true)->count();
+        $faltantes = $totalRequeridos - $totalSubidos;
+        $porcentaje = $totalRequeridos > 0 ? round(($totalSubidos / $totalRequeridos) * 100) : 0;
+
+        $estadisticas = [
+            'total_requeridos' => $totalRequeridos,
+            'total_subidos' => $totalSubidos,
+            'faltantes' => $faltantes,
+            'porcentaje' => $porcentaje
+        ];
+
+        Log::info("✅ Documentos cargados: " . count($documentosParaVista));
+        Log::info("📊 Estadísticas: " . json_encode($estadisticas));
+
+        return view('dashboard.profesor-documentos', compact(
+            'maestro',
+            'procesoActivo',
+            'documentosParaVista',
+            'estadisticas',
+            'rutaSubida',
+            'hayPeriodoHabilitado',
+            'periodoHabilitado'
+        ));
+
+    } catch (\Exception $e) {
+        Log::error('Error en verDocumentosUnificado: ' . $e->getMessage());
+        Log::error('Trace: ' . $e->getTraceAsString());
+        return redirect()->back()
+            ->with('error', 'Error al cargar documentos: ' . $e->getMessage());
+    }
+}
 }

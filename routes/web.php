@@ -31,6 +31,22 @@ Route::get('/diagnostico-coordinacion', function() {
 })->name('diagnostico.coordinacion');
 
 
+// Rutas para profesor (ver y subir documentos)
+Route::middleware(['auth'])->prefix('profesor')->name('profesor.')->group(function () {
+    // Ruta para ver documentos (unificada) - CORREGIDA (sin /profesor duplicado)
+    Route::get('/mis-documentos', [MaestroController::class, 'verDocumentosUnificado'])
+        ->name('mis-documentos');
+    
+    // Ruta para subir documentos de NUEVO INGRESO (13 documentos)
+    Route::post('/subir-documentos-ingreso', [MaestroController::class, 'subirDocumentosIngreso'])
+        ->name('subir-documentos-ingreso');
+    
+    // Ruta para subir documentos PERIÓDICOS (6 documentos)
+    Route::post('/subir-documentos', [MaestroController::class, 'subirDocumentos'])
+        ->name('subir-documentos');
+});
+
+
 // Rutas para el ROL de coordinación
 Route::get('/coordinacion/dashboard', [CoordinacionController::class, 'dashboard'])
     ->name('coordinacion.dashboard')
@@ -170,9 +186,9 @@ Route::get('/documentos/{id}/view', [CoordinacionController::class, 'view'])
         ///////////////////// DASHBOARD DE ROL PROFESOR
 Route::get('/profesor/dashboard', [MaestroController::class, 'dashboard'])
     ->name('profesor.dashboard');
-    // Vista separada de documentos
-    Route::get('/documentos', [MaestroController::class, 'documentos'])->name('profesor.documentos');
-        
+    // POR ESTA (usa el método unificado):
+Route::get('/documentos', [MaestroController::class, 'verDocumentosUnificado'])->name('profesor.documentos');
+
         // ✅ NUEVAS RUTAS PARA ACTUALIZAR PERFIL
     Route::get('/mi-perfil/editar', [MaestroController::class, 'editarMiPerfil'])
         ->name('editar-mi-perfil');
@@ -422,6 +438,15 @@ Route::prefix('maestros')->group(function () {
     Route::get('/{maestroId}/documentos/json', [DocumentoMaestroController::class, 'mostrarDocumentosJson'])
         ->name('maestros.documentos.json');
 
+});
+
+// Rutas para admin (activar documentos)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/maestros/{maestro}/activar-documentos', [MaestroController::class, 'activarDocumentos'])
+        ->name('maestros.activar-documentos');
+    
+    Route::get('/maestros/{maestro}/desactivar-documentos', [MaestroController::class, 'desactivarDocumentos'])
+        ->name('maestros.desactivar-documentos');
 });
 
 

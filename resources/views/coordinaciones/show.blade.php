@@ -888,37 +888,53 @@
                                             {{ $estaActivo ? 'Activo' : 'Inactivo' }}
                                         </button>
                                     </td>
-                                    
                                     <td class="text-end">
-                                        <!-- Botón de acciones con dropdown -->
-                                        <div class="dropdown">
-                                            <button class="btn btn-actions dropdown-toggle" type="button" 
-                                                    data-bs-toggle="dropdown" 
-                                                    aria-expanded="false" title="Acciones">
-                                                <i class="fas fa-cog"></i>
-                                            </button>
-                                            <ul class="dropdown-menu dropdown-menu-end">
-                                                <li>
-                                                    <a class="dropdown-item" href="{{ route('maestros.show', $maestro->id) }}">
-                                                        <i class="fas fa-eye text-primary me-2"></i> 
-                                                        <div>
-                                                            <div>Ver expediente</div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                                
-                                                <li><hr class="dropdown-divider"></li>
-                                                <li>
-                                                    <a class="dropdown-item text-danger" href="#">
-                                                        <i class="fas fa-trash-alt me-2"></i>
-                                                        <div>
-                                                            <div>Eliminar docente</div>
-                                                        </div>
-                                                    </a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                    </td>
+    <!-- Botón de acciones con dropdown -->
+    <div class="dropdown">
+        <button class="btn btn-actions dropdown-toggle" type="button" 
+                data-bs-toggle="dropdown" 
+                aria-expanded="false" title="Acciones">
+            <i class="fas fa-cog"></i>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-end">
+            <li>
+                <a class="dropdown-item" href="{{ route('maestros.show', $maestro->id) }}">
+                    <i class="fas fa-eye text-primary me-2"></i> 
+                    <div>
+                        <div>Ver expediente</div>
+                    </div>
+                </a>
+            </li>
+            
+            <!-- ✅ BOTÓN DE ACTIVAR DOCUMENTOS - AHORA SÍ DENTRO DEL DROPDOWN -->
+            <li>
+                <a class="dropdown-item {{ $maestro->procesoDocumentos && $maestro->procesoDocumentos->activo ? 'text-success' : '' }}" 
+                   href="{{ route('maestros.activar-documentos', $maestro->id) }}"
+                   onclick="return confirm('¿Activar documentos para este maestro? Podrá subir los 13 documentos.');">
+                    <i class="fas {{ $maestro->procesoDocumentos && $maestro->procesoDocumentos->activo ? 'fa-check-circle' : 'fa-file-upload' }} me-2"></i>
+                    <div>
+                        <div>{{ $maestro->procesoDocumentos && $maestro->procesoDocumentos->activo ? 'Proceso Activo' : 'Activar Nuevo Ingreso' }}</div>
+                        @if($maestro->procesoDocumentos && $maestro->procesoDocumentos->activo)
+                            <small class="text-muted">Activado</small>
+                        @else
+                            <small class="text-muted">Subir 13 documentos</small>
+                        @endif
+                    </div>
+                </a>
+            </li>
+            
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <a class="dropdown-item text-danger" href="#">
+                    <i class="fas fa-trash-alt me-2"></i>
+                    <div>
+                        <div>Eliminar docente</div>
+                    </div>
+                </a>
+            </li>
+        </ul>
+    </div>
+</td>
                                 </tr>
                                 @endforeach
                             </tbody>

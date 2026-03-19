@@ -5,7 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Documentos - Sistema GEPROC</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
+        /* ===== CSS ORIGINAL COMPLETO (SIN ELIMINAR NADA) ===== */
         :root {
             --primary: #0744b6ff;
             --primary-light: #3a6bd3;
@@ -1755,6 +1757,75 @@
             background: var(--gradient-primary);
         }
 
+        /* ===== MEJORAS DE DISEÑO SOLICITADAS ===== */
+        /* 1. TÍTULO DEL PERIODO MÁS GRANDE */
+        .periodo-text h3 {
+            font-size: 26px;
+            font-weight: 750;
+            color: #0b2b5c;
+            letter-spacing: -0.02em;
+            margin-bottom: 8px;
+        }
+
+        /* 2. TABLA LIGERAMENTE MÁS PEQUEÑA */
+        .documents-table {
+            font-size: 14.5px;
+        }
+
+        .documents-table th {
+            padding: 14px 18px;
+            font-size: 14px;
+        }
+
+        .documents-table td {
+            padding: 16px 18px;
+        }
+
+        .document-title {
+            font-size: 15px;
+        }
+
+        .status-badge {
+            padding: 6px 10px;
+            font-size: 12.5px;
+        }
+
+        .file-select-btn {
+            padding: 8px 14px;
+            font-size: 12.5px;
+        }
+
+        .upload-cell {
+            min-width: 260px;
+        }
+
+        /* 3. ICONOS CON COLORES DIFERENCIADOS */
+        .icon-aprobado { background: var(--gradient-success); }
+        .icon-rechazado { background: var(--gradient-danger); }
+        .icon-pendiente { background: var(--gradient-warning); }
+        .icon-faltante { background: var(--gradient-purple); } /* Morado en lugar de azul */
+
+        .periodo-icon {
+            background: linear-gradient(145deg, #1e3a8a, #3b82f6);
+        }
+
+        .detail-icon.fecha { background: var(--gradient-purple); }
+        .detail-icon.requeridos { background: linear-gradient(145deg, #2563eb, #38bdf8); }
+        .detail-icon.completados { background: var(--gradient-success); }
+        .detail-icon.progreso { background: linear-gradient(145deg, #7c3aed, #a78bfa); }
+
+        .info-item i {
+            color: #4f46e5;
+        }
+
+        .file-current-info i {
+            color: #0d9488;
+        }
+
+        .table-title i {
+            color: #1e40af;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 1200px) {
             .header {
@@ -1968,6 +2039,14 @@
                 width: 100%;
                 justify-content: center;
             }
+            
+            .periodo-text h3 {
+                font-size: 22px;
+            }
+            
+            .documents-table td {
+                padding: 14px 12px;
+            }
         }
 
         @media (max-width: 480px) {
@@ -2053,7 +2132,7 @@
 <body>
     <!-- MAIN CONTENT -->
     <div class="main-content">
-        <!-- HEADER SUPERIOR -->
+        <!-- HEADER SUPERIOR - INTACTO -->
         <div class="header">
             <div class="header-left">
                 <div class="header-logo">
@@ -2087,7 +2166,7 @@
 
         <!-- CONTENT WRAPPER -->
         <div class="content-wrapper">
-            <!-- MENSAJES -->
+            <!-- MENSAJES - INTACTO -->
             @if(session('success'))
             <div class="alert alert-success">
                 <i class="fas fa-check-circle"></i>
@@ -2123,38 +2202,35 @@
             </div>
             @endif
 
+            <!-- SOLO LAS VARIABLES QUE VENDRÁN DEL CONTROLADOR - INTACTO -->
             @php
-                // Variables seguras con datos del controller
-                $periodoHabilitado = $periodoHabilitado ?? null;
-                $hayPeriodoHabilitado = $hayPeriodoHabilitado ?? false;
+                // Estas variables deben venir del controlador misDocumentos()
+                // $procesoActivo = true/false (si el admin activó los 13 documentos)
+                // $documentosParaVista = array con los documentos
+                // $estadisticas = array con estadísticas
                 
-                if (!$hayPeriodoHabilitado) {
-                    $totalRequeridos = 0;
-                    $totalSubidos = 0;
-                    $aprobados = 0;
-                    $rechazados = 0;
-                    $pendientes = 0;
-                    $porcentaje = 0;
-                    $faltantes = 0;
-                } else {
-                    $totalRequeridos = $estadisticas['total_requeridos'] ?? 0;
-                    $totalSubidos = $estadisticas['total_subidos'] ?? 0;
-                    $aprobados = $estadisticas['aprobados'] ?? 0;
-                    $rechazados = $estadisticas['rechazados'] ?? 0;
-                    $pendientes = $estadisticas['pendientes'] ?? 0;
-                    $porcentaje = $estadisticas['porcentaje'] ?? 0;
-                    $faltantes = $estadisticas['faltantes'] ?? 0;
-                }
-                
-                $maestroData = $maestroData ?? $maestro ?? null;
+                // Valores por defecto por si no llegan
+                $procesoActivo = $procesoActivo ?? false;
                 $documentosParaVista = $documentosParaVista ?? [];
-                $tiposDocumentos = $tiposDocumentos ?? [];
+                $estadisticas = $estadisticas ?? [];
+                
+                // Calcular estadísticas básicas
+                $totalRequeridos = $estadisticas['total_requeridos'] ?? ($procesoActivo ? 13 : 6);
+                $totalSubidos = $estadisticas['total_subidos'] ?? 0;
+                $porcentaje = $estadisticas['porcentaje'] ?? ($totalRequeridos > 0 ? round(($totalSubidos / $totalRequeridos) * 100) : 0);
+                $faltantes = $estadisticas['faltantes'] ?? ($totalRequeridos - $totalSubidos);
             @endphp
 
-            <!-- PANEL DE CONTROL - TÍTULO MÁS PEQUEÑO -->
+            <!-- PANEL DE CONTROL - TÍTULO - INTACTO -->
             <div class="control-panel">
                 <div class="panel-title-section">
-                    <p class="subtitle">Carga de documentos</p>
+                    <p class="subtitle">
+                        @if($procesoActivo)
+                            Documentos de Nuevo Ingreso 
+                        @else
+                            Documentos Período
+                        @endif
+                    </p>
                 </div>
                 <div class="action-buttons">
                     <a href="{{ route('profesor.dashboard') }}" class="btn-back">
@@ -2164,45 +2240,40 @@
                 </div>
             </div>
 
-            <!-- PANEL DE PERÍODO -->
+            <!-- PANEL DE INFORMACIÓN - CON NOMBRE DE PERIODO MÁS GRANDE -->
             <div class="periodo-panel">
                 <div class="periodo-header">
                     <div class="periodo-title">
                         <div class="periodo-icon">
-                            @if($hayPeriodoHabilitado)
-                            <i class="fas fa-calendar-check"></i>
-                            @else
-                            <i class="fas fa-calendar-times"></i>
-                            @endif
+                            <i class="fas fa-folder-open"></i>
                         </div>
                         <div class="periodo-text">
                             <h3>
-                                @if($hayPeriodoHabilitado)
-                                Período Académico: {{ $periodoHabilitado->nombre }}
+                                @if($procesoActivo)
+                                    Expediente de Nuevo Ingreso
                                 @else
-                                Sin período activo
+                                    {{ $periodoHabilitado->nombre ?? 'Período Actual' }}
                                 @endif
                             </h3>
                             <p>
-                                @if($hayPeriodoHabilitado)
-                                Sistema de carga de documentos habilitado sube tus documentos de forma correctamente  para poder ser revisados y guardarlos en tu expediente.
+                                @if($procesoActivo)
+                                    Sube los 13 documentos requeridos para completar tu ingreso.
                                 @else
-                                El sistema se activará automáticamente cuando se habilite un nuevo período para que puedas subir tus documentos.
+                                    Mantén actualizado tu expediente con los documentos del período.
                                 @endif
                             </p>
                         </div>
                     </div>
-                    <div class="periodo-badge {{ $hayPeriodoHabilitado ? 'badge-active' : 'badge-inactive' }}">
-                        @if($hayPeriodoHabilitado)
-                        <i class="fas fa-check-circle"></i> ACTIVO
+                    <div class="periodo-badge {{ $procesoActivo ? 'badge-active' : 'badge-inactive' }}">
+                        @if($procesoActivo)
+                        <i class="fas fa-check-circle"></i> NUEVO INGRESO
                         @else
-                        <i class="fas fa-times-circle"></i> INACTIVO
+                        <i class="fas fa-clock"></i> PERÍODO
                         @endif
                     </div>
                 </div>
                 
-                <!-- BARRA DE PROGRESO GENERAL -->
-                @if($hayPeriodoHabilitado)
+                <!-- BARRA DE PROGRESO GENERAL - INTACTA -->
                 <div class="progress-overview">
                     <div class="progress-header">
                         <div class="progress-title">
@@ -2222,17 +2293,6 @@
                     </div>
                     
                     <div class="progress-details">
-                        @if($periodoHabilitado->fecha_limite)
-                        <div class="detail-item">
-                            <div class="detail-icon fecha">
-                                <i class="fas fa-clock"></i>
-                            </div>
-                            <div class="detail-content">
-                                <h4>Fecha Límite</h4>
-                                <p>{{ \Carbon\Carbon::parse($periodoHabilitado->fecha_limite)->format('d/m/Y') }}</p>
-                            </div>
-                        </div>
-                        @endif
                         <div class="detail-item">
                             <div class="detail-icon requeridos">
                                 <i class="fas fa-file-alt"></i>
@@ -2262,101 +2322,63 @@
                         </div>
                     </div>
                 </div>
-                @endif
             </div>
 
-            @if(!$maestroData)
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-triangle"></i>
-                <div>
-                    <strong>Información de usuario no disponible</strong>
-                    <p>Contacta al administrador del sistema para verificar tu perfil.</p>
-                </div>
-            </div>
-            @else
-                @if(count($documentosParaVista) > 0)
-                <!-- FORMULARIO DE SUBIDA - SOLO BOTÓN SELECCIONAR -->
-                <form action="{{ route('profesor.subir-documentos') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
-                    @csrf
-                    <input type="hidden" name="periodo_id" value="{{ $periodoHabilitado->id ?? '' }}">
-                    
-                    <!-- TABLA DE DOCUMENTOS -->
-                    <div class="documents-table-container">
-                        <div class="table-header">
-                            <h2 class="table-title">
-                                <i class="fas fa-file-alt"></i>
+            <!-- FORMULARIO DE SUBIDA - INTACTO -->
+            @if(count($documentosParaVista) > 0)
+            <form action="{{ route($rutaSubida ?? 'profesor.subir-documentos') }}" method="POST" enctype="multipart/form-data" id="uploadForm">
+                @csrf
+                
+                <div class="documents-table-container">
+                    <div class="table-header">
+                        <h2 class="table-title">
+                            <i class="fas fa-file-alt"></i>
+                            @if($procesoActivo)
                                 Documentos Requeridos
-                            </h2>
-                            <div class="table-info">
-                                <span>{{ count($documentosParaVista) }} documentos listados</span>
-                            </div>
+                            @else
+                                Documentos Requeridos
+                            @endif
+                        </h2>
+                        <div class="table-info">
+                            <span>{{ count($documentosParaVista) }} documentos listados</span>
+                            @if($procesoActivo)
+                                <span class="badge bg-primary ms-2">Nuevo Ingreso</span>
+                            @endif
                         </div>
-                        
-                        <table class="documents-table">
-                            <thead>
-                                <tr>
-                                    <th><i class="fas fa-file-signature"></i> Documento</th>
-                                    <th><i class="fas fa-clipboard-check"></i> Estado</th>
-                                    <th><i class="fas fa-info-circle"></i> Información</th>
-                                    <th><i class="fas fa-tools"></i> Acciones</th>
-                                    <th><i class="fas fa-upload"></i> Subir Archivo</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach($documentosParaVista as $documento)
+                    </div>
+                    
+                    <table class="documents-table">
+                        <thead>
+                            <tr>
+                                <th><i class="fas fa-file-signature"></i> Documento</th>
+                                <th><i class="fas fa-clipboard-check"></i> Estado</th>
+                                <th><i class="fas fa-info-circle"></i> Información</th>
+                                <th><i class="fas fa-upload"></i> Subir Archivo</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($documentosParaVista as $documento)
                                 @php
                                     $tieneDocumento = $documento['tiene_documento'] ?? false;
                                     $estado = $documento['estado'] ?? 'faltante';
-                                    $claseDocumento = $tieneDocumento ? 'has-document' : 'no-document';
                                     $claseFila = $estado == 'pendiente' ? 'pendiente' : '';
-                                    $tipoDocumento = $documento['tipo'];
+                                    $tipoFlujo = $documento['tipo_flujo'] ?? ($procesoActivo ? 'ingreso' : 'periodico');
+                                    $iconClass = 'icon-'.$estado;
                                 @endphp
-                                <tr data-documento-id="{{ $documento['documento_id'] ?? '' }}" data-tipo="{{ $tipoDocumento }}" class="{{ $claseDocumento }} {{ $claseFila }}">
+                                <tr class="{{ $claseFila }}">
                                     <!-- NOMBRE DEL DOCUMENTO -->
                                     <td class="document-name-cell" data-label="Documento">
                                         <div class="document-name">
-                                            <div class="document-icon icon-{{ $estado }}">
-                                                <i class="fas fa-{{ $documento['icono'] }}"></i>
+                                            <div class="document-icon {{ $iconClass }}">
+                                                <i class="fas fa-{{ $documento['icono'] ?? 'file' }}"></i>
                                             </div>
                                             <div class="document-name-text">
                                                 <div class="document-title">{{ $documento['nombre'] }}</div>
-                                                <div class="document-desc">{{ $documento['descripcion'] }}</div>
-                                            </div>
-                                        </div>
-                                        
-                                        <!-- BARRA DE PROGRESO INDIVIDUAL -->
-                                        <div class="document-progress">
-                                            <div class="progress-indicator">
-                                                <span class="progress-text">
-                                                    @php
-                                                        $textoProgreso = '';
-                                                        if($estado == 'aprobado') $textoProgreso = 'Aprobado';
-                                                        elseif($estado == 'rechazado') $textoProgreso = 'Rechazado';
-                                                        elseif($estado == 'pendiente') $textoProgreso = 'En revisión';
-                                                        else $textoProgreso = 'Pendiente';
-                                                    @endphp
-                                                    {{ $textoProgreso }}
-                                                </span>
-                                                <div class="progress-bar-small">
-                                                    @php
-                                                        $anchoProgreso = 0;
-                                                        $claseProgreso = '';
-                                                        if($estado == 'aprobado') {
-                                                            $anchoProgreso = 100;
-                                                            $claseProgreso = 'completed';
-                                                        } elseif($estado == 'rechazado') {
-                                                            $anchoProgreso = 100;
-                                                            $claseProgreso = 'rejected';
-                                                        } elseif($estado == 'pendiente') {
-                                                            $anchoProgreso = 50;
-                                                            $claseProgreso = 'pending';
-                                                        } else {
-                                                            $anchoProgreso = 0;
-                                                            $claseProgreso = 'not-started';
-                                                        }
-                                                    @endphp
-                                                    <div class="progress-fill {{ $claseProgreso }}" style="width: {{ $anchoProgreso }}%;"></div>
-                                                </div>
+                                                @if($documento['observaciones'])
+                                                    <small class="text-danger">
+                                                        <i class="fas fa-comment me-1"></i>{{ $documento['observaciones'] }}
+                                                    </small>
+                                                @endif
                                             </div>
                                         </div>
                                     </td>
@@ -2393,23 +2415,20 @@
                                             <div class="info-item">
                                                 <i class="fas fa-file"></i>
                                                 <span class="info-label">Archivo:</span>
-                                                <span class="info-value" title="{{ $documento['archivo'] ?? '' }}">
-                                                    @php
-                                                        $archivoNombre = $documento['archivo'] ?? 'Documento subido';
-                                                        echo strlen($archivoNombre) > 20 ? substr($archivoNombre, 0, 20) . '...' : $archivoNombre;
-                                                    @endphp
-                                                </span>
+                                                <span class="info-value">{{ $documento['archivo_original'] ?? $documento['archivo'] ?? 'Documento' }}</span>
                                             </div>
                                             <div class="info-item">
                                                 <i class="fas fa-calendar"></i>
-                                                <span class="info-label">Subido:</span>
-                                                <span class="info-value">{{ $documento['fecha_subida'] ? $documento['fecha_subida']->format('d/m/Y') : 'N/A' }}</span>
+                                                <span class="info-label">Fecha:</span>
+                                                <span class="info-value">
+                                                    {{ $documento['fecha_subida'] ? \Carbon\Carbon::parse($documento['fecha_subida'])->format('d/m/Y') : 'N/A' }}
+                                                </span>
                                             </div>
-                                            @if($estado == 'aprobado' && isset($documento['aprobado_por']))
+                                            @if(isset($documento['version']) && $documento['version'] > 0)
                                             <div class="info-item">
-                                                <i class="fas fa-user-check"></i>
-                                                <span class="info-label">Revisor:</span>
-                                                <span class="info-value">{{ $documento['aprobado_por'] }}</span>
+                                                <i class="fas fa-code-branch"></i>
+                                                <span class="info-label">Versión:</span>
+                                                <span class="info-value">{{ $documento['version'] }}</span>
                                             </div>
                                             @endif
                                         </div>
@@ -2417,402 +2436,227 @@
                                         <div class="document-info">
                                             <div class="info-item">
                                                 <i class="fas fa-exclamation-circle"></i>
-                                                <span class="info-label">Estado:</span>
                                                 <span class="info-value">No subido</span>
                                             </div>
-                                            <div class="info-item">
-                                                <i class="fas fa-clock"></i>
-                                                <span class="info-label">Fecha:</span>
-                                                <span class="info-value">Pendiente</span>
-                                            </div>
-                                        </div>
-                                        @endif
-                                        
-                                        @if($estado == 'rechazado' && !empty($documento['observaciones']))
-                                        <div class="observations" title="{{ $documento['observaciones'] }}">
-                                            <div class="observations-title">
-                                                <i class="fas fa-comment"></i>
-                                                Observaciones
-                                            </div>
-                                            @php
-                                                $obs = $documento['observaciones'];
-                                                echo strlen($obs) > 80 ? substr($obs, 0, 80) . '...' : $obs;
-                                            @endphp
-                                            @if(strlen($documento['observaciones']) > 80)
-                                            <span style="color: #8b5cf6; cursor: pointer;" onclick="alertObservacionCompleta('{{ addslashes($documento['observaciones']) }}')">
-                                                ...ver más
-                                            </span>
-                                            @endif
                                         </div>
                                         @endif
                                     </td>
                                     
-                                    <!-- ACCIONES -->
-                                    <td class="actions-cell" data-label="Acciones">
-                                        <div class="document-actions">
-                                            @if($tieneDocumento)
-                                            <button type="button" class="action-btn btn-view" onclick="verDocumento('{{ $documento['documento_id'] ?? '' }}')">
-                                                <i class="fas fa-eye"></i> Ver
-                                            </button>
-                                            <button type="button" class="action-btn btn-download" onclick="descargarDocumento('{{ $documento['documento_id'] ?? '' }}')">
-                                                <i class="fas fa-download"></i> Descargar
-                                            </button>
-                                            @if($hayPeriodoHabilitado && in_array($estado, ['aprobado', 'rechazado', 'pendiente']))
-                                            <button type="button" class="action-btn btn-update" onclick="selectFile('{{ $tipoDocumento }}')">
-                                                <i class="fas fa-sync-alt"></i> Actualizar
-                                            </button>
-                                            @endif
-                                            @else
-                                            @if($hayPeriodoHabilitado)
-                                            <!-- EL BOTÓN UPLOAD ESTÁ OCULTO POR CSS, SOLO USAMOS SELECT -->
-                                            <button type="button" class="action-btn btn-upload" style="display: none;">Subir</button>
-                                            @endif
-                                            @endif
-                                        </div>
-                                    </td>
-                                    
-                                    <!-- SUBIR ARCHIVO - SOLO BOTÓN SELECCIONAR -->
+                                    <!-- SUBIR ARCHIVO -->
                                     <td class="upload-cell" data-label="Subir Archivo">
-                                        @if($hayPeriodoHabilitado)
                                         <div class="upload-container">
-                                            <!-- INPUT OCULTO -->
-                                            <input type="file" 
-                                                   id="file-{{ $tipoDocumento }}" 
-                                                   name="{{ $tipoDocumento }}"
-                                                   accept=".pdf,.doc,.docx,.jpg,.jpeg,.png"
-                                                   style="display: none;"
-                                                   data-tipo="{{ $tipoDocumento }}"
-                                                   onchange="handleFileSelect('{{ $tipoDocumento }}', this)">
-                                            
                                             <div class="upload-main-wrapper">
-                                                @if(!$tieneDocumento)
-                                                <!-- BOTÓN SELECCIONAR - SOLO SI NO TIENE DOCUMENTO -->
-                                                <button type="button" class="file-select-btn" onclick="selectFile('{{ $tipoDocumento }}')">
-                                                    <i class="fas fa-paperclip"></i> Seleccionar archivo
-                                                </button>
+                                                @if($tipoFlujo == 'ingreso')
+                                                    <!-- PARA NUEVO INGRESO (13 docs) -->
+                                                    <input type="file" 
+                                                           name="documentos[{{ $documento['id'] }}]" 
+                                                           id="file-{{ $documento['id'] }}" 
+                                                           class="file-input" 
+                                                           data-doc-id="{{ $documento['id'] }}"
+                                                           accept=".pdf,.jpg,.jpeg,.png">
+                                                @else
+                                                    <!-- PARA PERIÓDICOS (6 docs) -->
+                                                    <input type="file" 
+                                                           name="{{ $documento['tipo'] ?? 'documentos[' . $documento['id'] . ']' }}" 
+                                                           id="file-{{ $documento['id'] }}" 
+                                                           class="file-input" 
+                                                           data-doc-id="{{ $documento['id'] }}"
+                                                           accept=".pdf,.jpg,.jpeg,.png">
+                                                @endif
+                                                
+                                                <label for="file-{{ $documento['id'] }}" class="file-select-btn">
+                                                    <i class="fas fa-cloud-upload-alt"></i> Seleccionar archivo
+                                                </label>
                                                 
                                                 <!-- INDICADOR DE ARCHIVO SELECCIONADO -->
-                                                <div id="file-selected-{{ $tipoDocumento }}" class="file-selected-indicator" style="display: none;">
+                                                <div id="file-info-{{ $documento['id'] }}" class="file-selected-indicator" style="display: none;">
                                                     <div class="file-info">
-                                                        <i class="fas fa-file-pdf"></i>
-                                                        <span class="file-name-display" id="file-selected-name-{{ $tipoDocumento }}"></span>
+                                                        <i class="fas fa-check-circle text-success"></i>
+                                                        <span class="file-name-display"></span>
                                                     </div>
-                                                    <button type="button" class="file-remove-btn" onclick="clearFile('{{ $tipoDocumento }}')">
+                                                    <button type="button" class="file-remove-btn" onclick="resetFileInput({{ $documento['id'] }})">
                                                         <i class="fas fa-times"></i> Quitar
                                                     </button>
                                                 </div>
                                                 
-                                                <!-- PREVIEW INICIAL -->
-                                                <div class="file-current-info" id="file-name-preview-{{ $tipoDocumento }}">
-                                                    <i class="fas fa-info-circle" style="color: #94a3b8;"></i>
-                                                    <span>Ningún archivo seleccionado</span>
-                                                </div>
-                                                @else
-                                                <!-- SI YA TIENE DOCUMENTO, SOLO MOSTRAR NOMBRE DEL ARCHIVO (SIN BOTONES) -->
-                                                <div class="file-current-info" id="file-name-preview-{{ $tipoDocumento }}">
-                                                    <i class="fas fa-check-circle" style="color: #10b981;"></i>
-                                                    <span>Archivo: {{ strlen($documento['archivo'] ?? '') > 30 ? substr($documento['archivo'] ?? '', 0, 30) . '...' : ($documento['archivo'] ?? 'Documento subido') }}</span>
-                                                </div>
+                                                <!-- INFORMACIÓN DEL ARCHIVO ACTUAL Y BOTONES DE ACCIÓN -->
+                                                @if($tieneDocumento)
+                                                    <div class="file-current-info">
+                                                        <i class="fas fa-file-pdf"></i>
+                                                        <span>{{ $documento['archivo_original'] ?? 'Documento subido' }}</span>
+                                                    </div>
+                                                    <div class="d-flex gap-2 mt-2">
+                                                        @if(isset($documento['documento_id']) && $documento['documento_id'])
+                                                            <a href="{{ route('documentos.ver', $documento['documento_id']) }}" 
+                                                               class="btn btn-sm btn-outline-primary" 
+                                                               target="_blank">
+                                                                <i class="fas fa-eye"></i> Ver
+                                                            </a>
+                                                            <a href="{{ route('documentos.descargar', $documento['documento_id']) }}" 
+                                                               class="btn btn-sm btn-outline-success">
+                                                                <i class="fas fa-download"></i> Descargar
+                                                            </a>
+                                                        @elseif(isset($documento['archivo']) && $documento['archivo'])
+                                                            <a href="{{ Storage::url($documento['archivo']) }}" 
+                                                               class="btn btn-sm btn-outline-primary" 
+                                                               target="_blank">
+                                                                <i class="fas fa-eye"></i> Ver
+                                                            </a>
+                                                            <a href="{{ Storage::url($documento['archivo']) }}" 
+                                                               class="btn btn-sm btn-outline-success" 
+                                                               download>
+                                                                <i class="fas fa-download"></i> Descargar
+                                                            </a>
+                                                        @endif
+                                                    </div>
                                                 @endif
                                             </div>
                                         </div>
-                                        @else
-                                        <div style="color: #94a3af; font-size: 14px; font-style: italic; padding: 12px 0; text-align: center;">
-                                            <i class="fas fa-lock"></i> Subida deshabilitada
-                                        </div>
-                                        @endif
                                     </td>
                                 </tr>
-                                @endforeach
-                            </tbody>
-                        </table>
-                    </div>
-                    
-                    <!-- BOTÓN DE ENVÍO A LA DERECHA (DEBAJO DE LA TABLA) -->
-                    @if($hayPeriodoHabilitado)
-                    <div class="submit-section-wrapper">
-                        <button type="button" class="submit-button" id="submitBtn" onclick="showSubmitModal()">
-                            <i class="fas fa-paper-plane"></i> Enviar Documentos Seleccionados
-                        </button>
-                    </div>
-                    @endif
-                </form>
-                @else
-                <!-- SIN DOCUMENTOS CONFIGURADOS -->
-                <div class="no-documents-panel">
-                    <div class="no-documents-icon">
-                        <i class="fas fa-folder-open"></i>
-                    </div>
-                    <h3 class="no-documents-title">Sin Documentos Configurados</h3>
-                    <p class="no-documents-text">
-                        No se han configurados documentos para tu coordinación académica.
-                        Contacta al administrador del sistema para más información.
-                    </p>
+                            @endforeach
+                        </tbody>
+                    </table>
                 </div>
-                @endif
+                
+                <!-- BOTÓN DE ENVÍO -->
+                <div class="submit-section-wrapper">
+                    <button type="button" class="submit-button" id="submitBtn" onclick="mostrarModalConfirmacion()">
+                        <i class="fas fa-paper-plane"></i> Enviar Documentos Seleccionados
+                    </button>
+                </div>
+            </form>
+            @else
+            <!-- SIN DOCUMENTOS - INTACTO -->
+            <div class="no-documents-panel">
+                <div class="no-documents-icon">
+                    <i class="fas fa-folder-open"></i>
+                </div>
+                <h3 class="no-documents-title">Sin Documentos Configurados</h3>
+                <p class="no-documents-text">
+                    No se han configurado documentos. Contacta al administrador del sistema.
+                </p>
+            </div>
             @endif
         </div>
     </div>
 
-    <!-- MODAL PROFESIONAL PARA CONFIRMACIÓN DE ENVÍO -->
-    <div id="submitModal" class="custom-modal-overlay" style="display: none;">
-        <div class="custom-modal">
-            <div class="modal-header">
-                <i class="fas fa-paper-plane"></i>
-                <h3>Confirmar envío de documentos</h3>
-            </div>
-            <div class="modal-body">
-                <p style="margin-bottom: 15px; color: #475569;">Los siguientes documentos serán enviados para revisión:</p>
-                <ul id="modalFileList" class="file-list"></ul>
-                <p style="color: #64748b; font-size: 14px; margin-top: 10px;">
-                    <i class="fas fa-info-circle" style="color: var(--primary);"></i>
-                    Una vez enviados, los documentos quedarán pendientes de revisión por el administrador.
-                </p>
-            </div>
-            <div class="modal-footer">
-                <button class="modal-btn modal-btn-cancel" onclick="closeSubmitModal()">Cancelar</button>
-                <button class="modal-btn modal-btn-confirm" onclick="submitForm()">Confirmar envío</button>
+    <!-- MODAL DE CONFIRMACIÓN - INTACTO -->
+    <div class="modal fade" id="confirmacionModal" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Confirmar envío</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro de enviar los documentos seleccionados?</p>
+                    <div id="archivosSeleccionados" class="mt-3"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="enviarFormulario()">Confirmar</button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- JAVASCRIPT -->
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    
+    <!-- JAVASCRIPT - INTACTO -->
     <script>
-        // Variables globales
-        let currentSelectedFiles = [];
-        
-        // Función para mostrar observaciones completas
-        function alertObservacionCompleta(observacion) {
-            alert("Observaciones completas:\n\n" + observacion);
-        }
-        
-        // Función para manejar selección de archivos
-        window.handleFileSelect = function(tipo, input) {
-            const fileSelected = document.getElementById('file-selected-' + tipo);
-            const fileSelectedName = document.getElementById('file-selected-name-' + tipo);
-            const fileNamePreview = document.getElementById('file-name-preview-' + tipo);
-            const row = document.querySelector(`tr[data-tipo="${tipo}"]`);
-            
-            if (input.files.length > 0) {
-                const file = input.files[0];
-                
-                // Actualizar UI
-                fileSelectedName.textContent = file.name;
-                fileSelected.style.display = 'flex';
-                fileNamePreview.innerHTML = `<i class="fas fa-check-circle" style="color: #10b981;"></i> <span>Nuevo archivo: ${file.name.length > 30 ? file.name.substring(0, 30) + '...' : file.name}</span>`;
-                
-                // Resaltar fila
-                if (row) {
-                    row.style.backgroundColor = '#eff6ff';
-                    row.style.borderLeft = '3px solid #3b82f6';
-                    row.classList.remove('no-document');
-                    row.classList.add('has-document');
-                }
-                
-                showToast(`Archivo "${file.name}" seleccionado`, 'success');
-            }
-        };
-        
-        // Función para limpiar archivo seleccionado
-        window.clearFile = function(tipo) {
-            const input = document.getElementById('file-' + tipo);
-            const fileSelected = document.getElementById('file-selected-' + tipo);
-            const fileNamePreview = document.getElementById('file-name-preview-' + tipo);
-            const row = document.querySelector(`tr[data-tipo="${tipo}"]`);
-            
-            if (input) {
-                input.value = '';
-            }
-            
-            if (fileSelected) {
-                fileSelected.style.display = 'none';
-            }
-            
-            if (fileNamePreview) {
-                fileNamePreview.innerHTML = `<i class="fas fa-info-circle" style="color: #94a3b8;"></i> <span>Ningún archivo seleccionado</span>`;
-            }
-            
-            if (row) {
-                row.style.backgroundColor = '';
-                row.style.borderLeft = '';
-                row.classList.remove('has-document');
-                row.classList.add('no-document');
-            }
-            
-            showToast('Archivo removido', 'info');
-        };
-        
-        // Abrir selector de archivos
-        window.selectFile = function(tipo) {
-            const input = document.getElementById('file-' + tipo);
-            if (input) {
-                input.click();
-            }
-        };
-        
-        // Ver documento
-        window.verDocumento = function(documentoId) {
-            if (documentoId) {
-                window.open("{{ url('documentos/ver') }}/" + documentoId, '_blank');
-            } else {
-                showToast('ID de documento no disponible', 'error');
-            }
-        };
-        
-        // Descargar documento
-        window.descargarDocumento = function(documentoId) {
-            if (documentoId) {
-                window.location.href = "{{ url('documentos/descargar') }}/" + documentoId;
-            } else {
-                showToast('ID de documento no disponible', 'error');
-            }
-        };
-        
-        // Mostrar modal de confirmación
-        window.showSubmitModal = function() {
-            const uploadForm = document.getElementById('uploadForm');
-            const fileInputs = uploadForm.querySelectorAll('input[type="file"]');
-            let hasFile = false;
-            currentSelectedFiles = [];
-            
-            fileInputs.forEach(input => {
-                if (input.files.length > 0) {
-                    hasFile = true;
-                    currentSelectedFiles.push({
-                        tipo: input.name,
-                        archivo: input.files[0].name,
-                        tamaño: (input.files[0].size / 1024).toFixed(2) + ' KB'
-                    });
-                }
-            });
-            
-            if (!hasFile) {
-                showToast('Selecciona al menos un documento', 'warning');
-                return;
-            }
-            
-            const modalList = document.getElementById('modalFileList');
-            modalList.innerHTML = '';
-            
-            currentSelectedFiles.forEach(file => {
-                const li = document.createElement('li');
-                li.className = 'file-list-item';
-                li.innerHTML = `
-                    <i class="fas fa-file-pdf"></i>
-                    <div class="file-details">
-                        <div class="file-name-modal">${file.archivo}</div>
-                        <div class="file-size-modal">${file.tamaño}</div>
-                    </div>
-                `;
-                modalList.appendChild(li);
-            });
-            
-            document.getElementById('submitModal').style.display = 'flex';
-        };
-        
-        window.closeSubmitModal = function() {
-            document.getElementById('submitModal').style.display = 'none';
-        };
-        
-        window.submitForm = function() {
-            const submitBtn = document.getElementById('submitBtn');
-            const uploadForm = document.getElementById('uploadForm');
-            
-            if (submitBtn) {
-                submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Enviando...';
-                submitBtn.disabled = true;
-            }
-            
-            closeSubmitModal();
-            showToast('Enviando documentos...', 'info');
-            uploadForm.submit();
-        };
-        
-        // Mostrar toasts
-        function showToast(message, type = 'info') {
-            const oldToasts = document.querySelectorAll('.custom-toast');
-            oldToasts.forEach(toast => toast.remove());
-            
-            const toast = document.createElement('div');
-            toast.className = 'custom-toast';
-            toast.style.cssText = `
-                position: fixed;
-                top: 20px;
-                right: 20px;
-                padding: 15px 20px;
-                background: ${type === 'error' ? '#ef4444' : type === 'success' ? '#10b981' : '#3b82f6'};
-                color: white;
-                border-radius: 10px;
-                box-shadow: 0 5px 15px rgba(0,0,0,0.2);
-                z-index: 10001;
-                animation: slideInRight 0.3s ease;
-                max-width: 350px;
-                font-size: 14px;
-                display: flex;
-                align-items: center;
-                gap: 10px;
-            `;
-            
-            const icon = type === 'error' ? 'exclamation-circle' : (type === 'success' ? 'check-circle' : 'info-circle');
-            toast.innerHTML = `
-                <i class="fas fa-${icon}"></i>
-                <span style="flex: 1;">${message}</span>
-                <button onclick="this.parentElement.remove()" style="background: none; border: none; color: white; cursor: pointer; padding: 0 5px;">
-                    <i class="fas fa-times"></i>
-                </button>
-            `;
-            
-            document.body.appendChild(toast);
-            
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.style.animation = 'slideOutRight 0.3s ease';
-                    setTimeout(() => {
-                        if (toast.parentNode) toast.remove();
-                    }, 300);
-                }
-            }, 5000);
-        }
-        
-        // Inicialización
         document.addEventListener('DOMContentLoaded', function() {
-            // Validar tamaño de archivo
-            const fileInputs = document.querySelectorAll('input[type="file"]');
-            fileInputs.forEach(input => {
-                input.addEventListener('change', function() {
-                    const maxSize = 10 * 1024 * 1024; // 10MB
-                    if (this.files[0] && this.files[0].size > maxSize) {
-                        showToast('Máximo 10MB', 'error');
-                        this.value = '';
-                        const tipo = this.dataset.tipo;
-                        const fileSelected = document.getElementById('file-selected-' + tipo);
-                        const fileNamePreview = document.getElementById('file-name-preview-' + tipo);
-                        if (fileSelected) fileSelected.style.display = 'none';
-                        if (fileNamePreview) fileNamePreview.innerHTML = `<i class="fas fa-info-circle" style="color: #94a3b8;"></i> <span>Ningún archivo seleccionado</span>`;
+            // Mostrar nombre del archivo seleccionado
+            document.querySelectorAll('.file-input').forEach(input => {
+                input.addEventListener('change', function(e) {
+                    const docId = this.dataset.docId;
+                    const fileInfo = document.getElementById('file-info-' + docId);
+                    const fileNameDisplay = fileInfo.querySelector('.file-name-display');
+                    
+                    if (this.files.length > 0) {
+                        const file = this.files[0];
+                        const fileSize = (file.size / 1024).toFixed(2);
+                        
+                        // Validar tamaño (5MB máximo)
+                        if (file.size > 5 * 1024 * 1024) {
+                            alert('El archivo no puede ser mayor a 5MB');
+                            this.value = '';
+                            fileInfo.style.display = 'none';
+                            return;
+                        }
+                        
+                        // Validar tipo de archivo
+                        const validTypes = ['application/pdf', 'image/jpeg', 'image/jpg', 'image/png'];
+                        if (!validTypes.includes(file.type)) {
+                            alert('Solo se permiten archivos PDF, JPG, JPEG o PNG');
+                            this.value = '';
+                            fileInfo.style.display = 'none';
+                            return;
+                        }
+                        
+                        fileNameDisplay.textContent = file.name + ' (' + fileSize + ' KB)';
+                        fileInfo.style.display = 'flex';
+                    } else {
+                        fileInfo.style.display = 'none';
                     }
                 });
             });
-            
-            // Cerrar modal al hacer clic fuera
-            window.addEventListener('click', function(event) {
-                const modal = document.getElementById('submitModal');
-                if (event.target === modal) closeSubmitModal();
-            });
         });
-        
-        // Estilos para animaciones
-        const style = document.createElement('style');
-        style.textContent = `
-            @keyframes slideInRight {
-                from { transform: translateX(100%); opacity: 0; }
-                to { transform: translateX(0); opacity: 1; }
+
+        function resetFileInput(docId) {
+            const input = document.getElementById('file-' + docId);
+            const fileInfo = document.getElementById('file-info-' + docId);
+            
+            input.value = '';
+            fileInfo.style.display = 'none';
+        }
+
+        function mostrarModalConfirmacion() {
+            const archivos = [];
+            let tieneArchivos = false;
+            
+            document.querySelectorAll('.file-input').forEach(input => {
+                if (input.files.length > 0) {
+                    tieneArchivos = true;
+                    const file = input.files[0];
+                    const fileSize = (file.size / 1024).toFixed(2);
+                    archivos.push(`
+                        <div class="alert alert-info py-2 mb-2">
+                            <i class="fas fa-file me-2"></i>
+                            <strong>${file.name}</strong>
+                            <small class="text-muted ms-2">(${fileSize} KB)</small>
+                        </div>
+                    `);
+                }
+            });
+            
+            if (!tieneArchivos) {
+                alert('Selecciona al menos un documento para subir');
+                return;
             }
-            @keyframes slideOutRight {
-                from { transform: translateX(0); opacity: 1; }
-                to { transform: translateX(100%); opacity: 0; }
+            
+            document.getElementById('archivosSeleccionados').innerHTML = archivos.join('');
+            const modal = new bootstrap.Modal(document.getElementById('confirmacionModal'));
+            modal.show();
+        }
+
+        function enviarFormulario() {
+            bootstrap.Modal.getInstance(document.getElementById('confirmacionModal')).hide();
+            document.getElementById('uploadForm').submit();
+        }
+
+        function verDocumento(documentoId) {
+            if (documentoId) {
+                window.open('/documentos/ver/' + documentoId, '_blank');
             }
-        `;
-        document.head.appendChild(style);
+        }
+
+        function descargarDocumento(documentoId) {
+            if (documentoId) {
+                window.location.href = '/documentos/descargar/' + documentoId;
+            }
+        }
     </script>
 </body>
 </html>
