@@ -1,302 +1,320 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Panel Administrativo - GEPROC</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet"/>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        :root {
+            --primary: #0744b6ff;
+            --secondary: #33CAE6;
+            --accent: #26E63F;
+            --light-bg: #F8F9FA;
+            --border-color: #E9ECEF;
+            --text-muted: #6C757D;
+            --card-shadow: 0 5px 15px rgba(15, 126, 230, 0.08);
+            --transition: all 0.3s ease;
+            
+            --font-size-base: 1.1rem;
+            --font-size-lg: 1.3rem;
+            --font-size-sm: 1rem;
+            --font-size-h1: 2.2rem;
+            --font-size-h2: 1.9rem;
+            --font-size-h3: 1.6rem;
+            --font-size-h4: 1.4rem;
         }
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: #f8fafc;
-            color: #0f172a;
-            line-height: 1.5;
+        body { 
+            background: white; 
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            color: #333; 
+            line-height: 1.6;
+            font-size: var(--font-size-base);
         }
 
-        /* Header */
-        .header {
-            background: white;
-            padding: 0.75rem 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: fixed;
+        /* ========== BARRA DE NAVEGACIÓN ========== */
+        .navbar-top { 
+            background: white; 
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
+            position: sticky;
             top: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            border-bottom: 1px solid #e2e8f0;
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
-        .logo-area {
+        .navbar-top.scrolled {
+            padding: 0.6rem 0;
+            box-shadow: 0 5px 20px rgba(15, 126, 230, 0.15);
+        }
+
+        .navbar-brand { 
+            color: var(--primary) !important; 
+            font-weight: 600; 
+            font-size: 1.4rem;
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 12px;
+        }
+
+        .navbar-brand::before {
+            content: "";
+            display: block;
+            width: 6px;
+            height: 28px;
+            background: var(--primary);
+            border-radius: 2px;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
         }
 
         .logo-img {
-            height: 45px;
+            height: 50px;
             width: auto;
+            object-fit: contain;
         }
 
-        .logo-area h1 {
-            font-size: 1.35rem;
-            font-weight: 600;
-            color: #0f172a;
-            letter-spacing: -0.025em;
+        /* Segunda barra - Menú */
+        .navbar-menu { 
+            background: var(--primary); 
+            padding: 0.7rem 0;
+            position: sticky;
+            top: 68px;
+            z-index: 999;
         }
 
-        .logo-area span {
-            color: #10b981;
-            font-weight: 700;
+        .navbar-menu .navbar-toggler {
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.25rem 0.5rem;
         }
 
-        .user-menu {
+        .navbar-menu .navbar-toggler-icon {
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+        }
+
+        .navbar-menu .nav-link {
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9) !important;
+            padding: 0.6rem 1.5rem !important;
+            margin: 0 0.1rem;
+            border-radius: 4px;
+            transition: var(--transition);
+            position: relative;
+            font-size: 0.95rem;
+        }
+
+        .navbar-menu .nav-link:hover, 
+        .navbar-menu .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .navbar-menu .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -7px;
+            left: 50%;
+            width: 0;
+            height: 2px;
+            background: white;
+            transition: var(--transition);
+            transform: translateX(-50%);
+        }
+
+        .navbar-menu .nav-link:hover::after, 
+        .navbar-menu .nav-link.active::after {
+            width: 60%;
+        }
+
+        /* Estilo para el botón de Cerrar Sesión en el menú */
+        .navbar-menu .user-info-container {
             display: flex;
             align-items: center;
-            gap: 1.5rem;
+            margin-left: auto;
+            gap: 15px;
         }
 
-        .user-info {
+        .navbar-menu .user-info {
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            background: #f8fafc;
-            padding: 0.5rem 1rem;
-            border-radius: 40px;
-            border: 1px solid #e2e8f0;
+            gap: 10px;
+            color: white;
         }
 
-        .user-avatar {
+        .navbar-menu .user-name {
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .navbar-menu .user-avatar {
             width: 36px;
             height: 36px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            color: white;
+            background: rgba(255, 255, 255, 0.2);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 600;
-            font-size: 1rem;
-            box-shadow: 0 2px 4px rgba(16,185,129,0.3);
+            font-size: 1.1rem;
+            color: white;
+            border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
-        .user-details {
-            line-height: 1.4;
+        .navbar-menu .logout-form {
+            margin: 0;
         }
 
-        .user-name {
-            font-weight: 600;
-            font-size: 0.9rem;
-            color: #0f172a;
-        }
-
-        .user-role {
-            font-size: 0.75rem;
-            color: #64748b;
+        .navbar-menu .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-weight: 500;
+            transition: var(--transition);
             display: flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 8px;
+            font-size: 0.9rem;
         }
 
-        .user-role i {
-            font-size: 0.7rem;
-            color: #10b981;
-        }
-
-        .logout-btn {
-            background: none;
-            border: 1px solid #e2e8f0;
-            color: #64748b;
-            padding: 0.5rem 1.25rem;
-            border-radius: 40px;
-            cursor: pointer;
-            font-size: 0.85rem;
-            font-weight: 500;
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .logout-btn:hover {
-            background: #fef2f2;
-            border-color: #ef4444;
-            color: #ef4444;
+        .navbar-menu .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.6);
         }
 
         /* Contenido principal */
-        .main-content {
-            margin-top: 80px;
-            padding: 2rem 2rem 3rem;
+        .main-content { 
+            padding: 30px 20px;
+            min-height: calc(100vh - 140px);
+            background: #f8fafc;
         }
 
-        .container {
-            max-width: 1280px;
-            margin: 0 auto;
-        }
-
-        /* Cabecera de página */
-        .page-header {
-            margin-bottom: 2rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .page-header h2 {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: #0f172a;
-            letter-spacing: -0.025em;
-            margin-bottom: 0.25rem;
-        }
-
-        .page-header p {
-            color: #64748b;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .page-header p i {
-            color: #10b981;
-            font-size: 0.9rem;
-        }
-
-        .date-badge {
-            background: white;
-            border: 1px solid #e2e8f0;
-            border-radius: 40px;
-            padding: 0.5rem 1.25rem;
-            font-size: 0.85rem;
-            color: #64748b;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .date-badge i {
-            color: #10b981;
-        }
-
-        /* Tarjetas de bienvenida y perfil */
-        .welcome-card {
-            background: white;
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
-            margin-bottom: 2rem;
-            display: flex;
-            align-items: center;
-            gap: 1.5rem;
-        }
-
-        .welcome-avatar {
-            width: 70px;
-            height: 70px;
-            background: linear-gradient(135deg, #10b981 0%, #059669 100%);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-size: 2rem;
-        }
-
-        .welcome-content h3 {
-            font-size: 1.3rem;
+        h1, h2, h3, h4, h5, h6 {
             font-weight: 600;
-            margin-bottom: 0.25rem;
+            line-height: 1.3;
         }
 
-        .welcome-content p {
-            color: #64748b;
-            margin-bottom: 0.5rem;
+        h1 { font-size: var(--font-size-h1); }
+        h2 { font-size: var(--font-size-h2); }
+        h3 { font-size: var(--font-size-h3); }
+        h4 { font-size: var(--font-size-h4); }
+
+        h2 { 
+            color: var(--primary);
+            margin-bottom: 1.5rem; 
+            padding-bottom: 0.8rem;
+            position: relative;
+        }
+
+        h2::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--primary);
+        }
+
+        /* Tarjetas y secciones */
+        .welcome-section {
+            background: white;
+            border-radius: 6px;
+            padding: 2.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
+        }
+
+        .welcome-title {
+            color: var(--primary);
+            font-weight: 600;
+            margin-bottom: 1.2rem;
+            font-size: var(--font-size-h2);
         }
 
         .profile-badge {
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            background: #ecfdf5;
-            color: #065f46;
-            padding: 0.35rem 1rem;
+            background: #e8f0fe;
+            color: var(--primary);
+            padding: 0.5rem 1.2rem;
             border-radius: 40px;
-            font-size: 0.85rem;
+            font-size: 0.95rem;
             font-weight: 500;
-            border: 1px solid #a7f3d0;
-        }
-
-        .profile-badge i {
-            font-size: 0.8rem;
+            border: 1px solid rgba(7, 68, 182, 0.2);
+            margin-top: 1rem;
         }
 
         /* Grid de estadísticas */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 1rem;
+            gap: 1.5rem;
             margin-bottom: 2rem;
         }
 
-        .stat-card {
+        .stats-card {
             background: white;
-            border-radius: 16px;
-            padding: 1.25rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 1.8rem 1.5rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
             display: flex;
             align-items: center;
-            gap: 1rem;
+            gap: 1.2rem;
+            transition: var(--transition);
         }
 
-        .stat-icon {
-            width: 50px;
-            height: 50px;
-            background: #ecfdf5;
-            border-radius: 12px;
+        .stats-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 25px rgba(7, 68, 182, 0.12);
+        }
+
+        .stats-icon {
+            width: 60px;
+            height: 60px;
+            background: #e8f0fe;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #10b981;
-            font-size: 1.5rem;
+            color: var(--primary);
+            font-size: 1.8rem;
         }
 
-        .stat-content h4 {
-            font-size: 0.8rem;
+        .stats-content h4 {
+            font-size: 0.9rem;
             font-weight: 600;
-            color: #64748b;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.3rem;
         }
 
-        .stat-content .number {
-            font-size: 1.5rem;
+        .stats-number {
+            font-size: 2rem;
             font-weight: 700;
-            color: #0f172a;
+            color: #333;
         }
 
         /* Tarjeta de perfil */
         .profile-card {
             background: white;
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 2rem;
             margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
         }
 
         .card-header {
@@ -305,47 +323,42 @@
             align-items: center;
             margin-bottom: 1.5rem;
             padding-bottom: 1rem;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .card-header h3 {
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: var(--font-size-h4);
+            color: var(--primary);
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
-        .card-header h3 i {
-            color: #10b981;
-        }
-
         .edit-btn {
-            background: none;
-            border: 1px solid #e2e8f0;
-            color: #64748b;
-            padding: 0.4rem 1rem;
-            border-radius: 30px;
-            font-size: 0.8rem;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
+            padding: 0.5rem 1.2rem;
+            border-radius: 6px;
             font-weight: 500;
-            cursor: pointer;
-            transition: all 0.2s;
+            transition: var(--transition);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
-            gap: 0.4rem;
+            gap: 0.5rem;
+            font-size: 0.95rem;
         }
 
         .edit-btn:hover {
-            background: #f8fafc;
-            color: #10b981;
-            border-color: #10b981;
+            background: rgba(7, 68, 182, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(7, 68, 182, 0.15);
         }
 
         .info-grid {
             display: grid;
             grid-template-columns: repeat(3, 1fr);
-            gap: 1.5rem;
+            gap: 1.8rem;
         }
 
         .info-item {
@@ -354,26 +367,27 @@
         }
 
         .info-label {
-            font-size: 0.7rem;
-            color: #64748b;
+            font-size: 0.8rem;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            margin-bottom: 0.25rem;
+            margin-bottom: 0.4rem;
         }
 
         .info-value {
             font-weight: 500;
-            color: #0f172a;
-            font-size: 0.95rem;
+            color: #333;
+            font-size: 1rem;
         }
 
-        /* Tabla de documentos */
+        /* Sección de documentos */
         .documents-section {
             background: white;
-            border-radius: 20px;
-            padding: 1.5rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
         }
 
         .section-header {
@@ -383,68 +397,44 @@
             margin-bottom: 1.5rem;
         }
 
-        .btn-primary {
-            background: #10b981;
-            color: white;
-            border: none;
-            padding: 0.6rem 1.5rem;
-            border-radius: 30px;
-            font-weight: 500;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 0.5rem;
-            text-decoration: none;
-            box-shadow: 0 4px 6px -1px rgba(16,185,129,0.2);
-        }
-
-        .btn-primary:hover {
-            background: #059669;
-            transform: translateY(-1px);
-            box-shadow: 0 10px 15px -3px rgba(16,185,129,0.3);
-        }
-
         .btn-outline {
-            background: white;
-            color: #10b981;
-            border: 1px solid #10b981;
+            background: transparent;
+            border: 2px solid var(--primary);
+            color: var(--primary);
             padding: 0.6rem 1.5rem;
-            border-radius: 30px;
+            border-radius: 6px;
             font-weight: 500;
-            font-size: 0.9rem;
-            cursor: pointer;
-            transition: all 0.2s;
+            transition: var(--transition);
+            text-decoration: none;
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
-            text-decoration: none;
         }
 
         .btn-outline:hover {
-            background: #ecfdf5;
+            background: rgba(7, 68, 182, 0.05);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(7, 68, 182, 0.15);
         }
 
         .documents-table {
             width: 100%;
-            border-collapse: collapse;
         }
 
         .documents-table th {
             text-align: left;
             padding: 1rem 0.5rem;
-            color: #64748b;
+            color: var(--text-muted);
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.85rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .documents-table td {
             padding: 1rem 0.5rem;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 1px solid var(--border-color);
         }
 
         .document-name {
@@ -454,104 +444,119 @@
         }
 
         .document-name i {
-            width: 30px;
-            height: 30px;
-            background: #f1f5f9;
-            border-radius: 8px;
+            width: 35px;
+            height: 35px;
+            background: #e8f0fe;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: #10b981;
+            color: var(--primary);
         }
 
         .badge {
-            padding: 0.25rem 0.75rem;
-            border-radius: 30px;
-            font-size: 0.75rem;
+            padding: 0.4rem 1rem;
+            border-radius: 4px;
+            font-size: 0.85rem;
             font-weight: 500;
             display: inline-flex;
             align-items: center;
-            gap: 0.25rem;
+            gap: 0.4rem;
         }
 
         .badge-success {
-            background: #d1fae5;
-            color: #065f46;
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
         }
 
         .badge-warning {
-            background: #fed7aa;
-            color: #9a3412;
+            background: #fff3cd;
+            color: #856404;
+            border: 1px solid #ffeeba;
         }
 
         .badge-danger {
-            background: #fee2e2;
-            color: #991b1b;
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
         }
 
         .badge-secondary {
-            background: #f1f5f9;
-            color: #475569;
+            background: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
         }
 
         .action-btn {
             background: none;
             border: none;
-            color: #10b981;
+            color: var(--primary);
             cursor: pointer;
             font-size: 1rem;
-            padding: 0.25rem;
-            transition: color 0.2s;
+            padding: 0.3rem 0.5rem;
+            transition: var(--transition);
         }
 
         .action-btn:hover {
-            color: #059669;
+            color: #052d7a;
+            transform: scale(1.1);
         }
 
+        /* Alertas */
         .alert {
-            padding: 1rem;
-            border-radius: 12px;
+            padding: 1.2rem;
+            border-radius: 6px;
             margin-bottom: 1.5rem;
             display: flex;
             align-items: center;
             gap: 0.75rem;
+            border: 1px solid;
         }
 
         .alert-success {
-            background: #d1fae5;
-            border: 1px solid #a7f3d0;
-            color: #065f46;
+            background: #d4edda;
+            border-color: #c3e6cb;
+            color: #155724;
         }
 
         .alert-info {
-            background: #dbeafe;
-            border: 1px solid #bfdbfe;
-            color: #1e40af;
+            background: #d1ecf1;
+            border-color: #bee5eb;
+            color: #0c5460;
         }
 
         .alert-warning {
-            background: #fed7aa;
-            border: 1px solid #fdba74;
-            color: #9a3412;
+            background: #fff3cd;
+            border-color: #ffeeba;
+            color: #856404;
         }
 
         /* Actividades recientes */
         .activities-section {
-            margin-top: 2rem;
+            background: white;
+            border-radius: 6px;
+            padding: 2rem;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--card-shadow);
         }
 
         .activity-item {
             display: flex;
             align-items: center;
             gap: 1rem;
-            padding: 1rem;
-            border-bottom: 1px solid #e2e8f0;
+            padding: 1rem 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .activity-item:last-child {
+            border-bottom: none;
         }
 
         .activity-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
+            width: 45px;
+            height: 45px;
+            border-radius: 6px;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -559,18 +564,18 @@
         }
 
         .activity-icon.success {
-            background: #d1fae5;
-            color: #065f46;
+            background: #d4edda;
+            color: #155724;
         }
 
         .activity-icon.warning {
-            background: #fed7aa;
-            color: #9a3412;
+            background: #fff3cd;
+            color: #856404;
         }
 
         .activity-icon.info {
-            background: #dbeafe;
-            color: #1e40af;
+            background: #d1ecf1;
+            color: #0c5460;
         }
 
         .activity-content {
@@ -583,13 +588,25 @@
         }
 
         .activity-desc {
-            font-size: 0.85rem;
-            color: #64748b;
+            font-size: 0.9rem;
+            color: var(--text-muted);
         }
 
         .activity-time {
-            font-size: 0.75rem;
-            color: #94a3b8;
+            font-size: 0.85rem;
+            color: #95a5a6;
+        }
+
+        .date-badge {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            padding: 0.7rem 1.5rem;
+            font-size: 0.95rem;
+            color: var(--text-muted);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
         /* Responsive */
@@ -604,349 +621,376 @@
         }
 
         @media (max-width: 768px) {
-            .header {
-                padding: 0.75rem 1rem;
+            :root {
+                --font-size-base: 1rem;
+                --font-size-h1: 1.9rem;
+                --font-size-h2: 1.6rem;
+                --font-size-h3: 1.4rem;
+                --font-size-h4: 1.2rem;
+            }
+            
+            .navbar-menu {
+                top: 60px;
+            }
+            
+            .navbar-menu .nav-link {
+                padding: 0.6rem 1.2rem !important;
+            }
+            
+            .navbar-menu .user-info-container {
                 flex-direction: column;
-                gap: 0.75rem;
-            }
-
-            .user-menu {
-                width: 100%;
-                justify-content: space-between;
-            }
-
-            .main-content {
-                padding: 1rem;
-                margin-top: 120px;
-            }
-
-            .page-header {
-                flex-direction: column;
+                gap: 10px;
                 align-items: flex-start;
-                gap: 1rem;
+                margin-top: 10px;
+                padding-top: 10px;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
             }
-
+            
+            .main-content {
+                padding: 20px 15px;
+            }
+            
             .stats-grid {
                 grid-template-columns: 1fr;
             }
-
+            
             .info-grid {
                 grid-template-columns: 1fr;
             }
-
-            .welcome-card {
-                flex-direction: column;
-                text-align: center;
-            }
-
+            
             .section-header {
                 flex-direction: column;
                 gap: 1rem;
                 align-items: flex-start;
             }
-
-            .documents-table {
-                font-size: 0.9rem;
+            
+            .logo-img {
+                height: 45px;
             }
         }
     </style>
 </head>
 <body>
-    <!-- Header -->
-    <header class="header">
-        <div class="logo-area">
-            <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img">
-            <h1>GEPROC <span>| Administrativos</span></h1>
-        </div>
-
-        <div class="user-menu">
-            <div class="user-info">
-                <div class="user-avatar">
-                    {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
-                </div>
-                <div class="user-details">
-                    <div class="user-name">{{ Auth::user()->name }}</div>
-                    <div class="user-role">
-                        <i class="fas fa-circle"></i>
-                        Administrativo
-                    </div>
-                </div>
-            </div>
-
-            <form method="POST" action="{{ route('logout') }}">
-                @csrf
-                <button type="submit" class="logout-btn">
-                    <i class="fas fa-sign-out-alt"></i>
-                    <span>Salir</span>
-                </button>
-            </form>
-        </div>
-    </header>
-
-    <!-- Contenido principal -->
-    <main class="main-content">
+    <!-- Primera barra - Logo y título -->
+    <nav class="navbar navbar-expand-lg navbar-top">
         <div class="container">
-            <!-- Cabecera con fecha -->
-            <div class="page-header">
-                <div>
-                    <h2>Panel Administrativo</h2>
-                    <p>
-                        <i class="fas fa-user-cog"></i>
-                        Gestiona tu información y documentos personales
-                    </p>
-                </div>
-                <div class="date-badge">
-                    <i class="fas fa-calendar-alt"></i>
-                    {{ now()->format('d F, Y') }}
-                </div>
+            <div class="logo-container">
+                <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo" class="logo-img">
+                <a class="navbar-brand" href="{{ route('dashboard') }}">
+                    GEPROC | Administrativos
+                </a>
             </div>
-
-            <!-- Alertas -->
-            @if(session('success'))
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle"></i>
-                    {{ session('success') }}
-                </div>
-            @endif
-
-            @if(session('info'))
-                <div class="alert alert-info">
-                    <i class="fas fa-info-circle"></i>
-                    {{ session('info') }}
-                </div>
-            @endif
-
-            @if(session('warning'))
-                <div class="alert alert-warning">
-                    <i class="fas fa-exclamation-triangle"></i>
-                    {{ session('warning') }}
-                </div>
-            @endif
-
-            <!-- Tarjeta de bienvenida con información del perfil -->
-            <div class="welcome-card">
-                <div class="welcome-avatar">
-                    <i class="fas fa-user-tie"></i>
-                </div>
-                <div class="welcome-content">
-                    <h3>¡Bienvenido, {{ $administrativo->nombres }}!</h3>
-                    <p>{{ $administrativo->puesto }} • {{ $administrativo->area_adscripcion }}</p>
-                    <span class="profile-badge">
-                        <i class="fas fa-id-card"></i>
-                        N° Empleado: {{ $administrativo->numero_empleado }}
-                    </span>
-                </div>
-            </div>
-
-            <!-- Estadísticas de documentos -->
-            <div class="stats-grid">
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-file-pdf"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h4>Documentos Requeridos</h4>
-                        <div class="number">{{ $estadisticas['total_requeridos'] }}</div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-cloud-upload-alt"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h4>Documentos Subidos</h4>
-                        <div class="number">{{ $estadisticas['total_subidos'] }}</div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-check-circle"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h4>Aprobados</h4>
-                        <div class="number">{{ $estadisticas['aprobados'] }}</div>
-                    </div>
-                </div>
-
-                <div class="stat-card">
-                    <div class="stat-icon">
-                        <i class="fas fa-hourglass-half"></i>
-                    </div>
-                    <div class="stat-content">
-                        <h4>Pendientes</h4>
-                        <div class="number">{{ $estadisticas['pendientes'] }}</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Información del Perfil -->
-            <div class="profile-card">
-                <div class="card-header">
-                    <h3>
-                        <i class="fas fa-id-card"></i>
-                        Información Personal
-                    </h3>
-                    <a href="{{ route('administrativos.editar-perfil') }}" class="edit-btn">
-                        <i class="fas fa-edit"></i> Editar Perfil
-                    </a>
-                </div>
-
-                <div class="info-grid">
-                    <div class="info-item">
-                        <span class="info-label">Nombre Completo</span>
-                        <span class="info-value">{{ $administrativo->nombre_completo }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">CURP</span>
-                        <span class="info-value">{{ $administrativo->curp }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">RFC</span>
-                        <span class="info-value">{{ $administrativo->rfc }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Fecha Nacimiento</span>
-                        <span class="info-value">{{ $administrativo->fecha_nacimiento->format('d/m/Y') }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Teléfono</span>
-                        <span class="info-value">{{ $administrativo->telefono }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Email Personal</span>
-                        <span class="info-value">{{ $administrativo->email_personal }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Dirección</span>
-                        <span class="info-value">{{ $administrativo->direccion }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Fecha Ingreso</span>
-                        <span class="info-value">{{ $administrativo->fecha_ingreso->format('d/m/Y') }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">Grado Máximo</span>
-                        <span class="info-value">{{ $administrativo->maximo_grado_estudios ?? 'No especificado' }}</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Documentos -->
-            <div class="documents-section">
-                <div class="section-header">
-                    <h3>
-                        <i class="fas fa-file-pdf"></i>
-                        Documentos Requeridos
-                        <span style="font-size: 0.8rem; color: #64748b; margin-left: 0.5rem;">
-                            ({{ $estadisticas['total_subidos'] }}/{{ $estadisticas['total_requeridos'] }})
-                        </span>
-                    </h3>
-                    <a href="{{ route('administrativos.documentos') }}" class="btn-outline">
-                        <i class="fas fa-arrow-right"></i> Ver Todos
-                    </a>
-                </div>
-
-                <table class="documents-table">
-                    <thead>
-                        <tr>
-                            <th>Documento</th>
-                            <th>Estado</th>
-                            <th>Fecha Subida</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach(array_slice($documentosParaVista, 0, 3) as $documento)
-                            <tr>
-                                <td>
-                                    <div class="document-name">
-                                        <i class="fas fa-{{ $documento['icono'] }}"></i>
-                                        {{ $documento['nombre'] }}
-                                    </div>
-                                </td>
-                                <td>
-                                    @if($documento['estado'] == 'aprobado')
-                                        <span class="badge badge-success">
-                                            <i class="fas fa-check-circle"></i> Aprobado
-                                        </span>
-                                    @elseif($documento['estado'] == 'rechazado')
-                                        <span class="badge badge-danger">
-                                            <i class="fas fa-times-circle"></i> Rechazado
-                                        </span>
-                                    @elseif($documento['estado'] == 'pendiente')
-                                        <span class="badge badge-warning">
-                                            <i class="fas fa-clock"></i> Pendiente
-                                        </span>
-                                    @else
-                                        <span class="badge badge-secondary">
-                                            <i class="fas fa-hourglass"></i> Faltante
-                                        </span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($documento['tiene_documento'])
-                                        {{ $documento['fecha_subida']->format('d/m/Y') }}
-                                    @else
-                                        <span style="color: #94a3b8;">No subido</span>
-                                    @endif
-                                </td>
-                                <td>
-                                    @if($documento['tiene_documento'])
-                                        <a href="{{ route('administrativos.documentos.ver', $documento['documento_id']) }}" target="_blank" class="action-btn" title="Ver documento">
-                                            <i class="fas fa-eye"></i>
-                                        </a>
-                                        <a href="{{ route('administrativos.documentos.descargar', $documento['documento_id']) }}" class="action-btn" title="Descargar">
-                                            <i class="fas fa-download"></i>
-                                        </a>
-                                    @else
-                                        <span style="color: #94a3b8;">-</span>
-                                    @endif
-                                </td>
-                            </tr>
-                        @endforeach
-                    </tbody>
-                </table>
-
-                @if(count($documentosParaVista) > 3)
-                    <div style="text-align: center; margin-top: 1rem;">
-                        <a href="{{ route('administrativos.documentos') }}" style="color: #10b981; text-decoration: none; font-size: 0.9rem;">
-                            Ver todos los documentos ({{ count($documentosParaVista) - 3 }} más)
-                        </a>
-                    </div>
-                @endif
-            </div>
-
-            <!-- Actividades Recientes -->
-            @if(isset($actividadesRecientes) && count($actividadesRecientes) > 0)
-                <div class="activities-section">
-                    <h3 style="margin-bottom: 1rem; font-size: 1rem;">
-                        <i class="fas fa-history" style="color: #10b981; margin-right: 0.5rem;"></i>
-                        Actividades Recientes
-                    </h3>
-
-                    @foreach($actividadesRecientes as $actividad)
-                        <div class="activity-item">
-                            <div class="activity-icon {{ $actividad['tipo'] }}">
-                                @if($actividad['tipo'] == 'aprobado')
-                                    <i class="fas fa-check-circle"></i>
-                                @elseif($actividad['tipo'] == 'rechazado')
-                                    <i class="fas fa-times-circle"></i>
-                                @else
-                                    <i class="fas fa-clock"></i>
-                                @endif
-                            </div>
-                            <div class="activity-content">
-                                <div class="activity-title">{{ $actividad['titulo'] }}</div>
-                                <div class="activity-desc">{{ $actividad['descripcion'] }}</div>
-                            </div>
-                            <div class="activity-time">{{ $actividad['tiempo'] }}</div>
-                        </div>
-                    @endforeach
-                </div>
-            @endif
         </div>
-    </main>
+    </nav>
+
+    <!-- Segunda barra - Menú con información de usuario y cerrar sesión -->
+    <nav class="navbar navbar-expand-lg navbar-menu">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            
+                
+                <!-- Información de usuario y cerrar sesión -->
+                <div class="user-info-container">
+                    <div class="user-info">
+                        <span class="user-name">{{ Auth::user()->name }}</span>
+                        <div class="user-avatar">
+                            {{ strtoupper(substr(Auth::user()->name, 0, 1)) }}
+                        </div>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                        @csrf
+                        <button type="submit" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Contenido principal -->
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12 main-content">
+                <div class="container">
+                    <!-- Cabecera con fecha -->
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2>Panel Administrativo</h2>
+                        <div class="date-badge">
+                            <i class="fas fa-calendar-alt"></i>
+                            {{ now()->format('d F, Y') }}
+                        </div>
+                    </div>
+
+                    <!-- Alertas -->
+                    @if(session('success'))
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i>
+                            {{ session('success') }}
+                        </div>
+                    @endif
+
+                    @if(session('info'))
+                        <div class="alert alert-info">
+                            <i class="fas fa-info-circle"></i>
+                            {{ session('info') }}
+                        </div>
+                    @endif
+
+                    @if(session('warning'))
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {{ session('warning') }}
+                        </div>
+                    @endif
+
+                    <!-- Tarjeta de bienvenida -->
+                    <div class="welcome-section">
+                        <div class="row align-items-center">
+                            <div class="col-md-8">
+                                <h1 class="welcome-title">¡Bienvenido, {{ $administrativo->nombres }}!</h1>
+                                <p class="mb-2" style="font-size: var(--font-size-lg); color: var(--text-muted);">
+                                    {{ $administrativo->puesto }} • {{ $administrativo->area_adscripcion }}
+                                </p>
+                                <span class="profile-badge">
+                                    <i class="fas fa-id-card"></i>
+                                    N° Empleado: {{ $administrativo->numero_empleado }}
+                                </span>
+                            </div>
+                            <div class="col-md-4 text-center">
+                                <i class="fas fa-user-tie" style="font-size: 5rem; color: var(--primary); opacity: 0.7;"></i>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Estadísticas de documentos -->
+                    <div class="stats-grid">
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="fas fa-file-pdf"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h4>Documentos Requeridos</h4>
+                                <div class="stats-number">{{ $estadisticas['total_requeridos'] }}</div>
+                            </div>
+                        </div>
+
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="fas fa-cloud-upload-alt"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h4>Documentos Subidos</h4>
+                                <div class="stats-number">{{ $estadisticas['total_subidos'] }}</div>
+                            </div>
+                        </div>
+
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="fas fa-check-circle"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h4>Aprobados</h4>
+                                <div class="stats-number">{{ $estadisticas['aprobados'] }}</div>
+                            </div>
+                        </div>
+
+                        <div class="stats-card">
+                            <div class="stats-icon">
+                                <i class="fas fa-hourglass-half"></i>
+                            </div>
+                            <div class="stats-content">
+                                <h4>Pendientes</h4>
+                                <div class="stats-number">{{ $estadisticas['pendientes'] }}</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Información del Perfil -->
+                    <div class="profile-card">
+                        <div class="card-header">
+                            <h3>
+                                <i class="fas fa-id-card"></i>
+                                Información Personal
+                            </h3>
+                            <a href="{{ route('administrativos.editar-perfil') }}" class="edit-btn">
+                                <i class="fas fa-edit"></i> Editar Perfil
+                            </a>
+                        </div>
+
+                        <div class="info-grid">
+                            <div class="info-item">
+                                <span class="info-label">Nombre Completo</span>
+                                <span class="info-value">{{ $administrativo->nombre_completo }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">CURP</span>
+                                <span class="info-value">{{ $administrativo->curp }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">RFC</span>
+                                <span class="info-value">{{ $administrativo->rfc }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Fecha Nacimiento</span>
+                                <span class="info-value">{{ $administrativo->fecha_nacimiento->format('d/m/Y') }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Teléfono</span>
+                                <span class="info-value">{{ $administrativo->telefono }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Email Personal</span>
+                                <span class="info-value">{{ $administrativo->email_personal }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Dirección</span>
+                                <span class="info-value">{{ $administrativo->direccion }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Fecha Ingreso</span>
+                                <span class="info-value">{{ $administrativo->fecha_ingreso->format('d/m/Y') }}</span>
+                            </div>
+                            <div class="info-item">
+                                <span class="info-label">Grado Máximo</span>
+                                <span class="info-value">{{ $administrativo->maximo_grado_estudios ?? 'No especificado' }}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Documentos -->
+                    <div class="documents-section">
+                        <div class="section-header">
+                            <h3>
+                                <i class="fas fa-file-pdf"></i>
+                                Documentos Requeridos
+                                <span style="font-size: 0.9rem; color: var(--text-muted); margin-left: 0.5rem;">
+                                    ({{ $estadisticas['total_subidos'] }}/{{ $estadisticas['total_requeridos'] }})
+                                </span>
+                            </h3>
+                            <a href="{{ route('administrativos.documentos') }}" class="btn-outline">
+                                <i class="fas fa-arrow-right"></i> Ver Todos
+                            </a>
+                        </div>
+
+                        <table class="documents-table">
+                            <thead>
+                                <tr>
+                                    <th>Documento</th>
+                                    <th>Estado</th>
+                                    <th>Fecha Subida</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach(array_slice($documentosParaVista, 0, 3) as $documento)
+                                    <tr>
+                                        <td>
+                                            <div class="document-name">
+                                                <i class="fas fa-{{ $documento['icono'] }}"></i>
+                                                {{ $documento['nombre'] }}
+                                            </div>
+                                        </td>
+                                        <td>
+                                            @if($documento['estado'] == 'aprobado')
+                                                <span class="badge badge-success">
+                                                    <i class="fas fa-check-circle"></i> Aprobado
+                                                </span>
+                                            @elseif($documento['estado'] == 'rechazado')
+                                                <span class="badge badge-danger">
+                                                    <i class="fas fa-times-circle"></i> Rechazado
+                                                </span>
+                                            @elseif($documento['estado'] == 'pendiente')
+                                                <span class="badge badge-warning">
+                                                    <i class="fas fa-clock"></i> Pendiente
+                                                </span>
+                                            @else
+                                                <span class="badge badge-secondary">
+                                                    <i class="fas fa-hourglass"></i> Faltante
+                                                </span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($documento['tiene_documento'])
+                                                {{ $documento['fecha_subida']->format('d/m/Y') }}
+                                            @else
+                                                <span style="color: #95a5a6;">No subido</span>
+                                            @endif
+                                        </td>
+                                        <td>
+                                            @if($documento['tiene_documento'])
+                                                <a href="{{ route('administrativos.documentos.ver', $documento['documento_id']) }}" target="_blank" class="action-btn" title="Ver documento">
+                                                    <i class="fas fa-eye"></i>
+                                                </a>
+                                                <a href="{{ route('administrativos.documentos.descargar', $documento['documento_id']) }}" class="action-btn" title="Descargar">
+                                                    <i class="fas fa-download"></i>
+                                                </a>
+                                            @else
+                                                <span style="color: #95a5a6;">-</span>
+                                            @endif
+                                        </td>
+                                    </tr>
+                                @endforeach
+                            </tbody>
+                        </table>
+
+                        @if(count($documentosParaVista) > 3)
+                            <div style="text-align: center; margin-top: 1.5rem;">
+                                <a href="{{ route('administrativos.documentos') }}" style="color: var(--primary); text-decoration: none; font-weight: 500;">
+                                    Ver todos los documentos ({{ count($documentosParaVista) - 3 }} más)
+                                </a>
+                            </div>
+                        @endif
+                    </div>
+
+                    <!-- Actividades Recientes -->
+                    @if(isset($actividadesRecientes) && count($actividadesRecientes) > 0)
+                        <div class="activities-section">
+                            <h3 style="margin-bottom: 1.5rem; font-size: var(--font-size-h4); color: var(--primary);">
+                                <i class="fas fa-history" style="margin-right: 0.5rem;"></i>
+                                Actividades Recientes
+                            </h3>
+
+                            @foreach($actividadesRecientes as $actividad)
+                                <div class="activity-item">
+                                    <div class="activity-icon {{ $actividad['tipo'] }}">
+                                        @if($actividad['tipo'] == 'aprobado')
+                                            <i class="fas fa-check-circle"></i>
+                                        @elseif($actividad['tipo'] == 'rechazado')
+                                            <i class="fas fa-times-circle"></i>
+                                        @else
+                                            <i class="fas fa-clock"></i>
+                                        @endif
+                                    </div>
+                                    <div class="activity-content">
+                                        <div class="activity-title">{{ $actividad['titulo'] }}</div>
+                                        <div class="activity-desc">{{ $actividad['descripcion'] }}</div>
+                                    </div>
+                                    <div class="activity-time">{{ $actividad['tiempo'] }}</div>
+                                </div>
+                            @endforeach
+                        </div>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        (function(){
+            const navbar = document.querySelector('.navbar-top');
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 50) {
+                    navbar.classList.add('scrolled');
+                } else {
+                    navbar.classList.remove('scrolled');
+                }
+            });
+        })();
+    </script>
 </body>
 </html>
