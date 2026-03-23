@@ -15,7 +15,7 @@ class Maestro extends Model
     protected $table = 'maestros';
 
     protected $fillable = [
-    'user_id','coordinaciones_id', 'nombres', 'apellido_paterno', 'apellido_materno',
+    'user_id','coordinaciones_id', 'plantilla', 'nombres', 'apellido_paterno', 'apellido_materno',
     'maximo_grado_academico', 'fecha_nacimiento', 'edad',   'activo', 'sexo', 'estado_civil',
     'telefono', 'email', 'direccion', 'rfc', 'curp', 'anio_ingreso'
 ];
@@ -229,6 +229,52 @@ public function documentosActuales()
 {
     return $this->belongsTo(User::class, 'user_id');
 
+}
+/**
+ * Las opciones de plantilla disponibles
+ */
+public static function getOpcionesPlantilla(): array
+{
+    return [
+        'SEGEM' => 'SEGEM',
+        'UAMEX' => 'UAMEX',
+        'SEP' => 'SEP',
+        'IUFIM' => 'IUFIM'
+    ];
+}
+
+/**
+ * Accesor para obtener el nombre de la plantilla con formato
+ */
+public function getPlantillaFormateadaAttribute(): string
+{
+    $plantilla = $this->plantilla;
+    
+    if (!$plantilla) {
+        return '<span class="badge bg-secondary">No asignada</span>';
+    }
+    
+    $colores = [
+        'SEGEM' => 'primary',
+        'UAMEX' => 'success',
+        'SEP' => 'info',
+        'IUFIM' => 'warning'
+    ];
+    
+    $color = $colores[$plantilla] ?? 'secondary';
+    
+    return '<span class="badge bg-' . $color . '">' . $plantilla . '</span>';
+}
+
+/**
+ * Scope para filtrar por plantilla
+ */
+public function scopeDePlantilla($query, $plantilla)
+{
+    if ($plantilla && $plantilla !== 'todos') {
+        return $query->where('plantilla', $plantilla);
+    }
+    return $query;
 }
 }
 

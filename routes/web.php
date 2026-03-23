@@ -220,6 +220,8 @@ Route::post('/mi-perfil/actualizar', [MaestroController::class, 'actualizarMiPer
         return view('profesor.perfil');
     })->name('profesor.mi-perfil');
 
+
+    Route::put('/coordinaciones/{coordinacion}/maestros/{maestro}/plantilla', [App\Http\Controllers\MaestroController::class, 'actualizarPlantilla'])->name('maestros.actualizar-plantilla');
 // SUBIR DOCUMENTOS (desde el dashboard del profesor)
 Route::post('/profesor/subir-documentos', [MaestroController::class, 'subirDocumentos'])
     ->name('profesor.subir-documentos');

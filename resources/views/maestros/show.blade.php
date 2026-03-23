@@ -720,13 +720,6 @@
                     </div>
                     <div class="col-md-9">
                         <h1 class="display-5">{{ $maestro->nombres }} {{ $maestro->apellido_paterno }} {{ $maestro->apellido_materno }}</h1>
-                        <p class="lead mb-2">
-                            <span class="badge badge-coordinacion">{{ $maestro->coordinacion->nombre }}</span>
-                            <span class="badge bg-success">{{ $maestro->maximo_grado_academico }}</span>
-                            <span class="badge bg-info">{{ $maestro->gradosAcademicos->count() }} Grados</span>
-                        </p>
-                        <p class="mb-1"><i class="fas fa-envelope me-2"></i> {{ $maestro->email }}</p>
-                        <p class="mb-0"><i class="fas fa-phone me-2"></i> {{ $maestro->telefono ?? 'No especificado' }}</p>
                     </div>
                 </div>
             </div>

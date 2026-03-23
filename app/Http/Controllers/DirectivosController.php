@@ -14,8 +14,8 @@ class DirectivosController extends Controller
      */
     public function dashboard(Request $request)
     {
-        // Iniciar consulta con relaciones necesarias
-        $query = Maestro::with(['user', 'coordinacion', 'gradosAcademicos']);
+        // Iniciar consulta con relaciones necesarias (AGREGAMOS 'periodos')
+        $query = Maestro::with(['user', 'coordinacion', 'gradosAcademicos', 'periodos']);
         
         // Aplicar filtro por coordinación
         if ($request->filled('coordinacion')) {
@@ -61,7 +61,7 @@ class DirectivosController extends Controller
      */
     public function maestros(Request $request)
     {
-        $query = Maestro::with(['user', 'coordinacion', 'gradosAcademicos']);
+        $query = Maestro::with(['user', 'coordinacion', 'gradosAcademicos', 'periodos']);
         
         // Aplicar filtros
         if ($request->filled('coordinacion')) {
@@ -99,15 +99,18 @@ class DirectivosController extends Controller
      */
     public function verMaestro($id)
     {
-        $maestro = Maestro::with(['user', 'coordinacion', 'gradosAcademicos', 'documentos'])
+        $maestro = Maestro::with(['user', 'coordinacion', 'gradosAcademicos', 'documentos', 'periodos'])
             ->findOrFail($id);
+        
+        // Calcular antigüedad
+        $antiguedad = $this->calcularAntiguedadTotal($maestro);
         
         // Si es petición AJAX, devolver solo el contenido
         if (request()->ajax()) {
-            return view('directivos.partials.maestro-detalle', compact('maestro'));
+            return view('directivos.partials.maestro-detalle', compact('maestro', 'antiguedad'));
         }
         
-        return view('directivos.ver-maestro', compact('maestro'));
+        return view('directivos.ver-maestro', compact('maestro', 'antiguedad'));
     }
 
     /**
@@ -118,5 +121,54 @@ class DirectivosController extends Controller
         // Por ahora solo redirige al dashboard con mensaje
         return redirect()->route('directivos.dashboard')
             ->with('info', 'Módulo de antigüedad en desarrollo. Próximamente disponible.');
+    }
+
+    // =============================================
+    // FUNCIONES DE CÁLCULO DE ANTIGÜEDAD (AGREGADAS)
+    // =============================================
+
+    /**
+     * Calcular antigüedad total de un maestro
+     */
+    private function calcularAntiguedadTotal($maestro)
+    {
+        $anioIngreso = $maestro->anio_ingreso;
+
+        if (!$anioIngreso) {
+            return [
+                'anios' => 0,
+                'meses' => 0,
+                'total_meses' => 0
+            ];
+        }
+
+        // Sumar SOLO los meses trabajados registrados en periodos
+        $totalMesesTrabajados = 0;
+
+        foreach ($maestro->periodos as $periodo) {
+            $mesesPeriodo = json_decode($periodo->pivot->meses_trabajados, true) ?? [];
+            $totalMesesTrabajados += count($mesesPeriodo);
+        }
+
+        // Calcular años y meses basado SOLO en meses trabajados
+        $aniosTotales = floor($totalMesesTrabajados / 12);
+        $mesesRestantes = $totalMesesTrabajados % 12;
+
+        return [
+            'anio_ingreso' => $anioIngreso,
+            'total_meses' => $totalMesesTrabajados,
+            'anios' => $aniosTotales,
+            'meses' => $mesesRestantes
+        ];
+    }
+
+    /**
+     * Obtener el último período calculado de un maestro
+     */
+    private function obtenerUltimoPeriodo($maestro)
+    {
+        return $maestro->periodos()
+            ->orderBy('pivot_created_at', 'desc')
+            ->first();
     }
 }

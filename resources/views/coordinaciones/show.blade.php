@@ -11,6 +11,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- DataTables CSS -->
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.13.6/css/dataTables.bootstrap5.min.css">
+    <!-- Select2 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/select2-bootstrap-5-theme@1.3.0/dist/select2-bootstrap-5-theme.min.css" rel="stylesheet" />
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
     
@@ -471,8 +474,8 @@
             box-shadow: 0 2px 5px rgba(0,0,0,0.1);
         }
 
-        /* Botones de acción */
-        .btn-actions {
+        /* Botones de acción MEJORADOS - dropdown no afecta tabla */
+        .btn-actions-modern {
             background: transparent;
             border: 1px solid var(--border-color);
             color: var(--text-muted);
@@ -487,7 +490,7 @@
             transition: var(--transition);
         }
 
-        .btn-actions:hover {
+        .btn-actions-modern:hover {
             background: var(--light-bg);
             border-color: var(--primary);
             color: var(--primary);
@@ -647,6 +650,86 @@
             margin: 1rem 0;
         }
 
+        /* Estilos para el selector de plantilla */
+        .plantilla-selector {
+            min-width: 120px;
+            font-size: 0.8rem;
+            padding: 2px 4px;
+        }
+        
+        .plantilla-badge {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        
+        .plantilla-badge:hover {
+            opacity: 0.8;
+            transform: scale(1.05);
+        }
+        
+        .plantilla-editing {
+            padding: 0 !important;
+        }
+        
+        .plantilla-editing select {
+            border: 1px solid var(--primary);
+            border-radius: 4px;
+            padding: 4px 8px;
+            font-size: 0.8rem;
+            width: 100%;
+        }
+        
+        .toast-notification {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            z-index: 9999;
+            min-width: 250px;
+        }
+
+        /* Estilo para badge de documentos activos */
+        .badge-documentos-activo {
+            background-color: #ffc107;
+            color: #212529;
+            font-size: 0.7rem;
+            padding: 3px 8px;
+            border-radius: 12px;
+            margin-left: 5px;
+            font-weight: 500;
+            display: inline-block;
+            animation: softPulse 2s infinite;
+        }
+
+        @keyframes softPulse {
+            0% { opacity: 1; }
+            50% { opacity: 0.8; }
+            100% { opacity: 1; }
+        }
+
+        /* Ícono de expediente */
+        .btn-expediente {
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--primary);
+            width: 34px;
+            height: 34px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 5px;
+            padding: 0;
+            font-size: 0.9rem;
+            transition: var(--transition);
+            margin: 0 2px;
+        }
+
+        .btn-expediente:hover {
+            background: var(--light-bg);
+            border-color: var(--primary);
+            color: var(--primary);
+            transform: translateY(-2px);
+        }
+
         /* Responsive */
         @media (max-width: 768px) {
             .container-fluid {
@@ -777,30 +860,34 @@
             <!-- Resumen estadístico - estilo compacto -->
             <div class="resumen-alert">
                 <div class="row text-center">
-                    <div class="col-md-4 border-end">
+                    <div class="col-md-3 border-end">
                         <small class="text-muted d-block">Total</small>
                         <strong id="totalCount" class="badge bg-primary">{{ $maestros->count() }}</strong>
                     </div> 
-                    <div class="col-md-4 border-end">
+                    <div class="col-md-3 border-end">
                         <small class="text-muted d-block">Activos</small>
                         <strong id="activeCount" class="badge bg-success">{{ $maestros->where('activo', true)->count() }}</strong>
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3 border-end">
                         <small class="text-muted d-block">Inactivos</small>
                         <strong id="inactiveCount" class="badge bg-danger">{{ $maestros->where('activo', false)->count() }}</strong>
+                    </div>
+                    <div class="col-md-3">
+                        <small class="text-muted d-block">Con Plantilla</small>
+                        <strong id="plantillaCount" class="badge bg-info">{{ $maestros->whereNotNull('plantilla')->count() }}</strong>
                     </div>
                 </div>
             </div>
             
-            <!-- NOTA SOBRE CAMBIO DE ESTADO -->
+            <!-- NOTA SOBRE CAMBIO DE ESTADO Y PLANTILLA -->
             <div class="alert alert-light border mb-3">
                 <div class="d-flex align-items-center">
                     <i class="fas fa-info-circle text-primary me-2"></i>
                     <div>
                         <small class="text-muted">
-                            <strong>Nota:</strong> Puede cambiar el estado de cualquier docente haciendo clic en el botón 
-                            <span class="badge bg-success">Activo</span> o <span class="badge bg-danger">Inactivo</span>. 
-                            El cambio se reflejará inmediatamente en el sistema.
+                            <strong>Nota:</strong> Puede cambiar el estado del docente haciendo clic en el botón 
+                            <span class="badge bg-success">Activo</span> o <span class="badge bg-danger">Inactivo</span>.
+                            Para cambiar la plantilla, haga clic directamente sobre el badge de plantilla y seleccione una opción.
                         </small>
                     </div>
                 </div>
@@ -825,11 +912,13 @@
                             <thead>
                                 <tr>
                                     <th width="4%">#</th>
-                                    <th width="15%">Nombre Completo</th>
-                                    <th width="8%">Género</th>
-                                    <th width="12%">Grado Académico</th>
-                                    <th width="10%">Teléfono</th>
-                                    <th width="10%">Estado</th>
+                                    <th width="14%">Nombre Completo</th>
+                                    <th width="7%">Género</th>
+                                    <th width="11%">Grado Académico</th>
+                                    <th width="9%">Teléfono</th>
+                                    <th width="9%">Estado</th>
+                                    <th width="10%">Plantilla</th>
+                                    <th width="8%">Expediente</th> <!-- NUEVA COLUMNA -->
                                     <th width="8%" class="text-end">Acciones</th>
                                 </tr>
                             </thead>
@@ -842,11 +931,17 @@
                                     data-telefono="{{ $maestro->telefono }}"
                                     data-grado="{{ $maestro->maximo_grado_academico }}"
                                     data-genero="{{ $maestro->sexo }}"
-                                    data-activo="{{ $maestro->activo }}">
+                                    data-activo="{{ $maestro->activo }}"
+                                    data-plantilla="{{ $maestro->plantilla }}">
                                     <td class="row-index">{{ $index + 1 }}</td>
                                     <td>
                                         <div class="maestro-info">
                                             <div class="maestro-nombre">{{ $maestro->nombres }} {{ $maestro->apellido_paterno }} {{ $maestro->apellido_materno }}</div>
+                                            @if($maestro->procesoDocumentos && $maestro->procesoDocumentos->activo)
+                                                <span class="badge-documentos-activo">
+                                                    <i class="fas fa-file-upload me-1"></i>Nuevo Ingreso
+                                                </span>
+                                            @endif
                                         </div>
                                     </td>
                                     <td>
@@ -889,53 +984,69 @@
                                             {{ $estaActivo ? 'Activo' : 'Inactivo' }}
                                         </button>
                                     </td>
+                                    <td class="plantilla-cell" data-maestro-id="{{ $maestro->id }}">
+                                        @if($maestro->plantilla)
+                                            @php
+                                                $coloresPlantilla = [
+                                                    'SEGEM' => 'primary',
+                                                    'UAMEX' => 'success',
+                                                    'SEP' => 'info',
+                                                    'IUFIM' => 'warning'
+                                                ];
+                                                $colorPlantilla = $coloresPlantilla[$maestro->plantilla] ?? 'secondary';
+                                            @endphp
+                                            <span class="badge bg-{{ $colorPlantilla }} plantilla-badge" 
+                                                  data-plantilla="{{ $maestro->plantilla }}"
+                                                  onclick="editarPlantilla({{ $maestro->id }}, '{{ $maestro->plantilla }}')">
+                                                {{ $maestro->plantilla }}
+                                                <i class="fas fa-pencil-alt ms-1" style="font-size: 0.7rem;"></i>
+                                            </span>
+                                        @else
+                                            <span class="badge bg-secondary plantilla-badge" 
+                                                  onclick="editarPlantilla({{ $maestro->id }}, '')">
+                                                No asignada
+                                                <i class="fas fa-plus ms-1" style="font-size: 0.7rem;"></i>
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        <!-- EXPEDIENTE: Ícono de ojo -->
+                                        <a href="{{ route('maestros.show', $maestro->id) }}" 
+                                           class="btn-expediente" 
+                                           title="Ver expediente completo">
+                                            <i class="fas fa-eye"></i>
+                                        </a>
+                                    </td>
                                     <td class="text-end">
-    <!-- Botón de acciones con dropdown -->
-    <div class="dropdown">
-        <button class="btn btn-actions dropdown-toggle" type="button" 
-                data-bs-toggle="dropdown" 
-                aria-expanded="false" title="Acciones">
-            <i class="fas fa-cog"></i>
-        </button>
-        <ul class="dropdown-menu dropdown-menu-end">
-            <li>
-                <a class="dropdown-item" href="{{ route('maestros.show', $maestro->id) }}">
-                    <i class="fas fa-eye text-primary me-2"></i> 
-                    <div>
-                        <div>Ver expediente</div>
-                    </div>
-                </a>
-            </li>
-            
-            <!-- ✅ BOTÓN DE ACTIVAR DOCUMENTOS - AHORA SÍ DENTRO DEL DROPDOWN -->
-            <li>
-                <a class="dropdown-item {{ $maestro->procesoDocumentos && $maestro->procesoDocumentos->activo ? 'text-success' : '' }}" 
-                   href="{{ route('maestros.activar-documentos', $maestro->id) }}"
-                   onclick="return confirm('¿Activar documentos para este maestro? Podrá subir los 13 documentos.');">
-                    <i class="fas {{ $maestro->procesoDocumentos && $maestro->procesoDocumentos->activo ? 'fa-check-circle' : 'fa-file-upload' }} me-2"></i>
-                    <div>
-                        <div>{{ $maestro->procesoDocumentos && $maestro->procesoDocumentos->activo ? 'Proceso Activo' : 'Activar Nuevo Ingreso' }}</div>
-                        @if($maestro->procesoDocumentos && $maestro->procesoDocumentos->activo)
-                            <small class="text-muted">Activado</small>
-                        @else
-                            <small class="text-muted">Subir 13 documentos</small>
-                        @endif
-                    </div>
-                </a>
-            </li>
-            
-            <li><hr class="dropdown-divider"></li>
-            <li>
-                <a class="dropdown-item text-danger" href="#">
-                    <i class="fas fa-trash-alt me-2"></i>
-                    <div>
-                        <div>Eliminar docente</div>
-                    </div>
-                </a>
-            </li>
-        </ul>
-    </div>
-</td>
+                                        <!-- BOTÓN DE ACCIONES MEJORADO - SIN AFECTAR TABLA -->
+                                        <div class="dropdown d-inline-block">
+                                            <button class="btn-actions-modern dropdown-toggle" type="button" 
+                                                    data-bs-toggle="dropdown" 
+                                                    aria-expanded="false" title="Acciones">
+                                                <i class="fas fa-cog"></i>
+                                            </button>
+                                            <ul class="dropdown-menu dropdown-menu-end">
+                                                <!-- BOTÓN DE ACTIVAR DOCUMENTOS - CON LA MISMA LÓGICA -->
+                                                <li>
+                                                    <a class="dropdown-item {{ $maestro->procesoDocumentos && $maestro->procesoDocumentos->activo ? 'text-success' : '' }}" 
+                                                       href="{{ route('maestros.activar-documentos', $maestro->id) }}"
+                                                       onclick="return confirm('¿Activar documentos para este maestro? Podrá subir los 13 documentos.');">
+                                                        <i class="fas {{ $maestro->procesoDocumentos && $maestro->procesoDocumentos->activo ? 'fa-check-circle' : 'fa-file-upload' }} me-2"></i>
+                                                        {{ $maestro->procesoDocumentos && $maestro->procesoDocumentos->activo ? 'Proceso Activo' : 'Activar Nuevo Ingreso' }}
+                                                        <br>
+                                                        <small class="text-muted">{{ $maestro->procesoDocumentos && $maestro->procesoDocumentos->activo ? 'Activado' : 'Subir 13 documentos' }}</small>
+                                                    </a>
+                                                </li>
+                                                
+                                                <li><hr class="dropdown-divider"></li>
+                                                <li>
+                                                    <a class="dropdown-item text-danger" href="#">
+                                                        <i class="fas fa-trash-alt me-2"></i>Eliminar docente
+                                                    </a>
+                                                </li>
+                                            </ul>
+                                        </div>
+                                    </td>
                                 </tr>
                                 @endforeach
                             </tbody>
@@ -976,6 +1087,17 @@
         </div>
     </div>
 
+    <!-- Template para editar plantilla (oculto) -->
+    <div id="plantilla-editor-template" style="display: none;">
+        <select class="form-select form-select-sm plantilla-selector" onchange="guardarPlantilla(this)">
+            <option value="">No asignada</option>
+            <option value="SEGEM">SEGEM</option>
+            <option value="UAMEX">UAMEX</option>
+            <option value="SEP">SEP</option>
+            <option value="IUFIM">IUFIM</option>
+        </select>
+    </div>
+
     <!-- jQuery -->
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <!-- Bootstrap JS -->
@@ -983,8 +1105,13 @@
     <!-- DataTables JS -->
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.6/js/jquery.dataTables.min.js"></script>
     <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.13.6/js/dataTables.bootstrap5.min.js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     
     <script>
+    // Variable global para el maestro en edición
+    let maestroEnEdicion = null;
+
     document.addEventListener('DOMContentLoaded', function() {
         // Variables globales
         let table;
@@ -1111,11 +1238,14 @@
             // Contar maestros activos e inactivos
             let activeCount = 0;
             let inactiveCount = 0;
+            let plantillaCount = 0;
             
             // Iterar sobre las filas visibles de DataTables
             table.rows({ search: 'applied' }).every(function() {
                 const row = this.node();
                 const statusBtn = row.querySelector('.status-btn');
+                const plantillaCell = row.querySelector('.plantilla-cell .badge');
+                
                 if (statusBtn) {
                     const status = statusBtn.getAttribute('data-actual-status');
                     if (status === 'active') {
@@ -1123,6 +1253,10 @@
                     } else {
                         inactiveCount++;
                     }
+                }
+                
+                if (plantillaCell && plantillaCell.getAttribute('data-plantilla')) {
+                    plantillaCount++;
                 }
             });
             
@@ -1132,6 +1266,9 @@
             document.getElementById('totalCount').textContent = totalCount;
             document.getElementById('activeCount').textContent = activeCount;
             document.getElementById('inactiveCount').textContent = inactiveCount;
+            if (document.getElementById('plantillaCount')) {
+                document.getElementById('plantillaCount').textContent = plantillaCount;
+            }
         }
         
         // Llamar a updateCounters cuando DataTables se redibuja
@@ -1193,13 +1330,26 @@
                     // Actualizar contadores
                     updateCounters();
                     
+                    // Mostrar notificación de éxito
+                    Swal.fire({
+                        icon: 'success',
+                        title: '¡Éxito!',
+                        text: 'Estado actualizado correctamente',
+                        timer: 2000,
+                        showConfirmButton: false
+                    });
+                    
                 } else {
                     throw new Error(data.message || 'Error desconocido del servidor');
                 }
             })
             .catch(error => {
                 console.error('Error en la petición:', error);
-                alert('Error al actualizar el estado: ' + error.message);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Error al actualizar el estado: ' + error.message
+                });
                 
                 // Revertir cambios visuales
                 revertStatusChange(buttonElement, originalStatus === 'active');
@@ -1228,6 +1378,170 @@
             updateCounters();
         }
     });
+
+    // Función para editar plantilla
+    function editarPlantilla(maestroId, plantillaActual) {
+        // Si ya hay un maestro en edición, no permitir otra edición
+        if (maestroEnEdicion) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Edición en curso',
+                text: 'Ya hay una plantilla en edición. Por favor termine esa edición primero.',
+                timer: 2000,
+                showConfirmButton: false
+            });
+            return;
+        }
+        
+        const cell = document.querySelector(`.plantilla-cell[data-maestro-id="${maestroId}"]`);
+        if (!cell) return;
+        
+        // Guardar el contenido original
+        const contenidoOriginal = cell.innerHTML;
+        
+        // Crear el selector
+        const template = document.getElementById('plantilla-editor-template').innerHTML;
+        cell.innerHTML = template;
+        cell.classList.add('plantilla-editing');
+        
+        // Configurar el selector
+        const select = cell.querySelector('select');
+        select.value = plantillaActual;
+        select.setAttribute('data-maestro-id', maestroId);
+        select.setAttribute('data-contenido-original', contenidoOriginal);
+        select.focus();
+        
+        maestroEnEdicion = maestroId;
+        
+        // Manejar pérdida de foco
+        select.addEventListener('blur', function(e) {
+            // Pequeño retraso para permitir que el cambio se procese
+            setTimeout(() => {
+                if (maestroEnEdicion === maestroId) {
+                    cancelarEdicionPlantilla(maestroId);
+                }
+            }, 200);
+        });
+        
+        // Manejar tecla Escape
+        select.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                cancelarEdicionPlantilla(maestroId);
+            }
+        });
+    }
+
+    // Función para guardar plantilla
+    function guardarPlantilla(selectElement) {
+        const maestroId = selectElement.getAttribute('data-maestro-id');
+        const nuevaPlantilla = selectElement.value;
+        const cell = selectElement.closest('.plantilla-cell');
+        
+        // Mostrar loading
+        Swal.fire({
+            title: 'Guardando...',
+            text: 'Por favor espere',
+            allowOutsideClick: false,
+            didOpen: () => {
+                Swal.showLoading();
+            }
+        });
+        
+        // Llamada AJAX para actualizar la plantilla
+        fetch(`/coordinaciones/{{ $coordinacion->id }}/maestros/${maestroId}/plantilla`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+            },
+            body: JSON.stringify({
+                plantilla: nuevaPlantilla || null
+            })
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error('Error en la respuesta del servidor: ' + response.status);
+            }
+            return response.json();
+        })
+        .then(data => {
+            if (data.success) {
+                // Actualizar la celda con el nuevo badge
+                actualizarBadgePlantilla(cell, nuevaPlantilla);
+                
+                // Actualizar el atributo data-plantilla en la fila
+                const row = cell.closest('.teacher-row');
+                if (row) {
+                    row.setAttribute('data-plantilla', nuevaPlantilla || '');
+                }
+                
+                Swal.fire({
+                    icon: 'success',
+                    title: '¡Éxito!',
+                    text: 'Plantilla actualizada correctamente',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
+            } else {
+                throw new Error(data.message || 'Error desconocido del servidor');
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Error al actualizar la plantilla: ' + error.message
+            });
+            
+            // Restaurar el contenido original
+            cancelarEdicionPlantilla(maestroId);
+        })
+        .finally(() => {
+            maestroEnEdicion = null;
+        });
+    }
+
+    // Función para cancelar edición de plantilla
+    function cancelarEdicionPlantilla(maestroId) {
+        const cell = document.querySelector(`.plantilla-cell[data-maestro-id="${maestroId}"]`);
+        if (cell && cell.classList.contains('plantilla-editing')) {
+            const select = cell.querySelector('select');
+            if (select) {
+                const contenidoOriginal = select.getAttribute('data-contenido-original');
+                cell.innerHTML = contenidoOriginal;
+                cell.classList.remove('plantilla-editing');
+            }
+        }
+        maestroEnEdicion = null;
+    }
+
+    // Función para actualizar el badge de plantilla
+    function actualizarBadgePlantilla(cell, plantilla) {
+        const colores = {
+            'SEGEM': 'primary',
+            'UAMEX': 'success',
+            'SEP': 'info',
+            'IUFIM': 'warning'
+        };
+        
+        if (plantilla) {
+            const color = colores[plantilla] || 'secondary';
+            cell.innerHTML = `<span class="badge bg-${color} plantilla-badge" 
+                                  data-plantilla="${plantilla}"
+                                  onclick="editarPlantilla(${cell.getAttribute('data-maestro-id')}, '${plantilla}')">
+                                ${plantilla}
+                                <i class="fas fa-pencil-alt ms-1" style="font-size: 0.7rem;"></i>
+                              </span>`;
+        } else {
+            cell.innerHTML = `<span class="badge bg-secondary plantilla-badge" 
+                                  onclick="editarPlantilla(${cell.getAttribute('data-maestro-id')}, '')">
+                                No asignada
+                                <i class="fas fa-plus ms-1" style="font-size: 0.7rem;"></i>
+                              </span>`;
+        }
+        cell.classList.remove('plantilla-editing');
+    }
     </script>
 </body>
 </html>

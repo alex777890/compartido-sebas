@@ -578,7 +578,7 @@
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 600px;
+            min-width: 900px; /* Aumentado para más columnas */
         }
 
         th {
@@ -649,6 +649,66 @@
             align-items: center;
             gap: 0.4rem;
             border: 1px solid #e2e8f0;
+        }
+
+        /* NUEVOS ESTILOS PARA ANTIGÜEDAD */
+        .badge-anio {
+            background: #f1f5f9;
+            color: #334155;
+            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .badge-anio i {
+            color: #3b82f6;
+            font-size: 0.7rem;
+        }
+
+        .badge-antiguedad {
+            background: #e6f7e6;
+            color: #0e5814;
+            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            border: 1px solid #b7e0b7;
+        }
+
+        .badge-antiguedad i {
+            color: #28a745;
+            font-size: 0.7rem;
+        }
+
+        .badge-sin-calculo {
+            background: #f1f5f9;
+            color: #64748b;
+            padding: 0.4rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: 400;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.3rem;
+            border: 1px solid #e2e8f0;
+        }
+
+        .badge-sin-calculo i {
+            color: #94a3b8;
+        }
+
+        .periodo-actual {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: #1e40af;
         }
 
         .empty-state {
@@ -830,9 +890,7 @@
             <div class="page-header">
                 <div>
                     <h2>Panel General De Maestros</h2>
-                   
                 </div>
-                
             </div>
 
             <!-- Tarjetas de estadísticas (solo 2) -->
@@ -937,7 +995,7 @@
 
                     <div class="filter-actions">
                         <button type="button" class="btn-filter" id="btnFilter">
-                            <i class="fas fa-search"></i> Filtrar
+                            <i class="fas fa-search"></i> Buscar
                         </button>
                         
                         <button type="button" class="btn-clear" id="btnClear">
@@ -947,7 +1005,7 @@
                 </div>
             </div>
 
-            <!-- Tabla simplificada - Solo Nombre y Coordinación -->
+            <!-- Tabla simplificada - CON COLUMNAS DE ANTIGÜEDAD AGREGADAS -->
             <div class="table-section" id="tablaContainer">
                 <div class="table-header">
                     <div class="results-info" id="resultsInfo">
@@ -964,10 +1022,34 @@
                             <tr>
                                 <th>Nombre Completo</th>
                                 <th>Coordinación</th>
+                                <th>Año de Ingreso (Al IUFIM)</th>
+                                <th>Periodo Actual</th>
+                                <th>Antigüedad</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
                             @forelse($maestros as $maestro)
+                                @php
+                                    // Calcular antigüedad
+                                    $anioIngreso = $maestro->anio_ingreso;
+                                    $totalMeses = 0;
+                                    $anios = 0;
+                                    $meses = 0;
+                                    $ultimoPeriodo = null;
+                                    
+                                    if ($maestro->periodos && $maestro->periodos->count() > 0) {
+                                        foreach ($maestro->periodos as $periodo) {
+                                            $mesesPeriodo = json_decode($periodo->pivot->meses_trabajados, true) ?? [];
+                                            $totalMeses += count($mesesPeriodo);
+                                        }
+                                        $anios = floor($totalMeses / 12);
+                                        $meses = $totalMeses % 12;
+                                        
+                                        $ultimoPeriodo = $maestro->periodos->sortByDesc(function($p) {
+                                            return $p->pivot->created_at;
+                                        })->first();
+                                    }
+                                @endphp
                                 <tr>
                                     <td>
                                         <div class="nombre-maestro">
@@ -988,10 +1070,49 @@
                                             </span>
                                         @endif
                                     </td>
+                                    <td>
+                                        @if($anioIngreso)
+                                            <span class="badge-anio">
+                                                <i class="fas fa-calendar-alt"></i>
+                                                {{ $anioIngreso }}
+                                            </span>
+                                        @else
+                                            <span class="badge-sin-calculo">
+                                                <i class="fas fa-calendar-times"></i>
+                                                —
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($ultimoPeriodo)
+                                            <span class="periodo-actual">
+                                                <i class="fas fa-clock"></i>
+                                                {{ $ultimoPeriodo->nombre }}
+                                            </span>
+                                        @else
+                                            <span class="badge-sin-calculo">
+                                                <i class="fas fa-hourglass"></i>
+                                                Sin cálculos
+                                            </span>
+                                        @endif
+                                    </td>
+                                    <td>
+                                        @if($totalMeses > 0)
+                                            <span class="badge-antiguedad">
+                                                <i class="fas fa-star"></i>
+                                                {{ $anios }} años ,      {{ $meses }} meses
+                                            </span>
+                                        @else
+                                            <span class="badge-sin-calculo">
+                                                <i class="fas fa-hourglass"></i>
+                                                —
+                                            </span>
+                                        @endif
+                                    </td>
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="2">
+                                    <td colspan="5">
                                         <div class="empty-state">
                                             <i class="fas fa-search"></i>
                                             <h3>No se encontraron maestros</h3>
@@ -1058,9 +1179,7 @@
                     const temp = document.createElement('div');
                     temp.innerHTML = html;
 
-                    // Actualizar solo las partes necesarias
-                    
-                    // 1. Actualizar estadísticas (si cambian)
+                    // 1. Actualizar estadísticas
                     const newTotalMaestros = temp.querySelector('#totalMaestros');
                     const newTotalCoordinaciones = temp.querySelector('#totalCoordinaciones');
                     if (newTotalMaestros) {
@@ -1094,12 +1213,10 @@
                     if (newPagination && oldPagination) {
                         oldPagination.innerHTML = newPagination.innerHTML;
                     } else if (newPagination && !oldPagination) {
-                        // Si no había paginación y ahora sí, crearla
                         const tablaContainer = document.getElementById('tablaContainer');
                         const newPaginationClone = newPagination.cloneNode(true);
                         tablaContainer.appendChild(newPaginationClone);
                     } else if (!newPagination && oldPagination) {
-                        // Si había paginación y ahora no, eliminarla
                         oldPagination.remove();
                     }
 
@@ -1108,49 +1225,34 @@
 
                 } catch (error) {
                     console.error('Error al filtrar:', error);
-                    // Mostrar mensaje de error
                     alert('Error al aplicar filtros. Por favor intenta de nuevo.');
                 } finally {
-                    // Ocultar loader
                     filterLoader.classList.remove('active');
                 }
             }
 
-            // Evento para el botón de filtrar
             btnFilter.addEventListener('click', function(e) {
                 e.preventDefault();
                 cargarDatosFiltrados();
             });
 
-            // Evento para el botón de limpiar
             btnClear.addEventListener('click', function(e) {
                 e.preventDefault();
-                // Limpiar campos
                 coordinacionSelect.value = '';
                 nombreInput.value = '';
                 
-                // Cargar datos sin filtros
                 let url = new URL(window.location.href);
-                url.search = ''; // Eliminar todos los parámetros
-                
-                // Actualizar URL
+                url.search = '';
                 window.history.pushState({}, '', url.toString());
-                
-                // Recargar datos
                 cargarDatosFiltrados();
             });
 
-            // Permitir filtrar con Enter en el campo de nombre
             nombreInput.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     e.preventDefault();
                     cargarDatosFiltrados();
                 }
             });
-
-            // Cambio en select también puede filtrar automáticamente (opcional)
-            // Descomenta la siguiente línea si quieres que filtre al cambiar el select
-            // coordinacionSelect.addEventListener('change', cargarDatosFiltrados);
         });
     </script>
 </body>

@@ -185,78 +185,142 @@ class MaestroController extends Controller
     // FUNCIONES CORREGIDAS PARA CÁLCULO DE ANTIGÜEDAD
     // =============================================
 
-    public function mostrarCalculoAntiguedad(Maestro $maestro)
-    {
-        $periodos = Periodo::all();
-
-        return view('maestros.calculo-antiguedad', compact(
-            'maestro', 
-            'periodos'
-        ));
+    /**
+ * MÉTODO MEJORADO - Mostrar formulario de cálculo
+ * Ahora puede recibir un período específico para editar
+ */
+public function mostrarCalculoAntiguedad(Maestro $maestro, Request $request)
+{
+    $periodos = Periodo::all();
+    
+    // ✅ Obtener el período a editar si se especifica
+    $periodoEditar = null;
+    if ($request->has('periodo_id')) {
+        $periodoEditar = Periodo::find($request->periodo_id);
+    }
+    
+    // Obtener períodos ya guardados para precargar
+    $periodosGuardados = $maestro->periodos()
+        ->orderBy('pivot_anio_periodo', 'asc')
+        ->get();
+    
+    $datosPrecargados = [];
+    foreach ($periodosGuardados as $periodo) {
+        $anio = $periodo->pivot->anio_periodo;
+        $meses = json_decode($periodo->pivot->meses_trabajados, true) ?? [];
+        
+        // Si es el período a editar, lo agregamos a los datos precargados
+        if ($periodoEditar && $periodo->id == $periodoEditar->id) {
+            $datosPrecargados[$anio] = $meses;
+        }
     }
 
-    public function calcularYGuardarAntiguedad(Request $request, Maestro $maestro)
-    {
-        // Verificar si el maestro tiene año de ingreso
-        if (!$maestro->anio_ingreso) {
-            return redirect()->back()
-                           ->with('error', 'El maestro no tiene año de ingreso definido. Por favor, regístrelo primero.')
-                           ->withInput();
-        }
+    return view('maestros.calculo-antiguedad', compact(
+        'maestro', 
+        'periodos',
+        'periodosGuardados',
+        'datosPrecargados',
+        'periodoEditar'
+    ));
+}
 
-        $request->validate([
-            'periodo_actual' => 'required|exists:periodos,id',
-            'periodos_meses' => 'required|string'
-        ]);
+    /**
+ * MÉTODO CORREGIDO - Guarda o EDITA un período específico
+ * Si el período ya existe, lo ACTUALIZA en lugar de crear duplicado
+ */
+public function calcularYGuardarAntiguedad(Request $request, Maestro $maestro)
+{
+    // Verificar si el maestro tiene año de ingreso
+    if (!$maestro->anio_ingreso) {
+        return redirect()->back()
+                       ->with('error', 'El maestro no tiene año de ingreso definido. Por favor, regístrelo primero.')
+                       ->withInput();
+    }
 
-        $periodosMeses = json_decode($request->periodos_meses, true);
+    $request->validate([
+        'periodo_actual' => 'required|exists:periodos,id',
+        'periodos_meses' => 'required|string'
+    ]);
+
+    $periodosMeses = json_decode($request->periodos_meses, true);
+    
+    if (!$periodosMeses) {
+        return redirect()->back()
+                       ->with('error', 'No se han seleccionado periodos válidos.')
+                       ->withInput();
+    }
+
+    $periodo = Periodo::find($request->periodo_actual);
+    
+    DB::beginTransaction();
+    
+    try {
+        // ✅ VERIFICAR SI EL PERÍODO YA EXISTE
+        $periodosExistentes = $maestro->periodos()
+            ->wherePivot('periodo_id', $request->periodo_actual)
+            ->get();
         
-        if (!$periodosMeses) {
-            return redirect()->back()
-                           ->with('error', 'No se han seleccionado periodos válidos.')
-                           ->withInput();
+        $esEdicion = $periodosExistentes->count() > 0;
+        
+        if ($esEdicion) {
+            // ✅ MODO EDICIÓN: Eliminar SOLO los registros de ESTE período específico
+            $maestro->periodos()
+                    ->wherePivot('periodo_id', $request->periodo_actual)
+                    ->detach();
+            
+            \Log::info("✏️ Editando período ID: {$request->periodo_actual} para maestro ID: {$maestro->id}");
+        } else {
+            \Log::info("➕ Creando nuevo período ID: {$request->periodo_actual} para maestro ID: {$maestro->id}");
         }
 
-        $periodo = Periodo::find($request->periodo_actual);
-        $anioPeriodo = $this->extraerAnioDePeriodo($periodo->nombre);
-
-        // ELIMINAR registros anteriores del MISMO periodo actual para evitar duplicados
-        $maestro->periodos()
-                ->wherePivot('periodo_id', $request->periodo_actual)
-                ->detach();
-
-        // Procesar cada año y sus meses (SOLO los seleccionados en el formulario)
+        // Procesar cada año y sus meses
         $totalMesesSeleccionados = 0;
+        $añosGuardados = [];
+        
         foreach ($periodosMeses as $anio => $meses) {
             if (count($meses) > 0) {
                 // Guardar en la relación maestro_periodo
                 $maestro->periodos()->attach($request->periodo_actual, [
                     'meses_trabajados' => json_encode($meses),
                     'total_meses' => count($meses),
-                    'anio_periodo' => $anio
+                    'anio_periodo' => $anio,
+                    'created_at' => $esEdicion ? $periodosExistentes->first()->pivot->created_at : now(),
+                    'updated_at' => now(),
                 ]);
                 
                 $totalMesesSeleccionados += count($meses);
+                $añosGuardados[] = $anio;
+                
+                \Log::info("✅ Guardado año {$anio}: " . count($meses) . " meses");
             }
         }
 
-        // Calcular antigüedad SOLO de los periodos seleccionados
+        DB::commit();
+
+        // Calcular antigüedad de los periodos seleccionados
         $antiguedad = $this->calcularAntiguedadSeleccionada($periodosMeses);
 
-        // Obtener los meses trabajados del último año procesado
-        $ultimoAnio = max(array_keys($periodosMeses));
-        $mesesTrabajados = $periodosMeses[$ultimoAnio] ?? [];
+        if ($esEdicion) {
+            $mensaje = "✏️ Período EDITADO correctamente. ";
+        } else {
+            $mensaje = "✅ Nuevo período registrado correctamente. ";
+        }
+        
+        $mensaje .= "Años: " . implode(', ', $añosGuardados) . ". ";
+        $mensaje .= "Total: {$antiguedad['anios']} años y {$antiguedad['meses']} meses.";
 
-        // Redirigir a la vista de resultado
-        return view('maestros.resultado-antiguedad', compact(
-            'maestro', 
-            'antiguedad',
-            'anioPeriodo',
-            'mesesTrabajados',
-            'periodo',
-            'totalMesesSeleccionados'
-        ));
+        return redirect()->route('maestros.historial-antiguedad', $maestro->id)
+                         ->with('success', $mensaje);
+
+    } catch (\Exception $e) {
+        DB::rollBack();
+        \Log::error('Error al guardar antigüedad: ' . $e->getMessage());
+        
+        return redirect()->back()
+                       ->with('error', 'Error al guardar el cálculo: ' . $e->getMessage())
+                       ->withInput();
     }
+}
 
     /**
      * MÉTODO NUEVO: Extrae el año del nombre del periodo
@@ -1626,7 +1690,7 @@ private function verificarYConfigurarPeriodo()
             Log::info('Estadísticas calculadas: ' . json_encode($estadisticas));
             Log::info('Total documentos para vista: ' . count($documentosParaVista));
 
-            return view('dashboard.mis-documentos', compact(
+            return view('dashboard.profesor-documentos', compact(
                 'maestro',
                 'procesoActivo',
                 'documentosParaVista',
@@ -1776,10 +1840,10 @@ public function subirDocumentosIngreso(Request $request)
             if (!empty($errores)) {
                 $mensaje .= ". Algunos documentos no se pudieron procesar.";
             }
-            return redirect()->route('profesor.mis-documentos')
+            return redirect()->route('profesor.profesor-documentos')
                 ->with('success', $mensaje);
         } else {
-            return redirect()->route('profesor.mis-documentos')
+            return redirect()->route('profesor.profesor-documentos')
                 ->with('error', 'No se pudo subir ningún documento: ' . implode(', ', $errores));
         }
 
@@ -1971,7 +2035,7 @@ public function verDocumentosUnificado()
         } else {
             // CASO 3: No hay nada que mostrar
             Log::info('🔴 NO HAY DOCUMENTOS PARA MOSTRAR');
-            return view('dashboard.mis-documentos', [
+            return view('dashboard.profesor-documentos', [
                 'maestro' => $maestro,
                 'procesoActivo' => false,
                 'documentosParaVista' => [],
@@ -2016,6 +2080,30 @@ public function verDocumentosUnificado()
         Log::error('Trace: ' . $e->getTraceAsString());
         return redirect()->back()
             ->with('error', 'Error al cargar documentos: ' . $e->getMessage());
+    }
+}
+
+public function actualizarPlantilla(Request $request, $coordinacionId, $maestroId)
+{
+    try {
+        $maestro = Maestro::findOrFail($maestroId);
+        
+        $request->validate([
+            'plantilla' => 'nullable|in:SEGEM,UAMEX,SEP,IUFIM'
+        ]);
+        
+        $maestro->plantilla = $request->plantilla;
+        $maestro->save();
+        
+        return response()->json([
+            'success' => true,
+            'message' => 'Plantilla actualizada correctamente'
+        ]);
+    } catch (\Exception $e) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Error al actualizar la plantilla: ' . $e->getMessage()
+        ], 500);
     }
 }
 }

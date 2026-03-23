@@ -6,31 +6,41 @@
     <title>Historial de Antigüedad - {{ $maestro->nombres }}</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #0744b6ff;
+            --primary-light: #eef3ff;
+            --primary-dark: #053594;
             --secondary: #33CAE6;
             --accent: #28a745;
             --light-bg: #F8F9FA;
             --border-color: #E9ECEF;
             --text-muted: #6C757D;
-            --card-shadow: 0 5px 15px rgba(7, 68, 182, 0.08);
-            --transition: all 0.3s ease;
+            --text-dark: #2c3e50;
+            --card-shadow: 0 15px 35px rgba(7, 68, 182, 0.08);
+            --card-shadow-hover: 0 20px 40px rgba(7, 68, 182, 0.12);
+            --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
             --success-color: #28a745;
             --warning-color: #FFC107;
             --danger-color: #dc3545;
+            --gradient-primary: linear-gradient(135deg, #0744b6 0%, #0f5ad6 100%);
+            --gradient-success: linear-gradient(135deg, #28a745 0%, #34ce57 100%);
+            --gradient-warning: linear-gradient(135deg, #ffc107 0%, #ffd54b 100%);
+            --info-color: #17a2b8;
         }
         
         body { 
-            background: #f8f9fa; 
-            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
-            color: #333; 
+            background: linear-gradient(135deg, #f8faff 0%, #f0f3f8 100%);
+            font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            color: var(--text-dark); 
             line-height: 1.6;
             margin: 0;
             padding: 0;
+            min-height: 100vh;
         }
         
-        /* ========== ESTILOS DE BARRA Y MENÚ ========== */
+        /* ========== ESTILOS DE BARRA Y MENÚ (SIN CAMBIOS) ========== */
 
         /* Primera barra - Logo y título */
         .navbar-top { 
@@ -183,203 +193,484 @@
             background: rgba(255, 255, 255, 0.2);
         }
         
-        /* ========== ESTILOS PARA EL CONTENIDO PRINCIPAL ========== */
+        /* ========== ESTILOS REDISEÑADOS PARA EL CONTENIDO PRINCIPAL ========== */
         .main-content {
-            padding: 30px;
+            padding: 2.5rem;
+            max-width: 1500px;
+            margin: 0 auto;
         }
         
-        .profile-header {
+        /* Header con diseño mejorado - NOMBRE MÁS PEQUEÑO */
+        .page-header {
             background: white;
-            border-radius: 12px;
-            padding: 20px 25px;
-            margin-bottom: 25px;
+            border-radius: 24px;
+            padding: 1.8rem 2.5rem;
+            margin-bottom: 2rem;
             box-shadow: var(--card-shadow);
-            border-left: 5px solid var(--primary);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
         }
         
-        .section-card {
-            background: white;
+        .header-icon {
+            width: 54px;
+            height: 54px;
+            background: var(--gradient-primary);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.6rem;
+            box-shadow: 0 8px 16px rgba(7, 68, 182, 0.15);
+        }
+        
+        .teacher-name {
+            font-size: 1.7rem;
+            font-weight: 600;
+            color: var(--text-dark);
+            margin-bottom: 0.2rem;
+            line-height: 1.2;
+        }
+        
+        .teacher-subtitle {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .teacher-subtitle i {
+            color: var(--primary);
+            font-size: 0.8rem;
+        }
+        
+        /* Botones con diseño moderno */
+        .btn-modern {
+            padding: 0.7rem 1.4rem;
             border-radius: 12px;
+            font-weight: 500;
+            transition: var(--transition);
+            border: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.95rem;
+        }
+        
+        .btn-outline-modern {
+            background: transparent;
+            border: 1.5px solid var(--primary);
+            color: var(--primary);
+        }
+        
+        .btn-outline-modern:hover {
+            background: var(--primary);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(7, 68, 182, 0.15);
+        }
+        
+        .btn-primary-modern {
+            background: var(--gradient-primary);
+            color: white;
+        }
+        
+        .btn-primary-modern:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(7, 68, 182, 0.2);
+        }
+        
+        /* Tarjetas de sección */
+        .section-card-modern {
+            background: white;
+            border-radius: 24px;
             box-shadow: var(--card-shadow);
-            margin-bottom: 25px;
+            margin-bottom: 2rem;
             border: none;
             overflow: hidden;
-            border-left: 4px solid var(--primary);
+            transition: var(--transition);
         }
         
-        .section-card .card-header {
-            background-color: white;
-            color: var(--primary);
-            padding: 15px 20px;
+        .card-header-modern {
+            background: white;
+            padding: 1.4rem 2rem;
             border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
         }
         
-        .section-card .card-body {
-            padding: 25px;
-        }
-        
-        .badge-coordinacion {
-            background-color: var(--primary);
-            color: white;
-            font-size: 0.9rem;
-        }
-        
-        .btn-primary {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-        
-        .btn-primary:hover {
-            background-color: #063a9e;
-            border-color: #063a9e;
-        }
-        
-        .btn-outline-primary {
+        .card-header-modern h5 {
             color: var(--primary);
-            border-color: var(--primary);
-        }
-        
-        .btn-outline-primary:hover {
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-        
-        .text-primary {
-            color: var(--primary) !important;
-        }
-        
-        .border-primary {
-            border-color: var(--primary) !important;
-        }
-        
-        .bg-primary {
-            background-color: var(--primary) !important;
-        }
-        
-        .action-dropdown .dropdown-menu {
-            min-width: 200px;
-        }
-        
-        .antiguedad-card {
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px;
-            margin-bottom: 15px;
-            background: white;
-        }
-        
-        .antiguedad-card.primary {
-            border-left: 4px solid var(--primary);
-        }
-        
-        .antiguedad-card.success {
-            border-left: 4px solid var(--success-color);
-        }
-        
-        .antiguedad-card.warning {
-            border-left: 4px solid var(--warning-color);
-        }
-        
-        .summary-card {
-            background: white;
-            border-radius: 10px;
-            padding: 20px;
-            text-align: center;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: transform 0.3s ease;
-            border: 1px solid #e9ecef;
-            height: 100%;
-        }
-        
-        .summary-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 8px 15px rgba(0,0,0,0.15);
-        }
-        
-        .summary-card i {
-            font-size: 2rem;
-            margin-bottom: 10px;
-            color: var(--primary);
-        }
-        
-        .summary-card h5 {
-            font-size: 0.9rem;
-            color: #6c757d;
-            margin-bottom: 10px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-        
-        .summary-card h2 {
-            font-size: 2.2rem;
-            font-weight: 700;
+            font-weight: 600;
+            font-size: 1.2rem;
             margin: 0;
-            color: #343a40;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
         
-        .summary-card.primary { border-top: 4px solid var(--primary); }
-        .summary-card.success { border-top: 4px solid var(--success-color); }
-        .summary-card.warning { border-top: 4px solid var(--warning-color); }
+        .card-header-modern h5 i {
+            font-size: 1.3rem;
+        }
         
-        .summary-total {
-            background: linear-gradient(135deg, var(--primary), #063a9e);
-            color: white;
-            padding: 20px;
+        .card-body-modern {
+            padding: 2rem;
+        }
+        
+        /* Año de ingreso - MINIMAL */
+        .ingreso-card-mini {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 14px;
+            padding: 1rem 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
+        }
+        
+        .ingreso-icon-mini {
+            width: 42px;
+            height: 42px;
+            background: var(--light-bg);
             border-radius: 10px;
-            text-align: center;
-            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--text-muted);
+            font-size: 1.1rem;
         }
         
-        .summary-total h4 {
-            font-size: 1.8rem;
+        .ingreso-text-mini h6 {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+            margin-bottom: 0.1rem;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        
+        .ingreso-text-mini h4 {
+            color: var(--text-dark);
+            font-size: 1.4rem;
+            font-weight: 600;
             margin-bottom: 0;
+            line-height: 1.2;
         }
         
-        .badge {
-            padding: 6px 12px;
+        .badge-mini-warning {
+            background: #fff3cd;
+            color: #856404;
+            padding: 0.25rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
             font-weight: 500;
-            font-size: 0.85rem;
+            margin-left: 1rem;
         }
         
-        .table-responsive {
-            border-radius: 8px;
-            border: 1px solid #e9ecef;
+        /* Tarjetas de resumen - MEJORADAS */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 1.2rem;
+        }
+        
+        .summary-card-modern {
+            background: white;
+            border-radius: 18px;
+            padding: 1.5rem 1.2rem;
+            text-align: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.02);
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
             overflow: hidden;
         }
         
-        .table th {
-            background-color: #f8f9fa;
-            border-bottom: 2px solid #dee2e6;
-            font-weight: 600;
-            color: #495057;
-            padding: 12px 15px;
+        .summary-card-modern::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+            background: var(--gradient-primary);
         }
         
-        .table td {
-            vertical-align: middle;
-            padding: 12px 15px;
-            border-top: 1px solid #e9ecef;
+        .summary-card-modern:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow);
         }
         
-        .table tbody tr:hover {
-            background-color: #f8f9fa;
-        }
-        
-        .alert-info {
-            background-color: rgba(7, 68, 182, 0.05);
-            border-color: var(--primary);
-            color: #333;
-        }
-        
-        .alert-info strong {
+        .summary-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-light);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 0.8rem;
             color: var(--primary);
+            font-size: 1.4rem;
+        }
+        
+        .summary-card-modern h5 {
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+        
+        .summary-card-modern h2 {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 0.1rem;
+            line-height: 1.2;
+        }
+        
+        .summary-card-modern small {
+            color: var(--text-muted);
+            font-size: 0.8rem;
+        }
+        
+        .summary-total-modern {
+            background: var(--gradient-primary);
+            border-radius: 18px;
+            padding: 1.5rem 1.2rem;
+            text-align: center;
+            color: white;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: 0 10px 20px rgba(7, 68, 182, 0.25);
+            transform: scale(1.02);
+            border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .summary-total-modern h5 {
+            color: rgba(255, 255, 255, 0.9);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.3rem;
+        }
+        
+        .summary-total-modern h4 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0;
+            line-height: 1.2;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+        
+        /* Tabla MEJORADA */
+        .table-responsive-modern {
+            overflow-x: auto;
+            border-radius: 14px;
+        }
+        
+        .table-modern {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0 10px;
+        }
+        
+        .table-modern thead th {
+            background: transparent;
+            color: var(--text-muted);
+            font-weight: 600;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 1rem 1.2rem;
+            border: none;
+        }
+        
+        .table-modern tbody tr {
+            background: white;
+            border-radius: 14px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.02);
+            transition: var(--transition);
+        }
+        
+        .table-modern tbody tr:hover {
+            box-shadow: 0 8px 20px rgba(7, 68, 182, 0.1);
+        }
+        
+        .table-modern td {
+            padding: 1.2rem 1.2rem;
+            border: none;
+            vertical-align: middle;
+            font-size: 1rem;
+        }
+        
+        .table-modern td:first-child {
+            border-radius: 14px 0 0 14px;
+        }
+        
+        .table-modern td:last-child {
+            border-radius: 0 14px 14px 0;
+        }
+        
+        .periodo-badge {
+            background: var(--primary-light);
+            color: var(--primary);
+            padding: 0.3rem 1rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+        
+        .anio-badge-modern {
+            background: var(--light-bg);
+            color: var(--text-dark);
+            padding: 0.3rem 0.8rem;
+            border-radius: 30px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin: 0.1rem;
+            display: inline-block;
+            transition: var(--transition);
+            border: 1px solid var(--border-color);
+        }
+        
+        .anio-badge-modern:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        .total-meses-badge {
+            background: var(--gradient-primary);
+            color: white;
+            padding: 0.4rem 1rem;
+            border-radius: 30px;
+            font-size: 0.95rem;
+            font-weight: 600;
+            display: inline-block;
+            box-shadow: 0 4px 8px rgba(7, 68, 182, 0.2);
+        }
+        
+        .fecha-small {
+            color: var(--text-muted);
+            font-size: 0.75rem;
+            display: block;
+            margin-top: 0.25rem;
+        }
+        
+        .btn-group-modern {
+            display: flex;
+            gap: 6px;
+        }
+        
+        .btn-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            transition: var(--transition);
+            border: none;
+            background: transparent;
+            color: var(--text-muted);
+            font-size: 1rem;
+        }
+        
+        .btn-icon:hover {
+            background: var(--light-bg);
+            color: var(--primary);
+        }
+        
+        .btn-icon-warning:hover {
+            background: #fff3cd;
+            color: #ffc107;
+        }
+        
+        .btn-icon-danger:hover {
+            background: #f8d7da;
+            color: #dc3545;
+        }
+        
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 3.5rem 2rem;
+        }
+        
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            background: var(--primary-light);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.2rem;
+            color: var(--primary);
+            font-size: 2.2rem;
+        }
+        
+        .empty-state h4 {
+            color: var(--text-dark);
+            font-weight: 600;
+            font-size: 1.3rem;
+            margin-bottom: 0.3rem;
+        }
+        
+        .empty-state p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            margin-bottom: 1.8rem;
+        }
+        
+        /* Alert info */
+        .alert-modern {
+            background: var(--primary-light);
+            border: none;
+            border-radius: 14px;
+            padding: 1.2rem 1.5rem;
+            color: var(--primary-dark);
+            font-size: 0.95rem;
+        }
+        
+        .alert-modern i {
+            color: var(--primary);
+        }
+        
+        @media (max-width: 992px) {
+            .summary-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
         }
         
         @media (max-width: 768px) {
-            .main-content { padding: 15px; }
-            .summary-card { margin-bottom: 15px; }
-            .summary-card h2 { font-size: 1.8rem; }
-            .table-responsive { font-size: 0.85rem; }
+            .main-content {
+                padding: 1.2rem;
+            }
+            
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .teacher-name {
+                font-size: 1.5rem;
+            }
+            
+            .page-header {
+                padding: 1.2rem;
+            }
+            
+            .table-modern td {
+                padding: 1rem;
+                font-size: 0.9rem;
+            }
         }
     </style>
 </head>
@@ -396,7 +687,7 @@
         </div>
     </nav>
     
-    <!-- Segunda barra - Menú con información de usuario y cerrar sesión -->
+    <!-- Segunda barra - Menú -->
     <nav class="navbar navbar-expand-lg navbar-menu">
         <div class="container">
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -412,7 +703,6 @@
                     <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.administrativos.*') ? 'active' : '' }}"href="{{ route('admin.administrativos.index') }}">Administrativos</a></ul>
                 </ul>
                 
-                <!-- Información de usuario y cerrar sesión -->
                 <div class="user-info-container">
                     <div class="user-info">
                         <span class="user-name">{{ Auth::user()->name }}</span>
@@ -432,155 +722,197 @@
     </nav>
     
     <div class="container-fluid p-0">
-        <!-- Main Content -->
+        <!-- Main Content - REDISEÑADO -->
         <div class="main-content">
-            <!-- Botones de acción -->
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <div>
-                    <a href="{{ route('maestros.show', $maestro) }}" class="btn btn-outline-primary">
-                        <i class="fas fa-arrow-left"></i> Volver al perfil
+            <!-- Header con nombre MÁS PEQUEÑO -->
+            <div class="page-header">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="header-icon">
+                            <i class="fas fa-history"></i>
+                        </div>
+                        <div>
+                            <h1 class="teacher-name">{{ $maestro->nombres }} {{ $maestro->apellido_paterno }} {{ $maestro->apellido_materno }}</h1>
+                            <div class="teacher-subtitle">
+                                <i class="fas fa-id-card"></i>
+                                <span>Historial de Antigüedad</span>
+                                <i class="fas fa-circle" style="font-size: 3px;"></i>
+                                <span>{{ $maestro->coordinacion->nombre ?? 'Sin coordinación' }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="{{ route('maestros.show', $maestro) }}" class="btn btn-outline-modern btn-modern">
+                        <i class="fas fa-arrow-left"></i>
+                        Volver
                     </a>
                 </div>
             </div>
 
-            <!-- Título de la sección -->
-            <div class="d-flex align-items-center mb-4">
-                <i class="fas fa-history fa-2x text-primary me-3"></i>
-                <div>
-                    <h3 class="mb-0">Historial de Antigüedad Docente</h3>
-                    <h3 class="mb-0">{{ $maestro->nombres }} {{ $maestro->apellido_paterno }} {{ $maestro->apellido_materno }}</h3>
-                    <p class="text-muted mb-0">Registro de periodos trabajados y cálculo de antigüedad acumulada</p>
-                </div>
-            </div>
-
-            <!-- Resumen de Antigüedad -->
-            @if(isset($antiguedad) && $antiguedad['total_meses_trabajados'] > 0)
-            <div class="section-card">
-                <div class="card-header">
-                    <h5 class="mb-0"><i class="fas fa-chart-bar me-2"></i>Resumen General de Antigüedad</h5>
-                </div>
-                <div class="card-body">
-                    <!-- Año de ingreso -->
-                    <div class="alert alert-primary mb-4">
-                        <div class="d-flex align-items-center">
-                            <i class="fas fa-calendar-check fa-2x me-3"></i>
-                            <div>
-                                <h6 class="mb-1">Año de Ingreso: <strong>{{ $antiguedad['anio_ingreso'] }}</strong></h6>
-                                <p class="mb-0">Cálculo basado en los meses trabajados registrados en el sistema</p>
+            <!-- AÑO DE INGRESO - Versión mini -->
+            <div class="section-card-modern">
+                <div class="card-body-modern">
+                    <div class="ingreso-card-mini">
+                        <div class="ingreso-icon-mini">
+                            <i class="fas fa-calendar-alt"></i>
+                        </div>
+                        <div class="ingreso-text-mini">
+                            <h6>Año de Ingreso del Docente</h6>
+                            <div class="d-flex align-items-center">
+                                <h4>{{ $maestro->anio_ingreso ?? 'No registrado' }}</h4>
+                                @if(!$maestro->anio_ingreso)
+                                    <span class="badge-mini-warning">
+                                        <i class="fas fa-exclamation-triangle me-1"></i>
+                                        Pendiente
+                                    </span>
+                                @endif
                             </div>
                         </div>
                     </div>
+                </div>
+            </div>
 
-                    <div class="row mb-4">
-                        <div class="col-md-3 mb-3">
-                            <div class="summary-card primary">
+            <!-- Resumen de Antigüedad - CON MEJOR DISEÑO -->
+            @if(isset($antiguedad) && isset($antiguedad['total_meses']) && $antiguedad['total_meses'] > 0)
+            <div class="section-card-modern">
+                <div class="card-header-modern">
+                    <h5>
+                        <i class="fas fa-chart-bar"></i>
+                        Resumen de Antigüedad
+                    </h5>
+                </div>
+                <div class="card-body-modern">
+                    <div class="summary-grid">
+                        <div class="summary-card-modern">
+                            <div class="summary-icon">
                                 <i class="fas fa-calendar-alt"></i>
-                                <h5>Total Meses</h5>
-                                <h2>{{ $antiguedad['total_meses_trabajados'] }}</h2>
-                                <small class="text-muted">meses acumulados</small>
                             </div>
+                            <h5>Total Meses</h5>
+                            <h2>{{ $antiguedad['total_meses'] }}</h2>
+                            <small>meses acumulados</small>
                         </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="summary-card success">
+                        
+                        <div class="summary-card-modern">
+                            <div class="summary-icon" style="background: rgba(40, 167, 69, 0.1); color: var(--success-color);">
                                 <i class="fas fa-calendar-check"></i>
-                                <h5>Años Completos</h5>
-                                <h2>{{ $antiguedad['anios'] }}</h2>
-                                <small class="text-muted">años</small>
                             </div>
+                            <h5>Años Completos</h5>
+                            <h2>{{ $antiguedad['anios'] }}</h2>
+                            <small>años</small>
                         </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="summary-card warning">
+                        
+                        <div class="summary-card-modern">
+                            <div class="summary-icon" style="background: rgba(255, 193, 7, 0.1); color: var(--warning-color);">
                                 <i class="fas fa-calendar-plus"></i>
-                                <h5>Meses Adicionales</h5>
-                                <h2>{{ $antiguedad['meses'] }}</h2>
-                                <small class="text-muted">meses</small>
                             </div>
+                            <h5>Meses Adicionales</h5>
+                            <h2>{{ $antiguedad['meses'] }}</h2>
+                            <small>meses</small>
                         </div>
-                        <div class="col-md-3 mb-3">
-                            <div class="summary-total">
-                                <i class="fas fa-star mb-2"></i>
-                                <h5 class="text-white-50">Antigüedad Total</h5>
-                                <h4>{{ $antiguedad['anios'] }} años {{ $antiguedad['meses'] }} meses</h4>
-                            </div>
+                        
+                        <div class="summary-total-modern">
+                            <h5>Antigüedad Total</h5>
+                            <h4>{{ $antiguedad['anios'] }} años {{ $antiguedad['meses'] }} meses</h4>
                         </div>
                     </div>
                 </div>
             </div>
             @endif
 
-            <!-- Tabla de Períodos -->
-            <div class="section-card">
-                <div class="card-header">
-                    <div class="d-flex justify-content-between align-items-center">
-                        <h5 class="mb-0"><i class="fas fa-table me-2"></i>Períodos Registrados</h5>
-                        <a href="{{ route('maestros.calcular-antiguedad', $maestro) }}" class="btn btn-sm btn-primary">
-                            <i class="fas fa-plus me-1"></i> Calcular Antiguedad
-                        </a>
-                    </div>
+            <!-- Tabla de Períodos - CON AÑO DE INGRESO AGREGADO -->
+            <div class="section-card-modern">
+                <div class="card-header-modern">
+                    <h5>
+                        <i class="fas fa-table"></i>
+                        Períodos Registrados
+                    </h5>
+                    <a href="{{ route('maestros.calcular-antiguedad', $maestro) }}" class="btn btn-primary-modern btn-modern">
+                        <i class="fas fa-plus"></i>
+                        Calcular Antiguedad
+                    </a>
                 </div>
-                <div class="card-body">
+                <div class="card-body-modern">
                     @if($periodosTrabajados->count() > 0)
                         @php
-                            $nombresMeses = [
-                                1 => 'Enero', 2 => 'Febrero', 3 => 'Marzo', 4 => 'Abril',
-                                5 => 'Mayo', 6 => 'Junio', 7 => 'Julio', 8 => 'Agosto',
-                                9 => 'Septiembre', 10 => 'Octubre', 11 => 'Noviembre', 12 => 'Diciembre'
-                            ];
+                            // Agrupar períodos por ID
+                            $periodosAgrupados = [];
+                            foreach($periodosTrabajados as $periodo) {
+                                $periodoId = $periodo->id;
+                                if(!isset($periodosAgrupados[$periodoId])) {
+                                    $periodosAgrupados[$periodoId] = [
+                                        'nombre' => $periodo->nombre,
+                                        'fecha' => $periodo->pivot->created_at,
+                                        'años' => [],
+                                        'total_meses' => 0
+                                    ];
+                                }
+                                
+                                $anio = $periodo->pivot->anio_periodo;
+                                $meses = json_decode($periodo->pivot->meses_trabajados, true) ?? [];
+                                $totalMeses = count($meses);
+                                
+                                $periodosAgrupados[$periodoId]['años'][] = $anio;
+                                $periodosAgrupados[$periodoId]['total_meses'] += $totalMeses;
+                            }
                         @endphp
                         
-                        <div class="table-responsive">
-                            <table class="table table-striped table-hover">
+                        <div class="table-responsive-modern">
+                            <table class="table-modern">
                                 <thead>
                                     <tr>
                                         <th>Período</th>
-                                        <th>Año</th>
-                                        <th>Meses Trabajados</th>
+                                        <th>Año Ingreso</th>
+                                        <th>Años Trabajados</th>
                                         <th>Total Meses</th>
-                                        <th>Fecha Registro</th>
                                         <th>Acciones</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach($periodosTrabajados as $periodo)
+                                    @foreach($periodosAgrupados as $periodoId => $datos)
                                     <tr>
                                         <td>
-                                            <strong>{{ $periodo->nombre }}</strong>
+                                            <span class="periodo-badge">
+                                                <i class="fas fa-calendar me-1"></i>
+                                                {{ $datos['nombre'] }}
+                                            </span>
                                         </td>
                                         <td>
-                                            <span class="badge bg-info fs-6">{{ $periodo->pivot->anio_periodo }}</span>
+                                            <span class="anio-badge-modern" style="background: var(--primary-light); color: var(--primary); font-weight: 600;">
+                                                <i class="fas fa-calendar-check me-1"></i>
+                                                {{ $maestro->anio_ingreso ?? '—' }}
+                                            </span>
                                         </td>
                                         <td>
-                                            @php
-                                                $meses = json_decode($periodo->pivot->meses_trabajados, true) ?? [];
-                                                $mesesNombres = array_map(function($mes) use ($nombresMeses) {
-                                                    return $nombresMeses[$mes] ?? $mes;
-                                                }, $meses);
-                                            @endphp
-                                            <small class="text-muted">
-                                                {{ implode(', ', array_slice($mesesNombres, 0, 3)) }}
-                                                @if(count($mesesNombres) > 3)
-                                                    ... ({{ count($mesesNombres) }} meses)
-                                                @endif
-                                            </small>
+                                            @foreach($datos['años'] as $anio)
+                                                <span class="anio-badge-modern">
+                                                    {{ $anio }}
+                                                </span>
+                                            @endforeach
                                         </td>
                                         <td>
-                                            <span class="badge bg-primary">{{ $periodo->pivot->total_meses }} meses</span>
+                                            <span class="total-meses-badge">
+                                                {{ $datos['total_meses'] }} meses
+                                            </span>
                                         </td>
                                         <td>
-                                            <small>{{ $periodo->pivot->created_at->format('d/m/Y H:i') }}</small>
-                                        </td>
-                                        <td>
-                                            <form action="{{ route('maestros.eliminar-periodo', $maestro) }}" method="POST" class="d-inline">
-                                                @csrf
-                                                @method('DELETE')
-                                                <input type="hidden" name="periodo_id" value="{{ $periodo->id }}">
-                                                <input type="hidden" name="anio_periodo" value="{{ $periodo->pivot->anio_periodo }}">
-                                                <button type="submit" class="btn btn-danger btn-sm" 
-                                                        onclick="return confirm('¿Está seguro de eliminar este período?')"
-                                                        title="Eliminar período">
-                                                    <i class="fas fa-trash"></i>
-                                                </button>
-                                            </form>
+                                            <div class="btn-group-modern">
+                                                <a href="{{ route('maestros.calcular-antiguedad', ['maestro' => $maestro, 'periodo_id' => $periodoId]) }}" 
+                                                   class="btn-icon btn-icon-warning"
+                                                   title="Editar período">
+                                                    <i class="fas fa-edit"></i>
+                                                </a>
+                                                
+                                                <form action="{{ route('maestros.eliminar-periodo', $maestro) }}" method="POST" class="d-inline">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <input type="hidden" name="periodo_id" value="{{ $periodoId }}">
+                                                    <input type="hidden" name="anio_periodo" value="{{ $datos['años'][0] ?? '' }}">
+                                                    <button type="submit" class="btn-icon btn-icon-danger" 
+                                                            onclick="return confirm('¿Está seguro de eliminar este período?')"
+                                                            title="Eliminar período">
+                                                        <i class="fas fa-trash"></i>
+                                                    </button>
+                                                </form>
+                                            </div>
                                         </td>
                                     </tr>
                                     @endforeach
@@ -588,12 +920,15 @@
                             </table>
                         </div>
                     @else
-                        <div class="text-center py-5">
-                            <i class="fas fa-inbox fa-4x text-muted mb-3"></i>
-                            <h4 class="text-muted">No hay períodos registrados</h4>
-                            <p class="text-muted mb-4">Comience agregando el primer período de trabajo.</p>
-                            <a href="{{ route('maestros.calcular-antiguedad', $maestro) }}" class="btn btn-primary btn-lg">
-                                <i class="fas fa-plus me-2"></i> Calcular Antiguedad
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <i class="fas fa-inbox"></i>
+                            </div>
+                            <h4>No hay períodos registrados</h4>
+                            <p>Comience agregando el primer período de trabajo</p>
+                            <a href="{{ route('maestros.calcular-antiguedad', $maestro) }}" class="btn btn-primary-modern btn-modern">
+                                <i class="fas fa-plus me-2"></i>
+                                Calcular Antigüedad
                             </a>
                         </div>
                     @endif
@@ -601,40 +936,16 @@
             </div>
 
             <!-- Información sobre el cálculo -->
-            <div class="alert alert-info">
-                <div class="d-flex">
-                    <div class="me-3">
-                        <i class="fas fa-info-circle fa-2x"></i>
-                    </div>
-                    <div>
-                        <h6 class="alert-heading">¿Cómo se calcula la antigüedad?</h6>
-                        <p class="mb-0">La antigüedad se calcula sumando únicamente los meses trabajados registrados en los diferentes periodos. Cada periodo contribuye con los meses específicos seleccionados. Total meses trabajados ÷ 12 = Años completos + Meses restantes.</p>
-                    </div>
+            <div class="alert-modern d-flex align-items-start gap-2">
+                <i class="fas fa-info-circle fa-lg mt-1"></i>
+                <div>
+                    <p class="mb-0"><strong>Calculo de Atiguedad:</strong> Cuando se realiza un calculo de atiguedad se agrega al historial pero se va haciedo la suma de todos los calculos, si solo quieres un caculo de antiguedad edita la atiguedad que seleccione</p>
+                    <p class="mb-0"><strong>¿Cómo se calcula?</strong> Suma de meses trabajados ÷ 12 = Años completos + Meses restantes.</p>
                 </div>
             </div>
         </div>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-    <script>
-        // Script para el botón de colapsar detalle
-        document.addEventListener('DOMContentLoaded', function() {
-            const toggleBtn = document.querySelector('[data-bs-target="#detallePeriodos"]');
-            if (toggleBtn) {
-                toggleBtn.addEventListener('click', function() {
-                    const icon = this.querySelector('.fa-chevron-down, .fa-chevron-up');
-                    if (icon) {
-                        if (icon.classList.contains('fa-chevron-down')) {
-                            icon.classList.remove('fa-chevron-down');
-                            icon.classList.add('fa-chevron-up');
-                        } else {
-                            icon.classList.remove('fa-chevron-up');
-                            icon.classList.add('fa-chevron-down');
-                        }
-                    }
-                });
-            }
-        });
-    </script>
 </body>
 </html>
