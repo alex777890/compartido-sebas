@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Estadísticas de Horarios - Coordinación | GEPROC GP</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -52,9 +52,10 @@
             margin: 0;
             padding: 0;
             min-height: 100vh;
+            overflow-x: hidden;
         }
         
-        /* Top Bar Superior - IGUAL A VISTA 02 */
+        /* Top Bar Superior */
         .top-bar {
             background: white;
             height: 70px;
@@ -141,9 +142,7 @@
             transition: all 0.2s ease;
         }
 
-        
-
-        /* Top Navigation - IGUAL A VISTA 02 */
+        /* Top Navigation - Versión Hamburguesa */
         .top-nav {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             position: fixed;
@@ -170,6 +169,27 @@
             gap: 30px;
         }
 
+        /* Botón Hamburguesa */
+        .hamburger-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
         .divider-white {
             width: 2px;
             height: 40px;
@@ -177,6 +197,7 @@
             border-radius: 2px;
         }
 
+        /* Menú Desktop */
         .nav-menu {
             display: flex;
             align-items: center;
@@ -225,6 +246,79 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        /* Menú Móvil Desplegable */
+        .mobile-nav-menu {
+            position: fixed;
+            top: 140px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            z-index: 999;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .mobile-nav-menu.open {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .mobile-nav-items {
+            padding: 15px 20px;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .mobile-nav-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .mobile-nav-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        /* Overlay para cerrar menú */
+        .menu-overlay {
+            position: fixed;
+            top: 140px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
         .nav-right {
             display: flex;
             align-items: center;
@@ -268,7 +362,7 @@
             margin: 0 auto;
         }
 
-        /* Header mejorado - IGUAL A VISTA 02 */
+        /* Header mejorado */
         .main-header {
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             border-radius: 16px;
@@ -499,6 +593,7 @@
             gap: 8px;
             justify-content: flex-end;
             margin-top: 15px;
+            flex-wrap: wrap;
         }
         
         .export-buttons .btn {
@@ -599,7 +694,7 @@
             margin-top: 10px;
         }
         
-        /* Info note de VISTA 02 adaptado */
+        /* Info note */
         .info-note {
             background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
             border-left: 4px solid var(--primary);
@@ -656,13 +751,22 @@
             .main-content {
                 padding: 20px 15px;
             }
-            
-            .page-header {
-                padding: 18px 20px;
-            }
         }
         
         @media (max-width: 768px) {
+            /* Ocultar menú desktop y mostrar hamburguesa */
+            .nav-menu {
+                display: none;
+            }
+            
+            .hamburger-btn {
+                display: flex;
+            }
+            
+            .divider-white {
+                display: none;
+            }
+            
             .stats-grid, .stats-grid-3 {
                 grid-template-columns: 1fr;
             }
@@ -691,22 +795,61 @@
                 padding: 5px 10px;
             }
             
-            .nav-menu {
-                display: none;
-            }
-            
             .top-bar {
                 padding: 0 20px;
+                height: 60px;
+            }
+            
+            .top-nav {
+                top: 60px;
+            }
+            
+            .nav-container {
+                height: 60px;
+                padding: 0 20px;
+            }
+            
+            .main-content {
+                margin-top: 130px;
+                padding: 20px;
+            }
+            
+            .mobile-nav-menu {
+                top: 130px;
+            }
+            
+            .menu-overlay {
+                top: 130px;
+            }
+            
+            .top-bar-right {
+                gap: 10px;
+            }
+            
+            .logo-img-header {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .header-logo span {
+                font-size: 1rem;
+            }
+            
+            .main-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 15px;
+            }
+            
+            .periodo-selector .row {
+                flex-direction: column;
+                gap: 15px;
             }
         }
         
         @media (max-width: 576px) {
             .age-grid {
                 grid-template-columns: 1fr;
-            }
-            
-            .page-header {
-                padding: 15px;
             }
             
             .stats-section {
@@ -735,6 +878,9 @@
         @media print {
             .top-bar, 
             .top-nav, 
+            .mobile-nav-menu,
+            .menu-overlay,
+            .hamburger-btn,
             .export-buttons,
             .logout-btn,
             .info-note {
@@ -804,23 +950,33 @@
         }
     @endphp
 
-    <!-- Top Bar Superior - IGUAL A VISTA 02 -->
+    <!-- Top Bar Superior -->
     <div class="top-bar">
         <div class="top-bar-content">
             <div class="header-logo">
                 <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img-header">
-                
+                <span></span>
             </div>
             
+            <div class="top-bar-right">
+                <div class="top-bar-divider"></div>
+                <div class="user-avatar">
+                    {{ $userInitials }}
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Top Navigation - IGUAL A VISTA 02 -->
+    <!-- Top Navigation con menú hamburguesa -->
     <nav class="top-nav">
         <div class="nav-container">
             <div class="nav-left">
-                <div class="divider-white"></div>
+                <!-- Botón Hamburguesa -->
+                <button class="hamburger-btn" id="hamburgerBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
                 
+                <!-- Menú Desktop (visible en escritorio) -->
                 <div class="nav-menu">
                     <a href="{{ route('coordinacion.dashboard') }}" class="nav-item">
                         <i class="fas fa-home"></i>
@@ -859,6 +1015,37 @@
         </div>
     </nav>
 
+    <!-- Menú Móvil Desplegable -->
+    <div class="mobile-nav-menu" id="mobileMenu">
+        <div class="mobile-nav-items">
+            <a href="{{ route('coordinacion.dashboard') }}" class="mobile-nav-item">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="{{ route('coordinaciones.maestros-detalle') }}" class="mobile-nav-item">
+                <i class="fas fa-users"></i>
+                <span>Maestros</span>
+            </a>
+            <a href="{{ route('coordinaciones.maestros') }}" class="mobile-nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Documentos</span>
+            </a>
+            <a href="{{ route('coordinaciones.estatus') }}" class="mobile-nav-item active">
+                <i class="fas fa-chart-bar"></i>
+                <span>Estadísticas</span>
+            </a>
+            @if(isset($coordinacionId) && $coordinacionId)
+            <a href="{{ route('coordinaciones.show', $coordinacionId) }}" class="mobile-nav-item">
+                <i class="fas fa-building"></i>
+                <span>Mi Coordinación</span>
+            </a>
+            @endif
+        </div>
+    </div>
+
+    <!-- Overlay para cerrar menú -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
     <!-- Overlay de carga para exportación -->
     <div class="export-loading" id="exportLoading">
         <div class="spinner-border text-light" role="status">
@@ -870,7 +1057,7 @@
     <!-- Main Content -->
     <main class="main-content">
         <div class="content-container">
-            <!-- HEADER - IGUAL A VISTA 02 -->
+            <!-- HEADER -->
             <div class="main-header">
                 <div class="header-left">
                     <h2>Estadísticas de Horarios</h2>
@@ -919,7 +1106,7 @@
             </div>
             @endif
 
-            <!-- NOTA INFORMATIVA SOBRE LAS ESTADÍSTICAS - Estilo VISTA 02 -->
+            <!-- NOTA INFORMATIVA SOBRE LAS ESTADÍSTICAS -->
             <div class="info-note">
                 <i class="fas fa-chart-line"></i>
                 <div class="info-note-content">
@@ -959,7 +1146,7 @@
                         @endif
                     </div>
                     
-                    <!-- ✅ NUEVO: Otros géneros -->
+                    <!-- NUEVO: Otros géneros -->
                     @if(isset($otros) && $otros > 0)
                     <div class="stat-card purple">
                         <div class="stat-number text-purple">{{ $otros }}</div>
@@ -970,7 +1157,7 @@
                     </div>
                     @endif
                     
-                    <!-- ✅ NUEVO: Sin género -->
+                    <!-- NUEVO: Sin género -->
                     @if(isset($sinSexo) && $sinSexo > 0)
                     <div class="stat-card warning">
                         <div class="stat-number text-warning">{{ $sinSexo }}</div>
@@ -1323,233 +1510,289 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('Cargando gráficas de horarios...');
-    
-    // Datos desde PHP
-    const totalMaestros = {{ $totalMaestros }};
-    
-    // Datos de horarios
-    const horariosData = {
-        conHorario: {{ $conHorario }},
-        sinHorario: {{ $sinHorario }},
-        conFoto: {{ $conFoto }},
-        sinFoto: {{ $sinFoto }}
-    };
-
-    // Datos de distribución de horas
-    const distribucionHorasData = {
-        rango1: {{ $distribucionHoras['0-5'] ?? 0 }},
-        rango2: {{ $distribucionHoras['6-10'] ?? 0 }},
-        rango3: {{ $distribucionHoras['11-15'] ?? 0 }},
-        rango4: {{ $distribucionHoras['16-20'] ?? 0 }},
-        rango5: {{ $distribucionHoras['21-25'] ?? 0 }},
-        rango6: {{ $distribucionHoras['26+'] ?? 0 }}
-    };
-
-    // Datos de género
-    const genderData = {
-        hombres: {{ $hombres }},
-        mujeres: {{ $mujeres }},
-        otros: {{ $otros ?? 0 }},
-        sinSexo: {{ $sinSexo ?? 0 }}
-    };
-
-    // Datos de actividad
-    const activityData = {
-        activos: {{ $maestrosActivos }},
-        inactivos: {{ $maestrosInactivos }}
-    };
-
-    // Gráfica 1: Estado de Horarios
-    const horariosCtx = document.getElementById('horariosChart').getContext('2d');
-    new Chart(horariosCtx, {
-        type: 'doughnut',
-        data: {
-            labels: ['Con Horario', 'Sin Horario'],
-            datasets: [{
-                data: [horariosData.conHorario, horariosData.sinHorario],
-                backgroundColor: ['#28a745', '#dc3545'],
-                borderWidth: 2,
-                borderColor: '#fff',
-                hoverOffset: 15
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom' },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const total = horariosData.conHorario + horariosData.sinHorario;
-                            const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
-                            return `${context.label}: ${context.parsed} (${percentage}%)`;
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Gráfica 2: Distribución de Horas
-    const horasCtx = document.getElementById('horasChart').getContext('2d');
-    new Chart(horasCtx, {
-        type: 'bar',
-        data: {
-            labels: ['0-5 h', '6-10 h', '11-15 h', '16-20 h', '21-25 h', '26+ h'],
-            datasets: [{
-                label: 'Cantidad de Maestros',
-                data: [
-                    distribucionHorasData.rango1,
-                    distribucionHorasData.rango2,
-                    distribucionHorasData.rango3,
-                    distribucionHorasData.rango4,
-                    distribucionHorasData.rango5,
-                    distribucionHorasData.rango6
-                ],
-                backgroundColor: [
-                    '#17a2b8',
-                    '#28a745',
-                    '#ffc107',
-                    '#fd7e14',
-                    '#dc3545',
-                    '#6f42c1'
-                ],
-                borderWidth: 1,
-                borderRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 1 }
-                }
-            },
-            plugins: {
-                legend: { display: false }
-            }
-        }
-    });
-
-    // Gráfica 3: Género
-    const genderCtx = document.getElementById('genderChart').getContext('2d');
-    
-    // Preparar labels y datos para género
-    let genderLabels = ['Hombres', 'Mujeres'];
-    let genderDataset = [genderData.hombres, genderData.mujeres];
-    let genderColors = ['#007bff', '#e83e8c'];
-    
-    // Agregar otros géneros si existen
-    if (genderData.otros > 0) {
-        genderLabels.push('Otro');
-        genderDataset.push(genderData.otros);
-        genderColors.push('#6f42c1');
-    }
-    
-    // Agregar sin sexo si existe
-    if (genderData.sinSexo > 0) {
-        genderLabels.push('Sin especificar');
-        genderDataset.push(genderData.sinSexo);
-        genderColors.push('#ffc107');
-    }
-    
-    new Chart(genderCtx, {
-        type: 'pie',
-        data: {
-            labels: genderLabels,
-            datasets: [{
-                data: genderDataset,
-                backgroundColor: genderColors,
-                borderWidth: 2,
-                borderColor: '#fff'
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                legend: { position: 'bottom' },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const total = genderDataset.reduce((a, b) => a + b, 0);
-                            const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
-                            return `${context.label}: ${context.parsed} (${percentage}%)`;
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Gráfica 4: Actividad
-    const activityCtx = document.getElementById('activityChart').getContext('2d');
-    new Chart(activityCtx, {
-        type: 'bar',
-        data: {
-            labels: ['Activos', 'Inactivos'],
-            datasets: [{
-                data: [activityData.activos, activityData.inactivos],
-                backgroundColor: ['#28a745', '#dc3545'],
-                borderWidth: 1,
-                borderRadius: 6
-            }]
-        },
-        options: {
-            responsive: true,
-            maintainAspectRatio: false,
-            scales: {
-                y: {
-                    beginAtZero: true,
-                    ticks: { stepSize: 1 }
-                }
-            },
-            plugins: {
-                legend: { display: false },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const total = activityData.activos + activityData.inactivos;
-                            const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
-                            return `${context.label}: ${context.parsed} (${percentage}%)`;
-                        }
-                    }
-                }
-            }
-        }
-    });
-
-    // Función para exportar a PDF
-    document.getElementById('exportPdf').addEventListener('click', function(e) {
-        e.preventDefault();
-        const loadingDiv = document.getElementById('exportLoading');
-        loadingDiv.classList.add('show');
+        // Control del menú hamburguesa
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
         
-        setTimeout(() => {
-            alert('Función de exportación a PDF - En desarrollo');
-            loadingDiv.classList.remove('show');
-        }, 1500);
-    });
-
-    // Función para exportar a Excel
-    document.getElementById('exportExcel').addEventListener('click', function(e) {
-        e.preventDefault();
-        const loadingDiv = document.getElementById('exportLoading');
-        loadingDiv.classList.add('show');
+        function toggleMenu() {
+            mobileMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('active');
+            
+            const icon = hamburgerBtn.querySelector('i');
+            if (mobileMenu.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
         
-        setTimeout(() => {
-            alert('Función de exportación a Excel - En desarrollo');
-            loadingDiv.classList.remove('show');
-        }, 1500);
-    });
+        function closeMenu() {
+            mobileMenu.classList.remove('open');
+            menuOverlay.classList.remove('active');
+            const icon = hamburgerBtn.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+        
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', toggleMenu);
+        }
+        
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', closeMenu);
+        }
+        
+        // Cerrar menú al hacer click en un enlace
+        const mobileLinks = document.querySelectorAll('.mobile-nav-item');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+        
+        // Cerrar menú al redimensionar a escritorio
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && mobileMenu.classList.contains('open')) {
+                closeMenu();
+            }
+        });
+        
+        // Fecha actual
+        function updateDate() {
+            const dateElement = document.getElementById('currentDate');
+            if (dateElement) {
+                const today = new Date();
+                const options = { day: 'numeric', month: 'short', year: 'numeric' };
+                dateElement.textContent = today.toLocaleDateString('es-ES', options);
+            }
+        }
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            console.log('Cargando gráficas de horarios...');
+            
+            // Datos desde PHP
+            const totalMaestros = {{ $totalMaestros }};
+            
+            // Datos de horarios
+            const horariosData = {
+                conHorario: {{ $conHorario }},
+                sinHorario: {{ $sinHorario }},
+                conFoto: {{ $conFoto }},
+                sinFoto: {{ $sinFoto }}
+            };
 
-    console.log('Todas las gráficas cargadas correctamente');
-});
+            // Datos de distribución de horas
+            const distribucionHorasData = {
+                rango1: {{ $distribucionHoras['0-5'] ?? 0 }},
+                rango2: {{ $distribucionHoras['6-10'] ?? 0 }},
+                rango3: {{ $distribucionHoras['11-15'] ?? 0 }},
+                rango4: {{ $distribucionHoras['16-20'] ?? 0 }},
+                rango5: {{ $distribucionHoras['21-25'] ?? 0 }},
+                rango6: {{ $distribucionHoras['26+'] ?? 0 }}
+            };
+
+            // Datos de género
+            const genderData = {
+                hombres: {{ $hombres }},
+                mujeres: {{ $mujeres }},
+                otros: {{ $otros ?? 0 }},
+                sinSexo: {{ $sinSexo ?? 0 }}
+            };
+
+            // Datos de actividad
+            const activityData = {
+                activos: {{ $maestrosActivos }},
+                inactivos: {{ $maestrosInactivos }}
+            };
+
+            // Gráfica 1: Estado de Horarios
+            const horariosCtx = document.getElementById('horariosChart').getContext('2d');
+            new Chart(horariosCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Con Horario', 'Sin Horario'],
+                    datasets: [{
+                        data: [horariosData.conHorario, horariosData.sinHorario],
+                        backgroundColor: ['#28a745', '#dc3545'],
+                        borderWidth: 2,
+                        borderColor: '#fff',
+                        hoverOffset: 15
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = horariosData.conHorario + horariosData.sinHorario;
+                                    const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
+                                    return `${context.label}: ${context.parsed} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfica 2: Distribución de Horas
+            const horasCtx = document.getElementById('horasChart').getContext('2d');
+            new Chart(horasCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['0-5 h', '6-10 h', '11-15 h', '16-20 h', '21-25 h', '26+ h'],
+                    datasets: [{
+                        label: 'Cantidad de Maestros',
+                        data: [
+                            distribucionHorasData.rango1,
+                            distribucionHorasData.rango2,
+                            distribucionHorasData.rango3,
+                            distribucionHorasData.rango4,
+                            distribucionHorasData.rango5,
+                            distribucionHorasData.rango6
+                        ],
+                        backgroundColor: [
+                            '#17a2b8',
+                            '#28a745',
+                            '#ffc107',
+                            '#fd7e14',
+                            '#dc3545',
+                            '#6f42c1'
+                        ],
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false }
+                    }
+                }
+            });
+
+            // Gráfica 3: Género
+            const genderCtx = document.getElementById('genderChart').getContext('2d');
+            
+            let genderLabels = ['Hombres', 'Mujeres'];
+            let genderDataset = [genderData.hombres, genderData.mujeres];
+            let genderColors = ['#007bff', '#e83e8c'];
+            
+            if (genderData.otros > 0) {
+                genderLabels.push('Otro');
+                genderDataset.push(genderData.otros);
+                genderColors.push('#6f42c1');
+            }
+            
+            if (genderData.sinSexo > 0) {
+                genderLabels.push('Sin especificar');
+                genderDataset.push(genderData.sinSexo);
+                genderColors.push('#ffc107');
+            }
+            
+            new Chart(genderCtx, {
+                type: 'pie',
+                data: {
+                    labels: genderLabels,
+                    datasets: [{
+                        data: genderDataset,
+                        backgroundColor: genderColors,
+                        borderWidth: 2,
+                        borderColor: '#fff'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { position: 'bottom' },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = genderDataset.reduce((a, b) => a + b, 0);
+                                    const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
+                                    return `${context.label}: ${context.parsed} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Gráfica 4: Actividad
+            const activityCtx = document.getElementById('activityChart').getContext('2d');
+            new Chart(activityCtx, {
+                type: 'bar',
+                data: {
+                    labels: ['Activos', 'Inactivos'],
+                    datasets: [{
+                        data: [activityData.activos, activityData.inactivos],
+                        backgroundColor: ['#28a745', '#dc3545'],
+                        borderWidth: 1,
+                        borderRadius: 6
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { stepSize: 1 }
+                        }
+                    },
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const total = activityData.activos + activityData.inactivos;
+                                    const percentage = total > 0 ? ((context.parsed / total) * 100).toFixed(1) : 0;
+                                    return `${context.label}: ${context.parsed} (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Función para exportar a PDF
+            document.getElementById('exportPdf').addEventListener('click', function(e) {
+                e.preventDefault();
+                const loadingDiv = document.getElementById('exportLoading');
+                loadingDiv.classList.add('show');
+                
+                setTimeout(() => {
+                    alert('Función de exportación a PDF - En desarrollo');
+                    loadingDiv.classList.remove('show');
+                }, 1500);
+            });
+
+            // Función para exportar a Excel
+            document.getElementById('exportExcel').addEventListener('click', function(e) {
+                e.preventDefault();
+                const loadingDiv = document.getElementById('exportLoading');
+                loadingDiv.classList.add('show');
+                
+                setTimeout(() => {
+                    alert('Función de exportación a Excel - En desarrollo');
+                    loadingDiv.classList.remove('show');
+                }, 1500);
+            });
+
+            console.log('Todas las gráficas cargadas correctamente');
+        });
     </script>
 </body>
 </html>

@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Estado de Documentos | GEPROC GP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Agregar Bootstrap para el paginado simple -->
@@ -45,6 +45,7 @@
             background: #f5f7fb;
             color: var(--text-dark);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Top Bar Superior */
@@ -109,17 +110,18 @@
         }
 
         .user-avatar {
-            width: 40px;
-            height: 40px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            width: 36px;
+            height: 36px;
+            background: var(--light-primary);
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            color: white;
+            color: var(--primary);
             font-weight: 600;
             font-size: 1rem;
-            box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+            border: 2px solid white;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
         .top-bar-item {
@@ -142,7 +144,7 @@
             font-size: 1rem;
         }
 
-        /* Top Navigation */
+        /* Top Navigation - Versión Hamburguesa */
         .top-nav {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             position: fixed;
@@ -169,6 +171,27 @@
             gap: 30px;
         }
 
+        /* Botón Hamburguesa */
+        .hamburger-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
         .divider-white {
             width: 2px;
             height: 40px;
@@ -176,6 +199,7 @@
             border-radius: 2px;
         }
 
+        /* Menú Desktop */
         .nav-menu {
             display: flex;
             align-items: center;
@@ -224,6 +248,79 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        /* Menú Móvil Desplegable */
+        .mobile-nav-menu {
+            position: fixed;
+            top: 140px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            z-index: 999;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .mobile-nav-menu.open {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .mobile-nav-items {
+            padding: 15px 20px;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .mobile-nav-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .mobile-nav-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        /* Overlay para cerrar menú */
+        .menu-overlay {
+            position: fixed;
+            top: 140px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
         .nav-right {
             display: flex;
             align-items: center;
@@ -255,7 +352,7 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Main Content - Ajustado por las dos barras */
+        /* Main Content */
         .main-content {
             margin-top: 140px;
             padding: 30px 40px;
@@ -448,7 +545,7 @@
             box-shadow: var(--shadow-sm);
         }
 
-        /* Info Tooltip - MEJORADO: se despliega a la izquierda */
+        /* Info Tooltip */
         .info-tooltip-container {
             position: relative;
             display: inline-flex;
@@ -622,7 +719,7 @@
             padding: 12px;
         }
 
-        /* Buscador mejorado - AHORA ARRIBA Y MÁS GRANDE */
+        /* Buscador mejorado */
         .search-filter-top {
             display: flex;
             justify-content: space-between;
@@ -791,7 +888,6 @@
             gap: 12px;
         }
 
-        /* Avatar modificado: borde azul y fondo blanco */
         .maestro-avatar {
             width: 45px;
             height: 45px;
@@ -828,50 +924,13 @@
             color: var(--primary);
         }
 
-        /* Documentación mejorada con 4 estados */
+        /* Documentación mejorada */
         .document-progress {
             display: flex;
             flex-direction: column;
             gap: 8px;
         }
 
-        .progress-stats {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.9rem;
-            color: var(--text-dark);
-            font-weight: 600;
-        }
-
-        .doc-count {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            background: #f8f9fa;
-            padding: 6px 12px;
-            border-radius: 30px;
-            border: 1px solid var(--border-color);
-        }
-
-        .doc-count span {
-            background: white;
-            padding: 2px 10px;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 700;
-        }
-
-        .entregados { 
-            color: #1a9c2a;
-            background: rgba(26, 156, 42, 0.1) !important;
-        }
-        
-        .faltantes { 
-            color: #f44336;
-            background: rgba(244, 67, 54, 0.1) !important;
-        }
-
-        /* Nuevos indicadores visuales para documentos con 4 estados */
         .doc-status-badge {
             display: inline-flex;
             align-items: center;
@@ -985,12 +1044,10 @@
             opacity: 0.6;
         }
 
-        /* Ocultar info de DataTables */
         .dataTables_info {
             display: none !important;
         }
 
-        /* Estilo para el buscador de DataTables */
         .dataTables_filter {
             display: none !important;
         }
@@ -1047,7 +1104,35 @@
             background: rgba(26, 76, 186, 0.1);
         }
 
-        /* Responsive */
+        /* Alert mejorado */
+        #alertMessage {
+            position: fixed;
+            top: 160px;
+            right: 25px;
+            padding: 15px 25px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+            border-left: 5px solid var(--accent);
+            z-index: 10000;
+            display: none;
+            font-size: 1rem;
+            font-weight: 500;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateX(100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        /* Responsive Design */
         @media (max-width: 1200px) {
             .table-responsive {
                 max-width: calc(100vw - 80px);
@@ -1061,16 +1146,44 @@
         }
 
         @media (max-width: 768px) {
+            /* Ocultar menú desktop y mostrar hamburguesa */
             .nav-menu {
+                display: none;
+            }
+            
+            .hamburger-btn {
+                display: flex;
+            }
+            
+            .divider-white {
                 display: none;
             }
             
             .main-content {
                 padding: 20px;
+                margin-top: 130px;
             }
             
             .top-bar {
                 padding: 0 20px;
+                height: 60px;
+            }
+            
+            .top-nav {
+                top: 60px;
+            }
+            
+            .nav-container {
+                height: 60px;
+                padding: 0 20px;
+            }
+            
+            .mobile-nav-menu {
+                top: 130px;
+            }
+            
+            .menu-overlay {
+                top: 130px;
             }
             
             .top-bar-right {
@@ -1127,33 +1240,41 @@
                 width: 100%;
                 justify-content: center;
             }
-        }
-
-        /* Alert mejorado */
-        #alertMessage {
-            position: fixed;
-            top: 160px;
-            right: 25px;
-            padding: 15px 25px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-            border-left: 5px solid var(--accent);
-            z-index: 10000;
-            display: none;
-            font-size: 1rem;
-            font-weight: 500;
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from {
-                transform: translateX(100%);
-                opacity: 0;
+            
+            .logo-img-header {
+                width: 60px;
+                height: 60px;
             }
-            to {
-                transform: translateX(0);
-                opacity: 1;
+            
+            .header-logo span {
+                font-size: 1rem;
+            }
+            
+            .periodo-info {
+                flex-direction: column;
+                gap: 12px;
+                text-align: center;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .doc-status-badge {
+                font-size: 0.7rem;
+                padding: 4px 8px;
+            }
+            
+            .main-header {
+                padding: 20px;
+            }
+            
+            .header-left h2 {
+                font-size: 1.3rem;
             }
         }
     </style>
@@ -1202,15 +1323,27 @@
                 <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img-header">
                 <span></span>
             </div>
+            
+            <div class="top-bar-right">
+                
+                <div class="top-bar-divider"></div>
+                <div class="user-avatar">
+                    {{ $userInitials }}
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Top Navigation - Menú principal -->
+    <!-- Top Navigation con menú hamburguesa -->
     <nav class="top-nav">
         <div class="nav-container">
             <div class="nav-left">
-                <div class="divider-white"></div>
+                <!-- Botón Hamburguesa -->
+                <button class="hamburger-btn" id="hamburgerBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
                 
+                <!-- Menú Desktop (visible en escritorio) -->
                 <div class="nav-menu">
                     <a href="{{ route('coordinacion.dashboard') }}" class="nav-item">
                         <i class="fas fa-home"></i>
@@ -1247,10 +1380,38 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- Menú Móvil Desplegable -->
+    <div class="mobile-nav-menu" id="mobileMenu">
+        <div class="mobile-nav-items">
+            <a href="{{ route('coordinacion.dashboard') }}" class="mobile-nav-item">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="{{ route('coordinaciones.maestros-detalle') }}" class="mobile-nav-item">
+                <i class="fas fa-users"></i>
+                <span>Maestros</span>
+            </a>
+            <a href="{{ route('coordinaciones.maestros') }}" class="mobile-nav-item active">
+                <i class="fas fa-file-alt"></i>
+                <span>Documentos</span>
+            </a>
+            <a href="{{ route('coordinaciones.estatus') }}" class="mobile-nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Estadísticas</span>
+            </a>
+            <a href="{{ route('coordinaciones.show', $coordinacion->id ?? '#') }}" class="mobile-nav-item">
+                <i class="fas fa-building"></i>
+                <span>Mi Coordinación</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Overlay para cerrar menú -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Main Content (CONTENIDO ORIGINAL SIN MODIFICAR) -->
     <main class="main-content">
         <div class="content-container">
-            
             
             <div class="main-header">
                 <div class="header-left">
@@ -1262,7 +1423,7 @@
             </div>
 
             @if($coordinacion)
-                <!-- ✅ INFORMACIÓN DEL PERÍODO - CON VALIDACIÓN -->
+                <!-- INFORMACIÓN DEL PERÍODO - CON VALIDACIÓN -->
                 @if(isset($periodoHabilitado) && $periodoHabilitado)
                 <div class="periodo-info">
                     <div class="periodo-title">
@@ -1462,14 +1623,12 @@
                                             </div>
                                         </td>
                                         <td>
-                                                <div class="action-icons">
-        <a href="{{ route('coordinacion.maestros.documentos', $maestro->id) }}" class="icon-btn" title="Ver documentos" style="width: auto; padding: 0 15px;">
-            <i class="fas fa-eye" style="margin-right: 5px;"></i> Ver documentos
-        </a>
-    </div>
-
+                                            <div class="action-icons">
+                                                <a href="{{ route('coordinacion.maestros.documentos', $maestro->id) }}" class="icon-btn" title="Ver documentos" style="width: auto; padding: 0 15px;">
+                                                    <i class="fas fa-eye" style="margin-right: 5px;"></i> Ver documentos
+                                                </a>
+                                            </div>
                                         </td>
-                                        
                                     </tr>
                                     @empty
                                     <tr>
@@ -1511,219 +1670,277 @@
     <!-- Bootstrap JS -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
-<script>
-    // Función para mostrar alertas
-    function showAlert(message, type = 'success') {
-        const alertDiv = document.getElementById('alertMessage');
-        alertDiv.textContent = message;
-        alertDiv.style.borderLeftColor = type === 'success' ? '#26E63F' : '#ff6b6b';
-        alertDiv.style.display = 'block';
+    <script>
+        // Control del menú hamburguesa
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
         
-        setTimeout(() => {
-            alertDiv.style.display = 'none';
-        }, 3000);
-    }
-
-    // Funciones para el modal personalizado
-    function showModal(title, message, onConfirm) {
-        document.getElementById('modalTitle').textContent = title;
-        document.getElementById('modalMessage').textContent = message;
-        document.getElementById('confirmModal').style.display = 'flex';
-        
-        document.getElementById('confirmBtn').onclick = function() {
-            hideModal();
-            if (onConfirm) onConfirm();
-        };
-    }
-
-    function hideModal() {
-        document.getElementById('confirmModal').style.display = 'none';
-    }
-
-    // Script principal
-    document.addEventListener('DOMContentLoaded', function() {
-        // Verificar si existe el tooltip (para la vista de documentos)
-        const infoIcon = document.getElementById('infoIcon');
-        const infoTooltip = document.getElementById('infoTooltip');
-        const closeTooltip = document.getElementById('closeTooltip');
-        
-        // TOOLTIP: se abre al hacer clic y se cierra con la X
-        if (infoIcon && infoTooltip) {
-            infoIcon.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                infoTooltip.classList.toggle('show');
-            });
+        function toggleMenu() {
+            mobileMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('active');
             
-            if (closeTooltip) {
-                closeTooltip.addEventListener('click', function(e) {
+            const icon = hamburgerBtn.querySelector('i');
+            if (mobileMenu.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+        
+        function closeMenu() {
+            mobileMenu.classList.remove('open');
+            menuOverlay.classList.remove('active');
+            const icon = hamburgerBtn.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+        
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', toggleMenu);
+        }
+        
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', closeMenu);
+        }
+        
+        // Cerrar menú al hacer click en un enlace
+        const mobileLinks = document.querySelectorAll('.mobile-nav-item');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+        
+        // Cerrar menú al redimensionar a escritorio
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && mobileMenu.classList.contains('open')) {
+                closeMenu();
+            }
+        });
+        
+        // Fecha actual
+        function updateDate() {
+            const dateElement = document.getElementById('currentDate');
+            if (dateElement) {
+                const today = new Date();
+                const options = { day: 'numeric', month: 'short', year: 'numeric' };
+                dateElement.textContent = today.toLocaleDateString('es-ES', options);
+            }
+        }
+        
+        // Función para mostrar alertas
+        function showAlert(message, type = 'success') {
+            const alertDiv = document.getElementById('alertMessage');
+            alertDiv.textContent = message;
+            alertDiv.style.borderLeftColor = type === 'success' ? '#26E63F' : '#ff6b6b';
+            alertDiv.style.display = 'block';
+            
+            setTimeout(() => {
+                alertDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Funciones para el modal personalizado
+        function showModal(title, message, onConfirm) {
+            document.getElementById('modalTitle').textContent = title;
+            document.getElementById('modalMessage').textContent = message;
+            document.getElementById('confirmModal').style.display = 'flex';
+            
+            document.getElementById('confirmBtn').onclick = function() {
+                hideModal();
+                if (onConfirm) onConfirm();
+            };
+        }
+
+        function hideModal() {
+            document.getElementById('confirmModal').style.display = 'none';
+        }
+
+        // Script principal
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            
+            // Verificar si existe el tooltip (para la vista de documentos)
+            const infoIcon = document.getElementById('infoIcon');
+            const infoTooltip = document.getElementById('infoTooltip');
+            const closeTooltip = document.getElementById('closeTooltip');
+            
+            // TOOLTIP: se abre al hacer clic y se cierra con la X
+            if (infoIcon && infoTooltip) {
+                infoIcon.addEventListener('click', function(e) {
                     e.preventDefault();
                     e.stopPropagation();
-                    infoTooltip.classList.remove('show');
+                    infoTooltip.classList.toggle('show');
+                });
+                
+                if (closeTooltip) {
+                    closeTooltip.addEventListener('click', function(e) {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        infoTooltip.classList.remove('show');
+                    });
+                }
+                
+                document.addEventListener('click', function(e) {
+                    if (!infoIcon.contains(e.target) && !infoTooltip.contains(e.target)) {
+                        infoTooltip.classList.remove('show');
+                    }
+                });
+                
+                infoTooltip.addEventListener('click', function(e) {
+                    e.stopPropagation();
                 });
             }
+
+            // Inicializar DataTable para la tabla de documentos - SIN ORDENAMIENTO
+            if ($('#documentosTable').length) {
+                var table = $('#documentosTable').DataTable({
+                    "language": {
+                        "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json",
+                        "paginate": {
+                            "first": "«",
+                            "last": "»",
+                            "next": "›",
+                            "previous": "‹"
+                        },
+                        "lengthMenu": "Mostrar _MENU_ registros por página",
+                        "zeroRecords": "No se encontraron maestros"
+                    },
+                    // DESACTIVAR TODO ORDENAMIENTO COMPLETAMENTE
+                    "ordering": false,
+                    "order": [],
+                    "orderFixed": [],
+                    "orderCellsTop": false,
+                    "orderClasses": false,
+                    "orderMulti": false,
+                    
+                    "pageLength": 10,
+                    "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
+                    "responsive": true,
+                    "dom": '<"row"<"col-sm-12"l>>rt<"row"<"col-sm-12"p>>',
+                    "columnDefs": [
+                        { 
+                            "targets": "_all",
+                            "orderable": false,
+                            "searchable": true
+                        }
+                    ],
+                    "drawCallback": function() {
+                        var info = table.page.info();
+                        $('#totalMaestros').text(info.recordsDisplay);
+                        
+                        // Actualizar números consecutivos
+                        updateConsecutiveNumbers();
+                    }
+                });
+
+                // Función para actualizar números consecutivos
+                function updateConsecutiveNumbers() {
+                    var rows = $('#documentosTable tbody tr');
+                    rows.each(function(index) {
+                        $(this).find('td:first').html('<strong>' + (index + 1) + '</strong>');
+                    });
+                }
+
+                // Configurar búsqueda personalizada
+                $('#searchButton').on('click', function() {
+                    table.search($('#searchInput').val()).draw();
+                });
+
+                $('#searchInput').on('keypress', function(e) {
+                    if (e.key === 'Enter') {
+                        table.search($(this).val()).draw();
+                    }
+                });
+
+                // Si hay término de búsqueda inicial, aplicarlo
+                @if($searchTerm)
+                    table.search('{{ $searchTerm }}').draw();
+                @endif
+
+                // Ajustar estilos del select
+                $('.dataTables_length select').addClass('form-select form-select-sm');
+            }
+
+            // Script para cambio de estado con modal personalizado
+            const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
             
-            document.addEventListener('click', function(e) {
-                if (!infoIcon.contains(e.target) && !infoTooltip.contains(e.target)) {
-                    infoTooltip.classList.remove('show');
+            function construirUrl(maestroId) {
+                return `/maestros/${maestroId}/cambiar-estado`;
+            }
+
+            const botonesEstado = document.querySelectorAll('.toggle-estado-btn');
+            
+            botonesEstado.forEach((boton) => {
+                boton.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    
+                    const maestroId = this.dataset.maestroId;
+                    const maestroNombre = this.dataset.maestroNombre || 'este maestro';
+                    const estadoActual = parseInt(this.dataset.estadoActual);
+                    const nuevoEstado = estadoActual === 1 ? 0 : 1;
+                    
+                    const accion = nuevoEstado === 1 ? 'activar' : 'desactivar';
+                    const accionTexto = nuevoEstado === 1 ? 'ACTIVAR' : 'DESACTIVAR';
+                    
+                    const botonOriginal = this;
+                    const textoOriginal = this.innerHTML;
+                    
+                    showModal(
+                        `${accionTexto} MAESTRO`,
+                        `¿Está seguro que desea ${accion} al maestro "${maestroNombre}"?`,
+                        function() {
+                            botonOriginal.disabled = true;
+                            botonOriginal.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
+                            
+                            const url = construirUrl(maestroId);
+                            
+                            fetch(url, {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json',
+                                    'X-CSRF-TOKEN': csrfToken,
+                                    'Accept': 'application/json',
+                                    'X-Requested-With': 'XMLHttpRequest'
+                                },
+                                body: JSON.stringify({
+                                    activo: nuevoEstado
+                                })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.success) {
+                                    botonOriginal.className = `status-badge ${data.data.badge_class} toggle-estado-btn`;
+                                    botonOriginal.innerHTML = `<i class="fas ${data.data.icono}"></i> ${data.data.estado_texto}`;
+                                    botonOriginal.dataset.estadoActual = data.data.activo;
+                                    botonOriginal.disabled = false;
+                                    
+                                    showAlert(data.message, 'success');
+                                } else {
+                                    throw new Error(data.message || 'Error al cambiar estado');
+                                }
+                            })
+                            .catch(error => {
+                                console.error('Error:', error);
+                                botonOriginal.disabled = false;
+                                botonOriginal.innerHTML = textoOriginal;
+                                showAlert(error.message || 'Error al cambiar el estado del maestro', 'error');
+                            });
+                        }
+                    );
+                });
+            });
+
+            // Cerrar modal si se hace clic fuera de él
+            window.addEventListener('click', function(event) {
+                const modal = document.getElementById('confirmModal');
+                if (event.target === modal) {
+                    hideModal();
                 }
             });
-            
-            infoTooltip.addEventListener('click', function(e) {
-                e.stopPropagation();
-            });
-        }
-
-// Inicializar DataTable para la tabla de documentos - SIN ORDENAMIENTO
-if ($('#documentosTable').length) {
-    var table = $('#documentosTable').DataTable({
-        "language": {
-            "url": "//cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json",
-            "paginate": {
-                "first": "«",
-                "last": "»",
-                "next": "›",
-                "previous": "‹"
-            },
-            "lengthMenu": "Mostrar _MENU_ registros por página",
-            "zeroRecords": "No se encontraron maestros"
-        },
-        // ✅ DESACTIVAR TODO ORDENAMIENTO COMPLETAMENTE
-        "ordering": false,
-        "order": [],
-        "orderFixed": [],
-        "orderCellsTop": false,
-        "orderClasses": false,
-        "orderMulti": false,
-        
-        "pageLength": 10,
-        "lengthMenu": [[10, 25, 50, -1], [10, 25, 50, "Todos"]],
-        "responsive": true,
-        "dom": '<"row"<"col-sm-12"l>>rt<"row"<"col-sm-12"p>>',
-        "columnDefs": [
-            { 
-                "targets": "_all",
-                "orderable": false,
-                "searchable": true // Mantener búsqueda
-            }
-        ],
-        "drawCallback": function() {
-            var info = table.page.info();
-            $('#totalMaestros').text(info.recordsDisplay);
-            
-            // ✅ Actualizar números consecutivos
-            updateConsecutiveNumbers();
-        }
-    });
-
-    // Función para actualizar números consecutivos
-    function updateConsecutiveNumbers() {
-        var rows = $('#documentosTable tbody tr');
-        rows.each(function(index) {
-            $(this).find('td:first').html('<strong>' + (index + 1) + '</strong>');
         });
-    }
-
-    // Configurar búsqueda personalizada
-    $('#searchButton').on('click', function() {
-        table.search($('#searchInput').val()).draw();
-    });
-
-    $('#searchInput').on('keypress', function(e) {
-        if (e.key === 'Enter') {
-            table.search($(this).val()).draw();
-        }
-    });
-
-    // Si hay término de búsqueda inicial, aplicarlo
-    @if($searchTerm)
-        table.search('{{ $searchTerm }}').draw();
-    @endif
-
-    // Ajustar estilos del select
-    $('.dataTables_length select').addClass('form-select form-select-sm');
-}
-
-
-
-        // Script para cambio de estado con modal personalizado
-        const csrfToken = document.querySelector('meta[name="csrf-token"]')?.getAttribute('content');
-        
-        function construirUrl(maestroId) {
-            return `/maestros/${maestroId}/cambiar-estado`;
-        }
-
-        const botonesEstado = document.querySelectorAll('.toggle-estado-btn');
-        
-        botonesEstado.forEach((boton) => {
-            boton.addEventListener('click', function(e) {
-                e.preventDefault();
-                e.stopPropagation();
-                
-                const maestroId = this.dataset.maestroId;
-                const maestroNombre = this.dataset.maestroNombre || 'este maestro';
-                const estadoActual = parseInt(this.dataset.estadoActual);
-                const nuevoEstado = estadoActual === 1 ? 0 : 1;
-                
-                const accion = nuevoEstado === 1 ? 'activar' : 'desactivar';
-                const accionTexto = nuevoEstado === 1 ? 'ACTIVAR' : 'DESACTIVAR';
-                
-                const botonOriginal = this;
-                const textoOriginal = this.innerHTML;
-                
-                showModal(
-                    `${accionTexto} MAESTRO`,
-                    `¿Está seguro que desea ${accion} al maestro "${maestroNombre}"?`,
-                    function() {
-                        botonOriginal.disabled = true;
-                        botonOriginal.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Procesando...';
-                        
-                        const url = construirUrl(maestroId);
-                        
-                        fetch(url, {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'X-CSRF-TOKEN': csrfToken,
-                                'Accept': 'application/json',
-                                'X-Requested-With': 'XMLHttpRequest'
-                            },
-                            body: JSON.stringify({
-                                activo: nuevoEstado
-                            })
-                        })
-                        .then(response => response.json())
-                        .then(data => {
-                            if (data.success) {
-                                botonOriginal.className = `status-badge ${data.data.badge_class} toggle-estado-btn`;
-                                botonOriginal.innerHTML = `<i class="fas ${data.data.icono}"></i> ${data.data.estado_texto}`;
-                                botonOriginal.dataset.estadoActual = data.data.activo;
-                                botonOriginal.disabled = false;
-                                
-                                showAlert(data.message, 'success');
-                            } else {
-                                throw new Error(data.message || 'Error al cambiar estado');
-                            }
-                        })
-                        .catch(error => {
-                            console.error('Error:', error);
-                            botonOriginal.disabled = false;
-                            botonOriginal.innerHTML = textoOriginal;
-                            showAlert(error.message || 'Error al cambiar el estado del maestro', 'error');
-                        });
-                    }
-                );
-            });
-        });
-
-        // Cerrar modal si se hace clic fuera de él
-        window.addEventListener('click', function(event) {
-            const modal = document.getElementById('confirmModal');
-            if (event.target === modal) {
-                hideModal();
-            }
-        });
-    });
-</script>
+    </script>
 </body>
 </html>

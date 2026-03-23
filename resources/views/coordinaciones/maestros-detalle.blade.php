@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Lista de Maestros | GEPROC GP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Agregar Bootstrap para el paginado simple -->
@@ -51,6 +51,7 @@
             background: #f5f7fb;
             color: var(--text-dark);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
         /* Top Bar Superior */
@@ -140,7 +141,7 @@
             transition: all 0.2s ease;
         }
 
-        /* Top Navigation */
+        /* Top Navigation - Versión Hamburguesa */
         .top-nav {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             position: fixed;
@@ -167,6 +168,27 @@
             gap: 30px;
         }
 
+        /* Botón Hamburguesa */
+        .hamburger-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
         .divider-white {
             width: 2px;
             height: 40px;
@@ -174,6 +196,7 @@
             border-radius: 2px;
         }
 
+        /* Menú Desktop */
         .nav-menu {
             display: flex;
             align-items: center;
@@ -222,6 +245,79 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        /* Menú Móvil Desplegable */
+        .mobile-nav-menu {
+            position: fixed;
+            top: 140px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            z-index: 999;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .mobile-nav-menu.open {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .mobile-nav-items {
+            padding: 15px 20px;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .mobile-nav-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .mobile-nav-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
+        /* Overlay para cerrar menú */
+        .menu-overlay {
+            position: fixed;
+            top: 140px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
         .nav-right {
             display: flex;
             align-items: center;
@@ -265,7 +361,7 @@
             margin: 0 auto;
         }
 
-        /* Header mejorado - IGUAL A VISTA 02 */
+        /* Header mejorado */
         .main-header {
             background: linear-gradient(135deg, #ffffff 0%, #f8fafc 100%);
             border-radius: 16px;
@@ -362,7 +458,7 @@
             box-shadow: var(--shadow-sm);
         }
 
-        /* BUSCADOR - IDÉNTICO A VISTA 02 */
+        /* BUSCADOR */
         .search-filter-top {
             display: flex;
             justify-content: space-between;
@@ -487,7 +583,7 @@
             font-weight: 600;
         }
 
-        /* Tabla - ESTILOS DE VISTA 02 */
+        /* Tabla */
         .maestros-table-container {
             background: white;
             border-radius: 16px;
@@ -602,7 +698,6 @@
             color: #333;
             margin-bottom: 4px;
             font-size: 1rem;
-            /* ELIMINADO max-width Y text-overflow PARA QUE SE VEA COMPLETO */
             white-space: normal;
             overflow: visible;
             text-overflow: clip;
@@ -614,7 +709,6 @@
             display: flex;
             align-items: center;
             gap: 5px;
-            /* ELIMINADO max-width Y text-overflow PARA QUE SE VEA COMPLETO */
             white-space: normal;
             overflow: visible;
             text-overflow: clip;
@@ -710,7 +804,7 @@
             box-shadow: none !important;
         }
 
-        /* Acciones - IGUAL A VISTA 02 */
+        /* Acciones */
         .action-icons {
             display: flex;
             gap: 6px;
@@ -740,14 +834,13 @@
             box-shadow: var(--shadow-sm);
         }
 
-        /* Para botones con texto */
         .icon-btn[style*="width: auto"] {
             width: auto !important;
             padding: 0 15px !important;
             gap: 5px;
         }
 
-        /* PAGINACIÓN DE DATATABLES - IDÉNTICA A VISTA 02 */
+        /* PAGINACIÓN DE DATATABLES */
         .dataTables_wrapper .dataTables_paginate {
             padding-top: 20px !important;
             display: flex !important;
@@ -796,12 +889,10 @@
             opacity: 0.6;
         }
 
-        /* Ocultar info de DataTables */
         .dataTables_info {
             display: none !important;
         }
 
-        /* Estilo para el buscador de DataTables - OCULTO porque usamos el nuestro */
         .dataTables_filter {
             display: none !important;
         }
@@ -972,6 +1063,7 @@
             cursor: not-allowed !important;
         }
 
+        /* Responsive Design */
         @media (max-width: 1200px) {
             .table-responsive {
                 max-width: calc(100vw - 80px);
@@ -985,17 +1077,44 @@
         }
 
         @media (max-width: 768px) {
+            /* Ocultar menú desktop y mostrar hamburguesa */
             .nav-menu {
+                display: none;
+            }
+            
+            .hamburger-btn {
+                display: flex;
+            }
+            
+            .divider-white {
                 display: none;
             }
             
             .main-content {
                 padding: 20px;
-                margin-top: 140px;
+                margin-top: 130px;
             }
             
             .top-bar {
                 padding: 0 20px;
+                height: 60px;
+            }
+            
+            .top-nav {
+                top: 60px;
+            }
+            
+            .nav-container {
+                height: 60px;
+                padding: 0 20px;
+            }
+            
+            .mobile-nav-menu {
+                top: 130px;
+            }
+            
+            .menu-overlay {
+                top: 130px;
             }
             
             .top-bar-right {
@@ -1031,6 +1150,31 @@
             .modal-btn {
                 width: 100%;
             }
+            
+            .logo-img-header {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .header-logo span {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .section-header {
+                flex-direction: column;
+                gap: 15px;
+                align-items: flex-start;
+            }
+            
+            .main-header {
+                padding: 20px;
+            }
+            
+            .header-left h2 {
+                font-size: 1.3rem;
+            }
         }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
@@ -1060,7 +1204,6 @@
             }
         }
         
-        // Iniciales del usuario para el avatar
         $userInitials = '';
         if ($user && $user->name) {
             $names = explode(' ', $user->name);
@@ -1080,15 +1223,26 @@
                 <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img-header">
                 <span></span>
             </div>
+            
+            <div class="top-bar-right">
+                <div class="top-bar-divider"></div>
+                <div class="user-avatar">
+                    {{ $userInitials }}
+                </div>
+            </div>
         </div>
     </div>
 
-    <!-- Top Navigation - Menú principal -->
+    <!-- Top Navigation con menú hamburguesa -->
     <nav class="top-nav">
         <div class="nav-container">
             <div class="nav-left">
-                <div class="divider-white"></div>
+                <!-- Botón Hamburguesa -->
+                <button class="hamburger-btn" id="hamburgerBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
                 
+                <!-- Menú Desktop (visible en escritorio) -->
                 <div class="nav-menu">
                     <a href="{{ route('coordinacion.dashboard') }}" class="nav-item">
                         <i class="fas fa-home"></i>
@@ -1125,12 +1279,40 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- Menú Móvil Desplegable -->
+    <div class="mobile-nav-menu" id="mobileMenu">
+        <div class="mobile-nav-items">
+            <a href="{{ route('coordinacion.dashboard') }}" class="mobile-nav-item">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="{{ route('coordinaciones.maestros-detalle') }}" class="mobile-nav-item active">
+                <i class="fas fa-users"></i>
+                <span>Maestros</span>
+            </a>
+            <a href="{{ route('coordinaciones.maestros') }}" class="mobile-nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Documentos</span>
+            </a>
+            <a href="{{ route('coordinaciones.estatus') }}" class="mobile-nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Estadísticas</span>
+            </a>
+            <a href="{{ route('coordinaciones.show', $coordinacion->id ?? '#') }}" class="mobile-nav-item">
+                <i class="fas fa-building"></i>
+                <span>Mi Coordinación</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Overlay para cerrar menú -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Main Content (CONTENIDO ORIGINAL SIN MODIFICAR) -->
     <main class="main-content">
         <div class="content-container">
             
-            
-            <!-- HEADER - IGUAL A VISTA 02 -->
+            <!-- HEADER -->
             <div class="main-header">
                 <div class="header-left">
                     <h2>Registro de Maestros</h2>
@@ -1150,7 +1332,7 @@
                         </div>
                     </div>
 
-                    <!-- FILTRO DE BÚSQUEDA - IGUAL A VISTA 02 -->
+                    <!-- FILTRO DE BÚSQUEDA -->
                     <div class="search-filter-top">
                         <div class="search-box-large">
                             <i class="fas fa-search"></i>
@@ -1278,7 +1460,6 @@
                         </div>
                     </div>
 
-                    <!-- DataTables se encarga de la paginación automáticamente -->
                     <div class="dataTables_info" style="display: none;"></div>
                 </div>
             @endif
@@ -1307,6 +1488,64 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     
     <script>
+        // Control del menú hamburguesa
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        function toggleMenu() {
+            mobileMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('active');
+            
+            const icon = hamburgerBtn.querySelector('i');
+            if (mobileMenu.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+        
+        function closeMenu() {
+            mobileMenu.classList.remove('open');
+            menuOverlay.classList.remove('active');
+            const icon = hamburgerBtn.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+        
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', toggleMenu);
+        }
+        
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', closeMenu);
+        }
+        
+        // Cerrar menú al hacer click en un enlace
+        const mobileLinks = document.querySelectorAll('.mobile-nav-item');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+        
+        // Cerrar menú al redimensionar a escritorio
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && mobileMenu.classList.contains('open')) {
+                closeMenu();
+            }
+        });
+        
+        // Fecha actual
+        function updateDate() {
+            const dateElement = document.getElementById('currentDate');
+            if (dateElement) {
+                const today = new Date();
+                const options = { day: 'numeric', month: 'short', year: 'numeric' };
+                dateElement.textContent = today.toLocaleDateString('es-ES', options);
+            }
+        }
+        
         function showAlert(message, type = 'success') {
             const alertDiv = document.getElementById('alertMessage');
             alertDiv.textContent = message;
@@ -1335,7 +1574,9 @@
         }
 
         document.addEventListener('DOMContentLoaded', function() {
-            // Inicializar DataTable - IGUAL QUE EN VISTA 02
+            updateDate();
+            
+            // Inicializar DataTable
             if ($('#maestrosTable').length) {
                 var table = $('#maestrosTable').DataTable({
                     "language": {
@@ -1358,7 +1599,6 @@
                         var info = table.page.info();
                         $('#totalMaestros').text(info.recordsDisplay);
                         
-                        // Mostrar/ocultar badge de búsqueda
                         var searchTerm = table.search();
                         if (searchTerm) {
                             $('#searchBadge').show();
@@ -1391,7 +1631,6 @@
                     table.search('').draw();
                 });
 
-                // Ajustar estilos del select
                 $('.dataTables_length select').addClass('form-select form-select-sm');
             }
 

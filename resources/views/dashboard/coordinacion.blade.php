@@ -2,7 +2,7 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes, viewport-fit=cover">
     <title>Panel de Coordinación | GEPROC GP</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -37,12 +37,13 @@
             background: #f5f7fb;
             color: var(--text-dark);
             min-height: 100vh;
+            overflow-x: hidden;
         }
 
-        /* Top Bar Superior - MODIFICADA */
+        /* Top Bar Superior */
         .top-bar {
             background: white;
-            height: 70px; /* Aumentada de 40px a 70px */
+            height: 70px;
             border-bottom: 2px solid #e0e7ef;
             display: flex;
             align-items: center;
@@ -60,36 +61,34 @@
             margin: 0 auto;
             width: 100%;
             display: flex;
-            justify-content: space-between; /* Cambiado a space-between */
+            justify-content: space-between;
             align-items: center;
         }
 
-        /* Header Logo - MODIFICADO (quitado el fondo/círculo) */
-.header-logo {
-    display: flex;
-    align-items: center;
-    padding: 0; /* Eliminado el padding */
-    background: transparent; /* Eliminado el fondo gradiente */
-    border-radius: 0; /* Eliminado el border-radius */
-    box-shadow: none; /* Eliminada la sombra */
-    border: none; /* Eliminado el borde */
-}
+        .header-logo {
+            display: flex;
+            align-items: center;
+            padding: 0;
+            background: transparent;
+            border-radius: 0;
+            box-shadow: none;
+            border: none;
+        }
 
-.logo-img-header {
-    width: 80px;
-    height: 80px;
-    object-fit: contain;
-    margin-right: 12px;
-}
+        .logo-img-header {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-right: 12px;
+        }
 
-.header-logo span {
-    color: var(--primary);
-    font-weight: 700;
-    font-size: 1.3rem;
-    letter-spacing: 0.5px;
-}
+        .header-logo span {
+            color: var(--primary);
+            font-weight: 700;
+            font-size: 1.3rem;
+            letter-spacing: 0.5px;
+        }
 
-        /* Elementos de la derecha en top bar */
         .top-bar-right {
             display: flex;
             align-items: center;
@@ -137,11 +136,11 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.05);
         }
 
-        /* Main Navigation - Ahora con top padding ajustado */
+        /* Main Navigation - Versión Hamburguesa */
         .top-nav {
             background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
             position: fixed;
-            top: 70px; /* Ajustado a 70px (nueva altura de top bar) */
+            top: 70px;
             left: 0;
             right: 0;
             z-index: 1000;
@@ -158,22 +157,34 @@
             height: 70px;
         }
 
-        /* Logo y menú a la izquierda */
         .nav-left {
             display: flex;
             align-items: center;
             gap: 30px;
         }
 
-        /* Línea blanca entre espacio y menú */
-        .divider-white {
-            width: 2px;
-            height: 40px;
-            background: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
+        /* Botón Hamburguesa */
+        .hamburger-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: none;
+            width: 45px;
+            height: 45px;
+            border-radius: 10px;
+            color: white;
+            font-size: 1.3rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: none;
+            align-items: center;
+            justify-content: center;
         }
 
-        /* Menú */
+        .hamburger-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+            transform: scale(1.05);
+        }
+
+        /* Menú Desktop (visible solo en escritorio) */
         .nav-menu {
             display: flex;
             align-items: center;
@@ -222,6 +233,60 @@
             box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
+        /* Menú Móvil Desplegable */
+        .mobile-nav-menu {
+            position: fixed;
+            top: 140px;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            z-index: 999;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-out;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        .mobile-nav-menu.open {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .mobile-nav-items {
+            padding: 15px 20px;
+        }
+
+        .mobile-nav-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 14px 20px;
+            color: rgba(255, 255, 255, 0.9);
+            text-decoration: none;
+            border-radius: 12px;
+            transition: all 0.2s ease;
+            font-weight: 500;
+            font-size: 1rem;
+            margin-bottom: 8px;
+        }
+
+        .mobile-nav-item i {
+            font-size: 1.2rem;
+            width: 24px;
+        }
+
+        .mobile-nav-item:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: white;
+            transform: translateX(5px);
+        }
+
+        .mobile-nav-item.active {
+            color: white;
+            background: rgba(255, 255, 255, 0.2);
+            font-weight: 600;
+        }
+
         /* Sección derecha */
         .nav-right {
             display: flex;
@@ -254,9 +319,9 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
 
-        /* Main Content - Ajustado por las dos barras */
+        /* Main Content */
         .main-content {
-            margin-top: 140px; /* 70px (top bar) + 70px (nav) */
+            margin-top: 140px;
             padding: 30px 40px;
             min-height: calc(100vh - 140px);
         }
@@ -503,49 +568,6 @@
             border: 1px solid #edf2f7;
         }
 
-        /* Responsive */
-        @media (max-width: 1024px) {
-            .actions-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-            
-            .welcome-grid {
-                flex-direction: column;
-                gap: 20px;
-                align-items: flex-start;
-            }
-            
-            .top-bar-right .top-bar-item span {
-                display: none;
-            }
-        }
-
-        @media (max-width: 768px) {
-            .nav-menu {
-                display: none;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .stats-mini-grid {
-                flex-wrap: wrap;
-            }
-            
-            .main-content {
-                padding: 20px;
-            }
-            
-            .top-bar {
-                padding: 0 20px;
-            }
-            
-            .top-bar-right {
-                gap: 10px;
-            }
-        }
-
         /* Floating Action Button */
         .fab {
             position: fixed;
@@ -588,6 +610,126 @@
             font-size: 0.95rem;
             font-weight: 500;
         }
+
+        /* Overlay para cerrar menú */
+        .menu-overlay {
+            position: fixed;
+            top: 140px;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+            display: none;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .menu-overlay.active {
+            display: block;
+            opacity: 1;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .actions-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            .welcome-grid {
+                flex-direction: column;
+                gap: 20px;
+                align-items: flex-start;
+            }
+            
+            .top-bar-right .top-bar-item span {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            /* Ocultar menú desktop y mostrar hamburguesa */
+            .nav-menu {
+                display: none;
+            }
+            
+            .hamburger-btn {
+                display: flex;
+            }
+            
+            .divider-white {
+                display: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-mini-grid {
+                flex-wrap: wrap;
+            }
+            
+            .main-content {
+                padding: 20px;
+            }
+            
+            .top-bar {
+                padding: 0 20px;
+                height: 60px;
+            }
+            
+            .top-nav {
+                top: 60px;
+            }
+            
+            .nav-container {
+                height: 60px;
+                padding: 0 20px;
+            }
+            
+            .main-content {
+                margin-top: 130px;
+            }
+            
+            .top-bar-right {
+                gap: 10px;
+            }
+            
+            .logo-img-header {
+                width: 60px;
+                height: 60px;
+            }
+            
+            .header-logo span {
+                font-size: 1rem;
+            }
+            
+            .mobile-nav-menu {
+                top: 130px;
+            }
+            
+            .menu-overlay {
+                top: 130px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .actions-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .welcome-card {
+                padding: 20px;
+            }
+            
+            .welcome-content h1 {
+                font-size: 1.3rem;
+            }
+            
+            .stat-mini-card {
+                min-width: 100%;
+            }
+        }
     </style>
     <meta name="csrf-token" content="{{ csrf_token() }}">
 </head>
@@ -619,7 +761,6 @@
             }
         }
         
-        // Iniciales del usuario para el avatar
         $userInitials = '';
         if ($user && $user->name) {
             $names = explode(' ', $user->name);
@@ -632,10 +773,9 @@
         }
     @endphp
 
-    <!-- Top Bar Superior - MODIFICADA con logo a la izquierda -->
+    <!-- Top Bar Superior -->
     <div class="top-bar">
         <div class="top-bar-content">
-            <!-- Logo en barra blanca - AHORA A LA IZQUIERDA -->
             <div class="header-logo">
                 <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img-header">
                 <span></span>
@@ -643,14 +783,16 @@
         </div>
     </div>
 
-    <!-- Top Navigation - Menú principal -->
+    <!-- Top Navigation con menú hamburguesa -->
     <nav class="top-nav">
         <div class="nav-container">
             <div class="nav-left">
-                <!-- Línea blanca separadora -->
-                <div class="divider-white"></div>
+                <!-- Botón Hamburguesa -->
+                <button class="hamburger-btn" id="hamburgerBtn">
+                    <i class="fas fa-bars"></i>
+                </button>
                 
-                <!-- Menú de navegación -->
+                <!-- Menú Desktop (visible en escritorio) -->
                 <div class="nav-menu">
                     <a href="{{ route('coordinacion.dashboard') }}" class="nav-item active">
                         <i class="fas fa-home"></i>
@@ -687,7 +829,36 @@
         </div>
     </nav>
 
-    <!-- Main Content -->
+    <!-- Menú Móvil Desplegable -->
+    <div class="mobile-nav-menu" id="mobileMenu">
+        <div class="mobile-nav-items">
+            <a href="{{ route('coordinacion.dashboard') }}" class="mobile-nav-item active">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </a>
+            <a href="{{ route('coordinaciones.maestros-detalle') }}" class="mobile-nav-item">
+                <i class="fas fa-users"></i>
+                <span>Maestros</span>
+            </a>
+            <a href="{{ route('coordinaciones.maestros') }}" class="mobile-nav-item">
+                <i class="fas fa-file-alt"></i>
+                <span>Documentos</span>
+            </a>
+            <a href="{{ route('coordinaciones.estatus') }}" class="mobile-nav-item">
+                <i class="fas fa-chart-bar"></i>
+                <span>Estadísticas</span>
+            </a>
+            <a href="{{ route('coordinaciones.show', $coordinacion->id ?? '#') }}" class="mobile-nav-item">
+                <i class="fas fa-building"></i>
+                <span>Mi Coordinación</span>
+            </a>
+        </div>
+    </div>
+
+    <!-- Overlay para cerrar menú -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+
+    <!-- Main Content (CONTENIDO ORIGINAL SIN MODIFICAR) -->
     <main class="main-content">
         <div class="content-container">
             
@@ -759,6 +930,56 @@
     <div id="alertMessage"></div>
 
     <script>
+        // Control del menú hamburguesa
+        const hamburgerBtn = document.getElementById('hamburgerBtn');
+        const mobileMenu = document.getElementById('mobileMenu');
+        const menuOverlay = document.getElementById('menuOverlay');
+        
+        function toggleMenu() {
+            mobileMenu.classList.toggle('open');
+            menuOverlay.classList.toggle('active');
+            
+            // Cambiar ícono del botón
+            const icon = hamburgerBtn.querySelector('i');
+            if (mobileMenu.classList.contains('open')) {
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
+            } else {
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
+            }
+        }
+        
+        function closeMenu() {
+            mobileMenu.classList.remove('open');
+            menuOverlay.classList.remove('active');
+            const icon = hamburgerBtn.querySelector('i');
+            icon.classList.remove('fa-times');
+            icon.classList.add('fa-bars');
+        }
+        
+        if (hamburgerBtn) {
+            hamburgerBtn.addEventListener('click', toggleMenu);
+        }
+        
+        if (menuOverlay) {
+            menuOverlay.addEventListener('click', closeMenu);
+        }
+        
+        // Cerrar menú al hacer click en un enlace
+        const mobileLinks = document.querySelectorAll('.mobile-nav-item');
+        mobileLinks.forEach(link => {
+            link.addEventListener('click', closeMenu);
+        });
+        
+        // Cerrar menú al redimensionar a escritorio
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768 && mobileMenu.classList.contains('open')) {
+                closeMenu();
+            }
+        });
+        
+        // Función de alerta (original)
         function showAlert(message, type = 'success') {
             const alertDiv = document.getElementById('alertMessage');
             alertDiv.textContent = message;
@@ -769,6 +990,24 @@
                 alertDiv.style.display = 'none';
             }, 3000);
         }
+        
+        // Resaltar el enlace activo en el menú móvil basado en la URL actual
+        const currentPath = window.location.pathname;
+        const desktopItems = document.querySelectorAll('.nav-item');
+        const mobileItems = document.querySelectorAll('.mobile-nav-item');
+        
+        function setActiveLink(items) {
+            items.forEach(item => {
+                const href = item.getAttribute('href');
+                if (href && currentPath.includes(href) && href !== '#') {
+                    items.forEach(i => i.classList.remove('active'));
+                    item.classList.add('active');
+                }
+            });
+        }
+        
+        setActiveLink(desktopItems);
+        setActiveLink(mobileItems);
     </script>
 </body>
 </html>

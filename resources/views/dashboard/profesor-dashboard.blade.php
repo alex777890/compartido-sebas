@@ -2,9 +2,10 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Dashboard Profesor - Sistema GEPROC</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
             --primary: #0744b6ff;
@@ -33,239 +34,234 @@
             --cyan-color: #06b6d4;
             --cyan-light: #cffafe;
             --border-radius: 12px;
-            --sidebar-width: 280px;
-            --header-height: 80px;
             --gradient-primary: linear-gradient(135deg, #0744b6ff 0%, #3a6bd3 100%);
             --gradient-success: linear-gradient(135deg, #10b981 0%, #34d399 100%);
             --gradient-warning: linear-gradient(135deg, #f59e0b 0%, #fbbf24 100%);
             --gradient-danger: linear-gradient(135deg, #ef4444 0%, #f87171 100%);
             --gradient-info: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
-            --gradient-purple: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-            --gradient-cyan: linear-gradient(135deg, #06b6d4 0%, #22d3ee 100%);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
         }
 
         body {
             background: linear-gradient(135deg, #f5f7fb 0%, #f0f4f8 100%);
             color: #2d3748;
             line-height: 1.6;
-            display: flex;
             min-height: 100vh;
             font-size: 15px;
         }
 
-        /* ===== MENÚ DE LA PRIMERA VISTA ===== */
-        /* HEADER SUPERIOR MEJORADO Y MÁS GRANDE */
-        .header {
-            height: 90px;
-            background-color: white;
-            box-shadow: 0 3px 20px rgba(0, 0, 0, 0.1);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 0 40px;
+        /* ===== PRIMERA BARRA (HEADER SUPERIOR) ===== */
+        .navbar-top { 
+            background: white; 
+            border-bottom: 1px solid var(--border-color);
+            padding: 0.8rem 0;
             position: sticky;
             top: 0;
-            z-index: 100;
-            border-bottom: 4px solid var(--primary);
+            z-index: 1000;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
         }
 
-        .header-left {
+        .navbar-top.scrolled {
+            padding: 0.6rem 0;
+            box-shadow: 0 5px 20px rgba(15, 126, 230, 0.15);
+        }
+
+        .container-custom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .logo-container {
             display: flex;
             align-items: center;
-            gap: 40px;
+            gap: 15px;
         }
 
-        .header-logo {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .logo-img-header {
-            height: 65px;
+        .logo-img {
+            height: 55px;
             width: auto;
             max-width: 180px;
             object-fit: contain;
         }
 
-        .header-nav {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-link {
-            padding: 15px 22px;
-            color: #4a5568;
-            text-decoration: none;
-            font-weight: 600;
-            font-size: 16px;
-            border-radius: 10px;
-            transition: var(--transition);
+        .navbar-brand { 
+            color: var(--primary) !important; 
+            font-weight: 600; 
+            font-size: 1.4rem;
             display: flex;
             align-items: center;
             gap: 12px;
-            white-space: nowrap;
+            text-decoration: none;
         }
 
-        /* HOVER CON AZUL MUY CLARO */
-        .nav-link:hover {
-            background-color: #e8f0fe;
-            color: var(--primary);
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(7, 68, 182, 0.12);
+        .navbar-brand::before {
+            content: "";
+            display: block;
+            width: 6px;
+            height: 28px;
+            background: var(--primary);
+            border-radius: 2px;
         }
 
-        /* ESTILO PARA EL ENLACE ACTIVO - SIN LÍNEA AZUL INFERIOR */
-        .nav-link.active {
-            background-color: #e8f0fe;
-            color: var(--primary);
-            box-shadow: 0 8px 16px rgba(7, 68, 182, 0.15);
-            border-radius: 10px;
-            position: relative;
-            font-weight: 700;
+        /* ===== SEGUNDA BARRA (MENÚ DE NAVEGACIÓN) ===== */
+        .navbar-menu { 
+            background: var(--primary); 
+            padding: 8px 0;
+            position: sticky;
+            top: 73px;
+            z-index: 999;
         }
 
-        .nav-link i {
-            font-size: 16px;
+        /* Estilos para escritorio (menú horizontal visible) */
+        .navbar-menu .navbar-collapse {
+            display: flex !important;
+            align-items: center;
+            justify-content: space-between;
         }
 
-        .header-right {
+        .navbar-menu .navbar-nav {
             display: flex;
             align-items: center;
-            gap: 30px;
+            gap: 5px;
+            flex-wrap: wrap;
+            list-style: none;
+            margin: 0;
+            padding: 0;
         }
 
-        /* LETRERO DE BIENVENIDA - COMPACTO Y ELEGANTE */
-        .welcome-message {
+        .navbar-menu .nav-item {
+            list-style: none;
+        }
+
+        .navbar-menu .nav-link {
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.9) !important;
+            padding: 1rem 1.8rem !important;
+            margin: 0 0.1rem;
+            border-radius: 8px;
+            transition: var(--transition);
+            position: relative;
+            font-size: 1rem;
             display: flex;
             align-items: center;
             gap: 8px;
-            padding: 8px 18px;
+            text-decoration: none;
+        }
+
+        .navbar-menu .nav-link:hover, 
+        .navbar-menu .nav-link.active {
+            color: white !important;
+            background-color: rgba(255, 255, 255, 0.12);
+        }
+
+        .navbar-menu .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;
+            width: 0;
+            height: 3px;
             background: white;
-            border: 1.5px solid var(--success-color);
-            border-radius: 40px;
-            color: var(--success-color);
-            font-weight: 600;
-            font-size: 15px;
-            box-shadow: 0 3px 10px rgba(16, 185, 129, 0.1);
             transition: var(--transition);
-            letter-spacing: 0.3px;
+            transform: translateX(-50%);
+            border-radius: 2px;
         }
 
-        .welcome-message:hover {
-            background: white;
-            border-color: var(--success-color);
-            color: var(--success-color);
-            transform: translateY(-1px);
-            box-shadow: 0 5px 12px rgba(16, 185, 129, 0.15);
+        .navbar-menu .nav-link:hover::after, 
+        .navbar-menu .nav-link.active::after {
+            width: 70%;
         }
 
-        .welcome-message i {
-            font-size: 18px;
-            color: var(--success-color);
-        }
-
-        .user-profile {
+        /* Información de usuario y cerrar sesión en escritorio */
+        .user-info-container {
             display: flex;
             align-items: center;
-            gap: 18px;
-            padding: 12px 22px;
-            background-color: var(--light-bg);
-            border-radius: 50px;
-            cursor: pointer;
-            transition: var(--transition);
-            border: 2px solid var(--border-color);
-        }
-
-        .user-profile:hover {
-            background-color: #e9ecef;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1);
-        }
-
-        .user-avatar {
-            width: 50px;
-            height: 50px;
-            border-radius: 50%;
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-            font-size: 20px;
+            gap: 20px;
         }
 
         .user-info {
             display: flex;
-            flex-direction: column;
-        }
-
-        .user-info h4 {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 4px;
-            white-space: nowrap;
-        }
-
-        .user-info p {
-            font-size: 14px;
-            color: var(--text-muted);
-            white-space: nowrap;
-        }
-
-        /* BOTÓN DE CERRAR SESIÓN - SIN CONTORNO AZUL, TOTALMENTE BLANCO */
-        .logout-button {
-            display: flex;
             align-items: center;
             gap: 12px;
-            padding: 12px 28px;
-            background-color: white;
-            color: #4a5568;
-            border: none;
-            border-radius: 50px;
-            font-weight: 600;
-            font-size: 15px;
-            cursor: pointer;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 40px;
+            background: rgba(255, 255, 255, 0.1);
+        }
+
+        .user-name {
+            font-weight: 500;
+            color: rgba(255, 255, 255, 0.95);
+            font-size: 0.95rem;
+        }
+
+        .user-avatar {
+            font-size: 1.3rem;
+            color: rgba(255, 255, 255, 0.9);
+        }
+
+        .logout-form {
+            margin: 0;
+        }
+
+        .logout-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.4);
+            color: rgba(255, 255, 255, 0.9);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            font-weight: 500;
             transition: var(--transition);
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+            cursor: pointer;
         }
 
-        .logout-button:hover {
-            background-color: #fee2e2;
-            color: var(--danger-color);
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            border-color: rgba(255, 255, 255, 0.6);
             transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(239, 68, 68, 0.15);
         }
 
-        .logout-button i {
-            font-size: 16px;
+        /* Botón hamburguesa - Oculto en escritorio */
+        .navbar-toggler {
+            display: none;
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            padding: 0.5rem 0.75rem;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .navbar-toggler-icon {
+            display: inline-block;
+            width: 1.5em;
+            height: 1.5em;
+            background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 30 30'%3e%3cpath stroke='rgba%28255, 255, 255, 0.8%29' stroke-linecap='round' stroke-miterlimit='10' stroke-width='2' d='M4 7h22M4 15h22M4 23h22'/%3e%3c/svg%3e");
+            background-repeat: no-repeat;
+            background-position: center;
+            background-size: contain;
         }
 
         /* MAIN CONTENT */
         .main-content {
-            flex: 1;
-            transition: var(--transition);
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 30px 20px;
+            min-height: calc(100vh - 140px);
         }
 
-        /* CONTENT WRAPPER */
-        .content-wrapper {
-            padding: 30px 35px;
-            max-width: 100%;
-        }
-
-        /* ===== ESTILOS DEL DASHBOARD - CUADROS MÁS COMPACTOS, LETRAS GRANDES ===== */
-        
-        /* ALERTAS DEL SISTEMA */
+        /* ===== ESTILOS DEL DASHBOARD (MANTENIDOS) ===== */
         .system-alert {
             padding: 15px 20px;
             border-radius: 12px;
@@ -308,7 +304,6 @@
             }
         }
 
-        /* PERIODO ALERT - MÁS COMPACTO */
         .periodo-alert {
             display: flex;
             align-items: center;
@@ -320,6 +315,8 @@
             background-color: white;
             border: 2px solid var(--border-color);
             transition: var(--transition);
+            flex-wrap: wrap;
+            gap: 15px;
         }
 
         .periodo-alert:hover {
@@ -331,6 +328,7 @@
             display: flex;
             align-items: center;
             gap: 16px;
+            flex: 1;
         }
 
         .periodo-icon {
@@ -374,7 +372,6 @@
             color: white;
         }
 
-        /* CARD GRID - MÁS COMPACTO */
         .cards-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
@@ -427,21 +424,10 @@
             box-shadow: 0 5px 10px rgba(0,0,0,0.1);
         }
 
-        .card-icon.req {
-            background: var(--gradient-primary);
-        }
-
-        .card-icon.sub {
-            background: var(--gradient-success);
-        }
-
-        .card-icon.fal {
-            background: var(--gradient-warning);
-        }
-
-        .card-icon.pro {
-            background: var(--gradient-info);
-        }
+        .card-icon.req { background: var(--gradient-primary); }
+        .card-icon.sub { background: var(--gradient-success); }
+        .card-icon.fal { background: var(--gradient-warning); }
+        .card-icon.pro { background: var(--gradient-info); }
 
         .card-title h3 {
             font-size: 15px;
@@ -464,7 +450,6 @@
             font-weight: 500;
         }
 
-        /* SECTION STYLES - MÁS COMPACTO */
         .section {
             background-color: white;
             border-radius: 16px;
@@ -486,6 +471,8 @@
             margin-bottom: 20px;
             padding-bottom: 15px;
             border-bottom: 2px solid var(--light-bg);
+            flex-wrap: wrap;
+            gap: 10px;
         }
 
         .section-title {
@@ -501,7 +488,6 @@
             font-size: 22px;
         }
 
-        /* PROFILE SECTION - ICONOS CON COLORES ESPECÍFICOS */
         .profile-info {
             display: grid;
             grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -538,25 +524,12 @@
             box-shadow: 0 4px 10px rgba(0,0,0,0.15);
         }
 
-        /* COLORES ESPECÍFICOS PARA CADA ICONO */
-        .info-icon.id-card {
-            background: linear-gradient(135deg, #4f46e5, #6366f1);
-        }
-        .info-icon.envelope {
-            background: linear-gradient(135deg, #dc2626, #ef4444);
-        }
-        .info-icon.university {
-            background: linear-gradient(135deg, #7c3aed, #8b5cf6);
-        }
-        .info-icon.calendar {
-            background: linear-gradient(135deg, #ea580c, #f97316);
-        }
-        .info-icon.user-check {
-            background: linear-gradient(135deg, #16a34a, #22c55e);
-        }
-        .info-icon.chart-bar {
-            background: linear-gradient(135deg, #0284c7, #38bdf8);
-        }
+        .info-icon.id-card { background: linear-gradient(135deg, #4f46e5, #6366f1); }
+        .info-icon.envelope { background: linear-gradient(135deg, #dc2626, #ef4444); }
+        .info-icon.university { background: linear-gradient(135deg, #7c3aed, #8b5cf6); }
+        .info-icon.calendar { background: linear-gradient(135deg, #ea580c, #f97316); }
+        .info-icon.user-check { background: linear-gradient(135deg, #16a34a, #22c55e); }
+        .info-icon.chart-bar { background: linear-gradient(135deg, #0284c7, #38bdf8); }
 
         .info-content h4 {
             font-size: 14px;
@@ -572,7 +545,6 @@
             line-height: 1.3;
         }
 
-        /* BOTÓN PARA IR A DOCUMENTOS */
         .btn-go-documents {
             display: inline-flex;
             align-items: center;
@@ -590,20 +562,12 @@
             box-shadow: 0 5px 15px rgba(7, 68, 182, 0.25);
         }
 
-        .btn-go-documents:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 20px rgba(7, 68, 182, 0.35);
-        }
-
-        .btn-go-documents i {
-            font-size: 16px;
-        }
-
         .periodo-actions {
             display: flex;
             align-items: center;
             gap: 12px;
             margin-top: 10px;
+            flex-wrap: wrap;
         }
 
         .btn-subir-documentos {
@@ -626,10 +590,8 @@
             background-color: var(--primary);
             color: white;
             transform: translateY(-2px);
-            box-shadow: 0 5px 12px rgba(7, 68, 182, 0.2);
         }
 
-        /* ACTIVIDADES RECIENTES - MÁS COMPACTAS */
         .timeline {
             position: relative;
             padding-left: 25px;
@@ -643,16 +605,11 @@
             bottom: 0;
             width: 2px;
             background: linear-gradient(to bottom, var(--primary-light), var(--secondary));
-            border-radius: 2px;
         }
 
         .timeline-item {
             position: relative;
             margin-bottom: 18px;
-        }
-
-        .timeline-item:last-child {
-            margin-bottom: 0;
         }
 
         .timeline-marker {
@@ -671,20 +628,9 @@
             box-shadow: 0 3px 6px rgba(0,0,0,0.12);
         }
 
-        .timeline-marker.aprobado {
-            background-color: var(--success-color);
-            color: white;
-        }
-
-        .timeline-marker.rechazado {
-            background-color: var(--danger-color);
-            color: white;
-        }
-
-        .timeline-marker.pendiente {
-            background-color: var(--warning-color);
-            color: white;
-        }
+        .timeline-marker.aprobado { background-color: var(--success-color); color: white; }
+        .timeline-marker.rechazado { background-color: var(--danger-color); color: white; }
+        .timeline-marker.pendiente { background-color: var(--warning-color); color: white; }
 
         .timeline-content {
             background-color: var(--light-bg);
@@ -696,7 +642,6 @@
 
         .timeline-content:hover {
             transform: translateX(4px);
-            box-shadow: 0 5px 12px rgba(0,0,0,0.08);
             background-color: white;
         }
 
@@ -705,6 +650,8 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 6px;
+            flex-wrap: wrap;
+            gap: 8px;
         }
 
         .timeline-title {
@@ -716,16 +663,8 @@
         .timeline-time {
             font-size: 13px;
             color: var(--text-muted);
-            font-weight: 500;
         }
 
-        .timeline-desc {
-            color: #4a5568;
-            font-size: 14px;
-            line-height: 1.5;
-        }
-
-        /* ALERTAS ESTILIZADAS */
         .alert {
             padding: 15px 20px;
             border-radius: 12px;
@@ -735,87 +674,117 @@
             gap: 15px;
             border-left: 6px solid transparent;
             animation: slideIn 0.3s ease;
-            font-size: 15px;
             box-shadow: var(--card-shadow);
         }
 
-        .alert-success {
-            background-color: var(--success-light);
-            border-color: var(--success-color);
-            color: #065f46;
-        }
+        .alert-success { background-color: var(--success-light); border-color: var(--success-color); color: #065f46; }
+        .alert-warning { background-color: var(--warning-light); border-color: var(--warning-color); color: #92400e; }
+        .alert-danger { background-color: var(--danger-light); border-color: var(--danger-color); color: #991b1b; }
 
-        .alert-warning {
-            background-color: var(--warning-light);
-            border-color: var(--warning-color);
-            color: #92400e;
-        }
-
-        .alert-danger {
-            background-color: var(--danger-light);
-            border-color: var(--danger-color);
-            color: #991b1b;
-        }
-
-        .alert-info {
-            background-color: var(--info-light);
-            border-color: var(--info-color);
-            color: #1e40af;
-        }
-
-        .alert i {
-            font-size: 22px;
-            margin-top: 2px;
-        }
-
-        .alert ul {
-            margin-top: 10px;
-            margin-left: 18px;
+        .welcome-message {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px 20px;
+            background: white;
+            border: 1.5px solid var(--success-color);
+            border-radius: 40px;
+            color: var(--success-color);
+            font-weight: 600;
             font-size: 14px;
+            margin-bottom: 20px;
         }
 
-        .alert ul li {
-            margin-bottom: 4px;
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 1200px) {
-            .header {
-                padding: 0 25px;
-                height: auto;
+        /* ===== MEDIA QUERIES - SOLO PARA MÓVIL ===== */
+        @media (max-width: 991px) {
+            .navbar-menu {
+                top: 70px;
+            }
+            
+            /* En móvil, ocultamos el menú horizontal y mostramos el botón hamburguesa */
+            .navbar-menu .navbar-collapse {
+                display: none !important;
                 flex-direction: column;
-                gap: 15px;
-                padding: 15px;
-            }
-            
-            .header-left, .header-right {
+                align-items: stretch;
                 width: 100%;
-                justify-content: space-between;
+                background: var(--primary);
+                padding: 15px 0 20px 0;
+                border-radius: 0 0 12px 12px;
+                position: absolute;
+                top: 100%;
+                left: 0;
+                z-index: 1000;
             }
             
-            .header-nav {
-                overflow-x: auto;
-                padding-bottom: 10px;
+            .navbar-menu .navbar-collapse.active {
+                display: flex !important;
+            }
+            
+            .navbar-toggler {
+                display: block;
+            }
+            
+            .navbar-menu .navbar-nav {
+                flex-direction: column;
+                align-items: stretch;
                 width: 100%;
+                margin-bottom: 20px;
             }
             
-            .nav-link {
-                padding: 12px 16px;
-                font-size: 15px;
+            .navbar-menu .nav-link {
+                justify-content: flex-start;
+                padding: 12px 20px !important;
+                margin: 2px 0;
             }
             
-            .content-wrapper {
-                padding: 20px 25px;
-            }
-            
-            .welcome-message {
+            .navbar-menu .nav-link::after {
                 display: none;
             }
+            
+            .user-info-container {
+                flex-direction: column;
+                align-items: stretch;
+                width: 100%;
+                gap: 15px;
+                padding-top: 15px;
+                border-top: 1px solid rgba(255, 255, 255, 0.2);
+            }
+            
+            .user-info {
+                justify-content: center;
+                padding: 10px;
+            }
+            
+            .logout-form {
+                width: 100%;
+            }
+            
+            .logout-btn {
+                width: 100%;
+                justify-content: center;
+                padding: 10px;
+            }
         }
 
-        @media (max-width: 992px) {
+        @media (max-width: 768px) {
+            .container-custom {
+                padding: 0 15px;
+            }
+            
+            .logo-img {
+                height: 45px;
+            }
+            
+            .navbar-brand {
+                font-size: 1.2rem;
+            }
+            
+            .main-content {
+                padding: 20px 15px;
+            }
+            
             .cards-grid {
-                grid-template-columns: repeat(2, 1fr);
+                grid-template-columns: 1fr;
             }
             
             .profile-info {
@@ -825,430 +794,398 @@
             .periodo-alert {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 15px;
             }
             
             .periodo-status {
                 align-self: stretch;
                 justify-content: center;
             }
-        }
-
-        @media (max-width: 768px) {
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
             
-            .header-left {
+            .periodo-content {
                 flex-direction: column;
                 align-items: flex-start;
-                gap: 15px;
-            }
-            
-            .user-info h4 {
-                font-size: 16px;
-            }
-            
-            .user-info p {
-                font-size: 13px;
             }
             
             .section {
                 padding: 18px;
             }
-            
-            .periodo-content {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 8px;
-            }
-            
-            .header-right {
-                flex-wrap: wrap;
-                justify-content: flex-end;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .content-wrapper {
-                padding: 15px;
-            }
-            
-            .card-value {
-                font-size: 26px;
-            }
-            
-            .section-title {
-                font-size: 18px;
-            }
-            
-            .info-content p {
-                font-size: 15px;
-            }
-            
-            .btn-go-documents {
-                width: 100%;
-                justify-content: center;
-                padding: 10px 20px;
-            }
-            
-            .logout-button {
-                padding: 10px 20px;
-                font-size: 14px;
-            }
         }
     </style>
 </head>
 <body>
-    <!-- HEADER SUPERIOR DE LA PRIMERA VISTA - MENÚ COMPLETO -->
-    <div class="main-content">
-        <!-- HEADER SUPERIOR MÁS GRANDE Y ATTRACTIVO -->
-        <div class="header">
-            <div class="header-left">
-                <div class="header-logo">
-                    <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img-header">
-                </div>
-                <div class="header-nav">
-                    <a href="{{ route('profesor.dashboard') }}" class="nav-link active">
-                        <i class="fas fa-home"></i> Inicio
-                    </a>
-                    <a href="{{ route('profesor.documentos') }}" class="nav-link">
-                        <i class="fas fa-folder"></i> Documentos
-                    </a>
-                    <a href="{{ route('maestros.grados.create') }}" class="nav-link">
-                        <i class="fas fa-graduation-cap"></i> Grados
-                    </a>
-                    <a href="{{ route('editar-mi-perfil') }}" class="nav-link" onclick="scrollToSection('perfil')">
-                        <i class="fas fa-user"></i> Perfil
-                    </a>
-                </div>
-            </div>
-            
-            <div class="header-right">
-                <form action="{{ route('logout') }}" method="POST">
-                    @csrf
-                    <button type="submit" class="logout-button">
-                        <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
-                    </button>
-                </form>
+    <!-- PRIMERA BARRA - Logo y título -->
+    <nav class="navbar-top">
+        <div class="container-custom">
+            <div class="logo-container">
+                <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img">
+                <a class="navbar-brand" href="{{ route('profesor.dashboard') }}">
+                    Sistema GEPROC
+                </a>
             </div>
         </div>
+    </nav>
 
-        <!-- CONTENT WRAPPER -->
-        <div class="content-wrapper" id="dashboard">
-            <!-- MENSAJES DEL SISTEMA -->
-            @if(session('success'))
-            <div class="alert alert-success">
-                <i class="fas fa-check-circle"></i> 
-                <div>{{ session('success') }}</div>
-            </div>
-            @endif
-
-            @if(session('warning'))
-            <div class="alert alert-warning">
-                <i class="fas fa-exclamation-triangle"></i> 
-                <div>{{ session('warning') }}</div>
-            </div>
-            @endif
-
-            @if(session('error'))
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-triangle"></i> 
-                <div>{{ session('error') }}</div>
-            </div>
-            @endif
-
-            @if($errors->any())
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-triangle"></i>
-                <div>
-                    <strong>Errores encontrados:</strong>
-                    <ul style="margin: 10px 0 0 20px;">
-                        @foreach($errors->all() as $error)
-                            <li>{{ $error }}</li>
-                        @endforeach
-                    </ul>
-                </div>
-            </div>
-            @endif
-
-            @php
-                // Variables seguras con datos del controller
-                $periodoHabilitado = $periodoHabilitado ?? null;
-                $hayPeriodoHabilitado = $hayPeriodoHabilitado ?? false;
+    <!-- SEGUNDA BARRA - Menú con información de usuario -->
+    <nav class="navbar-menu">
+        <div class="container-custom" style="display: flex; align-items: center; justify-content: space-between;">
+            <!-- Botón hamburguesa (solo visible en móvil) -->
+            <button class="navbar-toggler" type="button" id="menuToggle">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <!-- Espacio vacío para mantener el layout -->
+            <div style="flex: 1;"></div>
+        </div>
+        
+        <!-- Menú colapsable (en escritorio siempre visible, en móvil se despliega) -->
+        <div class="navbar-collapse" id="mainNavbar">
+            <div class="container-custom" style="display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 20px;">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a href="{{ route('profesor.dashboard') }}" class="nav-link active">
+                            <i class="fas fa-home"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('profesor.documentos') }}" class="nav-link">
+                            <i class="fas fa-folder"></i> Documentos
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('maestros.grados.create') }}" class="nav-link">
+                            <i class="fas fa-graduation-cap"></i> Grados
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('editar-mi-perfil') }}" class="nav-link">
+                            <i class="fas fa-user"></i> Perfil
+                        </a>
+                    </li>
+                </ul>
                 
-                if (!$hayPeriodoHabilitado) {
-                    $totalRequeridos = 0;
-                    $totalSubidos = 0;
-                    $aprobados = 0;
-                    $rechazados = 0;
-                    $pendientes = 0;
-                    $porcentaje = 0;
-                    $faltantes = 0;
-                } else {
-                    $totalRequeridos = $estadisticas['total_requeridos'] ?? 0;
-                    $totalSubidos = $estadisticas['total_subidos'] ?? 0;
-                    $aprobados = $estadisticas['aprobados'] ?? 0;
-                    $rechazados = $estadisticas['rechazados'] ?? 0;
-                    $pendientes = $estadisticas['pendientes'] ?? 0;
-                    $porcentaje = $estadisticas['porcentaje'] ?? 0;
-                    $faltantes = $estadisticas['faltantes'] ?? 0;
-                }
-                
-                $maestroData = $maestroData ?? $maestro ?? null;
-                $actividadesRecientes = $actividadesRecientes ?? [];
-            @endphp
- <!-- LETRERO DE BIENVENIDA - CON SALUDO DINÁMICO -->
-<div class="welcome-message" id="welcomeContainer">
-    <i class="fas fa-hand-wave"></i>
-    <span id="welcomeText">
-        Cargando saludo...
-    </span>
-</div>
-
-            <!-- ALERTA DEL SISTEMA -->
-            @if($hayPeriodoHabilitado && $faltantes > 0)
-            <div class="system-alert">
-                <i class="fas fa-bell"></i>
-                <div class="system-alert-content">
-                    <h4>📌 Recordatorio Importante</h4>
-                    <p>Tienes <strong style="color: var(--primary);">{{ $faltantes }}</strong> documento(s) pendiente(s) de subir para el período actual.</p>
-                </div>
-            </div>
-            @endif
-
-            <!-- PERIODO HABILITADO CON BOTÓN DE SUBIR DOCUMENTOS -->
-            <div class="periodo-alert">
-                <div class="periodo-content">
-                    <div class="periodo-icon">
-                        @if($hayPeriodoHabilitado)
-                        <i class="fas fa-calendar-check" style="color: var(--success-color);"></i>
-                        @else
-                        <i class="fas fa-calendar-times" style="color: var(--warning-color);"></i>
-                        @endif
-                    </div>
-                    <div style="flex: 1;">
-                        <h3>
-                            @if($hayPeriodoHabilitado)
-                            Período Habilitado: {{ $periodoHabilitado->nombre }}
-                            @else
-                            No hay período habilitado
-                            @endif
-                        </h3>
-                        <p>
-                            @if($hayPeriodoHabilitado)
-                            <strong>Estado:</strong> Activo, sube tus documentos para este periodo
-                            @if($periodoHabilitado->fecha_limite)
-                            • <strong>Fecha límite:</strong> {{ \Carbon\Carbon::parse($periodoHabilitado->fecha_limite)->format('d/m/Y') }}
-                            @endif
-                            @else
-                            <strong>Espera a que se habilite un período para subir documentos</strong>
-                            @endif
-                        </p>
-                        @if($hayPeriodoHabilitado)
-                        <div class="periodo-actions">
-                            <a href="{{ route('profesor.documentos') }}" class="btn-subir-documentos">
-                                <i class="fas fa-upload"></i> Subir Documentos
-                            </a>
+                <!-- Información de usuario y cerrar sesión -->
+                <div class="user-info-container">
+                    <div class="user-info">
+                        <span class="user-name">{{ $maestroData->nombre ?? 'Profesor' }}</span>
+                        <div class="user-avatar">
+                            <i class="fas fa-user-circle"></i>
                         </div>
-                        @endif
                     </div>
+                    <form method="POST" action="{{ route('logout') }}" class="logout-form">
+                        @csrf
+                        <button type="submit" class="logout-btn">
+                            <i class="fas fa-sign-out-alt"></i> Cerrar Sesión
+                        </button>
+                    </form>
                 </div>
-                <div class="periodo-status {{ $hayPeriodoHabilitado ? 'status-active' : 'status-inactive' }}">
+            </div>
+        </div>
+    </nav>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content" id="dashboard">
+        @if(session('success'))
+        <div class="alert alert-success">
+            <i class="fas fa-check-circle"></i> 
+            <div>{{ session('success') }}</div>
+        </div>
+        @endif
+
+        @if(session('warning'))
+        <div class="alert alert-warning">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <div>{{ session('warning') }}</div>
+        </div>
+        @endif
+
+        @if(session('error'))
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i> 
+            <div>{{ session('error') }}</div>
+        </div>
+        @endif
+
+        @php
+            $periodoHabilitado = $periodoHabilitado ?? null;
+            $hayPeriodoHabilitado = $hayPeriodoHabilitado ?? false;
+            
+            if (!$hayPeriodoHabilitado) {
+                $totalRequeridos = 0;
+                $totalSubidos = 0;
+                $porcentaje = 0;
+                $faltantes = 0;
+            } else {
+                $totalRequeridos = $estadisticas['total_requeridos'] ?? 0;
+                $totalSubidos = $estadisticas['total_subidos'] ?? 0;
+                $porcentaje = $estadisticas['porcentaje'] ?? 0;
+                $faltantes = $estadisticas['faltantes'] ?? 0;
+            }
+            
+            $maestroData = $maestroData ?? $maestro ?? null;
+            $actividadesRecientes = $actividadesRecientes ?? [];
+        @endphp
+
+        <div class="welcome-message" id="welcomeContainer">
+            <i class="fas fa-hand-wave"></i>
+            <span id="welcomeText">Cargando saludo...</span>
+        </div>
+
+        @if($hayPeriodoHabilitado && $faltantes > 0)
+        <div class="system-alert">
+            <i class="fas fa-bell"></i>
+            <div class="system-alert-content">
+                <h4>📌 Recordatorio Importante</h4>
+                <p>Tienes <strong>{{ $faltantes }}</strong> documento(s) pendiente(s) de subir.</p>
+            </div>
+        </div>
+        @endif
+
+        <div class="periodo-alert">
+            <div class="periodo-content">
+                <div class="periodo-icon">
                     @if($hayPeriodoHabilitado)
-                    <i class="fas fa-toggle-on"></i> ACTIVO
+                    <i class="fas fa-calendar-check" style="color: var(--success-color);"></i>
                     @else
-                    <i class="fas fa-toggle-off"></i> INACTIVO
+                    <i class="fas fa-calendar-times" style="color: var(--warning-color);"></i>
+                    @endif
+                </div>
+                <div>
+                    <h3>
+                        @if($hayPeriodoHabilitado)
+                        Período Habilitado: {{ $periodoHabilitado->nombre }}
+                        @else
+                        No hay período habilitado
+                        @endif
+                    </h3>
+                    <p>
+                        @if($hayPeriodoHabilitado)
+                        <strong>Estado:</strong> Activo, sube tus documentos
+                        @else
+                        <strong>Espera a que se habilite un período</strong>
+                        @endif
+                    </p>
+                    @if($hayPeriodoHabilitado)
+                    <div class="periodo-actions">
+                        <a href="{{ route('profesor.documentos') }}" class="btn-subir-documentos">
+                            <i class="fas fa-upload"></i> Subir Documentos
+                        </a>
+                    </div>
                     @endif
                 </div>
             </div>
-
-            @if(!$maestroData)
-            <div class="alert alert-danger">
-                <i class="fas fa-exclamation-triangle"></i>
-                <div>
-                    <strong>No se encontró información del maestro.</strong>
-                    <p style="margin-top: 8px; font-size: 15px;">Contacta al administrador del sistema.</p>
-                </div>
+            <div class="periodo-status {{ $hayPeriodoHabilitado ? 'status-active' : 'status-inactive' }}">
+                @if($hayPeriodoHabilitado)
+                <i class="fas fa-toggle-on"></i> ACTIVO
+                @else
+                <i class="fas fa-toggle-off"></i> INACTIVO
+                @endif
             </div>
-            @else
-
-            <!-- INFORMACIÓN DEL PERFIL - ICONOS CON COLORES ESPECÍFICOS -->
-            <div class="section" id="perfil">
-                <div class="section-header">
-                    <div class="section-title">
-                        <i class="fas fa-user-circle"></i>
-                        <span>Información Personal</span>
-                    </div>
-                </div>
-                
-                <div class="profile-info">
-                    <div class="info-item">
-                        <div class="info-icon id-card">
-                            <i class="fas fa-id-card"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>Nombre Completo</h4>
-                            <p>{{ $maestroData->nombres }} {{ $maestroData->apellido_paterno }} {{ $maestroData->apellido_materno }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon envelope">
-                            <i class="fas fa-envelope"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>Correo Electrónico</h4>
-                            <p>{{ $maestroData->email }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon university">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>Coordinación</h4>
-                            <p>{{ $maestroData->coordinacion->nombre ?? 'No asignada' }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon calendar">
-                            <i class="fas fa-calendar-plus"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>Fecha de Registro</h4>
-                            <p>{{ $maestroData->created_at ? $maestroData->created_at->format('d/m/Y') : 'N/A' }}</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon user-check">
-                            <i class="fas fa-user-check"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>Estado</h4>
-                            <p style="color: var(--success-color); font-weight: 700;">Activo</p>
-                        </div>
-                    </div>
-                    
-                    <div class="info-item">
-                        <div class="info-icon chart-bar">
-                            <i class="fas fa-chart-bar"></i>
-                        </div>
-                        <div class="info-content">
-                            <h4>Progreso de Documentos</h4>
-                            <p style="color: var(--primary); font-weight: 700;">{{ $porcentaje }}% Completado</p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ACTIVIDADES RECIENTES - MÁS COMPACTAS -->
-            @if(count($actividadesRecientes) > 0)
-            <div class="section">
-                <div class="section-header">
-                    <div class="section-title">
-                        <i class="fas fa-history"></i>
-                        <span>Estado de Actividades</span>
-                    </div>
-                </div>
-                
-                <div class="timeline">
-                    @foreach($actividadesRecientes as $actividad)
-                    <div class="timeline-item">
-                        <div class="timeline-marker {{ $actividad['tipo'] }}">
-                            <i class="fas fa-{{ $actividad['tipo'] == 'aprobado' ? 'check' : ($actividad['tipo'] == 'rechazado' ? 'times' : 'clock') }}"></i>
-                        </div>
-                        <div class="timeline-content">
-                            <div class="timeline-header">
-                                <div class="timeline-title">{{ $actividad['titulo'] }}</div>
-                                <div class="timeline-time">{{ $actividad['tiempo'] }}</div>
-                            </div>
-                            <div class="timeline-desc">{{ $actividad['descripcion'] }}</div>
-                        </div>
-                    </div>
-                    @endforeach
-                </div>
-            </div>
-            @endif
-            @endif
         </div>
+
+        @if(!$maestroData)
+        <div class="alert alert-danger">
+            <i class="fas fa-exclamation-triangle"></i>
+            <div>No se encontró información del maestro. Contacta al administrador.</div>
+        </div>
+        @else
+
+        <div class="cards-grid">
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon req"><i class="fas fa-file-alt"></i></div>
+                    <div class="card-title"><h3>Documentos Requeridos</h3></div>
+                </div>
+                <div class="card-value">{{ $totalRequeridos }}</div>
+                <div class="card-footer">Total de documentos a subir</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon sub"><i class="fas fa-check-circle"></i></div>
+                    <div class="card-title"><h3>Documentos Subidos</h3></div>
+                </div>
+                <div class="card-value">{{ $totalSubidos }}</div>
+                <div class="card-footer">de {{ $totalRequeridos }} requeridos</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon fal"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div class="card-title"><h3>Documentos Faltantes</h3></div>
+                </div>
+                <div class="card-value">{{ $faltantes }}</div>
+                <div class="card-footer">Pendientes de subir</div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon pro"><i class="fas fa-chart-line"></i></div>
+                    <div class="card-title"><h3>Progreso Total</h3></div>
+                </div>
+                <div class="card-value">{{ $porcentaje }}%</div>
+                <div class="card-footer">Completado</div>
+            </div>
+        </div>
+
+        <div class="section" id="perfil">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-user-circle"></i>
+                    <span>Información Personal</span>
+                </div>
+                <a href="{{ route('editar-mi-perfil') }}" class="btn-go-documents">
+                    <i class="fas fa-edit"></i> Editar Perfil
+                </a>
+            </div>
+            
+            <div class="profile-info">
+                <div class="info-item">
+                    <div class="info-icon id-card"><i class="fas fa-id-card"></i></div>
+                    <div class="info-content">
+                        <h4>Nombre Completo</h4>
+                        <p>{{ $maestroData->nombres }} {{ $maestroData->apellido_paterno }} {{ $maestroData->apellido_materno }}</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon envelope"><i class="fas fa-envelope"></i></div>
+                    <div class="info-content">
+                        <h4>Correo Electrónico</h4>
+                        <p>{{ $maestroData->email }}</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon university"><i class="fas fa-university"></i></div>
+                    <div class="info-content">
+                        <h4>Coordinación</h4>
+                        <p>{{ $maestroData->coordinacion->nombre ?? 'No asignada' }}</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon calendar"><i class="fas fa-calendar-plus"></i></div>
+                    <div class="info-content">
+                        <h4>Fecha de Registro</h4>
+                        <p>{{ $maestroData->created_at ? $maestroData->created_at->format('d/m/Y') : 'N/A' }}</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon user-check"><i class="fas fa-user-check"></i></div>
+                    <div class="info-content">
+                        <h4>Estado</h4>
+                        <p style="color: var(--success-color);">Activo</p>
+                    </div>
+                </div>
+                
+                <div class="info-item">
+                    <div class="info-icon chart-bar"><i class="fas fa-chart-bar"></i></div>
+                    <div class="info-content">
+                        <h4>Progreso</h4>
+                        <p>{{ $porcentaje }}% Completado</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        @if(count($actividadesRecientes) > 0)
+        <div class="section">
+            <div class="section-header">
+                <div class="section-title">
+                    <i class="fas fa-history"></i>
+                    <span>Actividades Recientes</span>
+                </div>
+            </div>
+            <div class="timeline">
+                @foreach($actividadesRecientes as $actividad)
+                <div class="timeline-item">
+                    <div class="timeline-marker {{ $actividad['tipo'] }}">
+                        <i class="fas fa-{{ $actividad['tipo'] == 'aprobado' ? 'check' : ($actividad['tipo'] == 'rechazado' ? 'times' : 'clock') }}"></i>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="timeline-header">
+                            <div class="timeline-title">{{ $actividad['titulo'] }}</div>
+                            <div class="timeline-time">{{ $actividad['tiempo'] }}</div>
+                        </div>
+                        <div class="timeline-desc">{{ $actividad['descripcion'] }}</div>
+                    </div>
+                </div>
+                @endforeach
+            </div>
+        </div>
+        @endif
+        @endif
     </div>
 
     <script>
+        // Menú hamburguesa para móvil
+        const menuToggle = document.getElementById('menuToggle');
+        const mainNavbar = document.getElementById('mainNavbar');
+        
+        if (menuToggle && mainNavbar) {
+            menuToggle.addEventListener('click', function(e) {
+                e.stopPropagation();
+                mainNavbar.classList.toggle('active');
+            });
+            
+            // Cerrar menú al hacer clic fuera
+            document.addEventListener('click', function(event) {
+                if (window.innerWidth <= 991) {
+                    if (!menuToggle.contains(event.target) && !mainNavbar.contains(event.target)) {
+                        mainNavbar.classList.remove('active');
+                    }
+                }
+            });
+        }
+
         function scrollToSection(sectionId) {
             const section = document.getElementById(sectionId);
             if (section) {
                 section.scrollIntoView({ behavior: 'smooth', block: 'start' });
-                
-                // Actualizar clase activa en el menú
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    link.classList.remove('active');
-                });
-                
-                // Buscar el enlace que corresponde a esta sección
-                document.querySelectorAll('.nav-link').forEach(link => {
-                    if (link.getAttribute('href') === '#' + sectionId) {
-                        link.classList.add('active');
-                    }
-                });
+                // Cerrar menú móvil
+                if (window.innerWidth <= 991 && mainNavbar.classList.contains('active')) {
+                    mainNavbar.classList.remove('active');
+                }
             }
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Marcar enlace activo según la URL
-            const currentPath = window.location.pathname;
-            document.querySelectorAll('.nav-link').forEach(link => {
-                const href = link.getAttribute('href');
-                if (href && !href.startsWith('#') && currentPath.includes(href)) {
-                    link.classList.add('active');
-                }
-            });
+        function actualizarSaludoMexico() {
+            const welcomeText = document.getElementById('welcomeText');
+            if (!welcomeText) return;
+            
+            const opciones = { timeZone: 'America/Mexico_City', hour: 'numeric', hour12: false };
+            const formatter = new Intl.DateTimeFormat('es-MX', opciones);
+            const horaMexico = parseInt(formatter.format(new Date()));
+            
+            const nombre = "{{ $maestroData->nombres ?? 'Profesor' }}";
+            let saludo, emoji;
+            
+            if (horaMexico >= 0 && horaMexico < 12) {
+                emoji = '🌅';
+                saludo = 'Buenos días';
+            } else if (horaMexico >= 12 && horaMexico < 19) {
+                emoji = '☀️';
+                saludo = 'Buenas tardes';
+            } else {
+                emoji = '🌙';
+                saludo = 'Buenas noches';
+            }
+            
+            welcomeText.innerHTML = `${emoji} ¡${saludo}, ${nombre}! Bienvenido/a al Sistema GEPROC`;
+        }
+        
+        actualizarSaludoMexico();
+        setInterval(actualizarSaludoMexico, 60000);
 
-            // Manejar clics en enlaces de anclaje
-            document.querySelectorAll('.nav-link[href^="#"]').forEach(anchor => {
-                anchor.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    const targetId = this.getAttribute('href').substring(1);
-                    scrollToSection(targetId);
-                });
-            });
+        // Efecto de scroll en navbar superior
+        const navbarTop = document.querySelector('.navbar-top');
+        window.addEventListener('scroll', function() {
+            if (window.scrollY > 50) {
+                navbarTop.classList.add('scrolled');
+            } else {
+                navbarTop.classList.remove('scrolled');
+            }
         });
-
-function actualizarSaludoMexico() {
-    const welcomeText = document.getElementById('welcomeText');
-    if (!welcomeText) return;
-    
-    // Crear fecha con zona horaria de México
-    const opciones = { timeZone: 'America/Mexico_City', hour: 'numeric', hour12: false };
-    const formatter = new Intl.DateTimeFormat('es-MX', opciones);
-    const horaMexico = parseInt(formatter.format(new Date()));
-    
-    const nombre = "{{ $maestroData->nombres ?? 'Profesor' }}";
-    let saludo, emoji;
-    
-    if (horaMexico >= 0 && horaMexico < 12) {
-        emoji = '🌅';
-        saludo = 'Buenos días';
-    } else if (horaMexico >= 12 && horaMexico < 19) {
-        emoji = '☀️';
-        saludo = 'Buenas tardes';
-    } else {
-        emoji = '🌙';
-        saludo = 'Buenas noches';
-    }
-    
-    // Mostrar SOLO el saludo sin la hora
-    welcomeText.innerHTML = `${emoji} ¡${saludo}, ${nombre}! Bienvenido/a al Sistema`;
-}
-
-// Ejecutar inmediatamente
-actualizarSaludoMexico();
-
-// Actualizar cada minuto
-setInterval(actualizarSaludoMexico, 60000);
     </script>
 </body>
 </html>
