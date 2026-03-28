@@ -94,7 +94,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        /* Contenedor de usuario - alineado a la derecha */
         .user-info-container {
             display: flex;
             align-items: center;
@@ -374,16 +373,17 @@
             margin-bottom: 1.5rem;
         }
 
-        /* ===== MEDIA QUERIES RESPONSIVAS ===== */
-        
-        /* Tablets */
+        .required-star {
+            color: #ef4444;
+        }
+
+        /* Responsive */
         @media (max-width: 992px) {
             .navbar-menu {
                 top: 57px;
             }
         }
 
-        /* Móviles */
         @media (max-width: 768px) {
             :root {
                 --font-size-base: 0.95rem;
@@ -471,7 +471,6 @@
             }
         }
 
-        /* Móviles pequeños */
         @media (max-width: 480px) {
             .logo-img {
                 height: 35px;
@@ -493,7 +492,7 @@
     </style>
 </head>
 <body>
-    <!-- Primera barra - Solo Logo y título -->
+    <!-- Primera barra - Logo y título -->
     <nav class="navbar navbar-expand-lg navbar-top">
         <div class="container">
             <div class="logo-container">
@@ -505,7 +504,7 @@
         </div>
     </nav>
 
-    <!-- Segunda barra - Solo Usuario y Cerrar Sesión -->
+    <!-- Segunda barra - Usuario y Cerrar Sesión -->
     <nav class="navbar navbar-menu">
         <div class="container">
             <div class="user-info-container">
@@ -573,7 +572,7 @@
             <!-- Nota informativa -->
             <div class="info-note">
                 <i class="fas fa-info-circle"></i>
-                Todos los campos marcados con <span class="text-danger">*</span> son obligatorios. Puedes editar toda tu información.
+                Todos los campos marcados con <span class="required-star">*</span> son obligatorios. Puedes editar toda tu información.
             </div>
 
             <!-- Formulario de edición -->
@@ -589,59 +588,50 @@
                     </h3>
 
                     <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="nombres" class="form-label">
-                                <i class="fas fa-user"></i>
-                                Nombres <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" 
-                                   class="form-control @error('nombres') is-invalid @enderror" 
-                                   id="nombres" 
-                                   name="nombres" 
-                                   value="{{ old('nombres', $administrativo->nombres) }}" 
-                                   required>
-                            @error('nombres')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+    <div class="col-md-4 mb-3">
+        <label for="nombres" class="form-label">
+            <i class="fas fa-user"></i>
+            Nombres <span class="required-star">*</span>
+        </label>
+        <input type="text" 
+               class="form-control @error('nombres') is-invalid @enderror" 
+               id="nombres" 
+               name="nombres" 
+               value="{{ old('nombres', $administrativo->nombres) }}" 
+               required>
+    </div>
 
-                        <div class="col-md-4 mb-3">
-                            <label for="apellido_paterno" class="form-label">
-                                <i class="fas fa-user"></i>
-                                Apellido Paterno <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" 
-                                   class="form-control @error('apellido_paterno') is-invalid @enderror" 
-                                   id="apellido_paterno" 
-                                   name="apellido_paterno" 
-                                   value="{{ old('apellido_paterno', $administrativo->apellido_paterno) }}" 
-                                   required>
-                            @error('apellido_paterno')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
+    <div class="col-md-4 mb-3">
+        <label for="apellido_paterno" class="form-label">
+            <i class="fas fa-user"></i>
+            Apellido Paterno <span class="required-star">*</span>
+        </label>
+        <input type="text" 
+               class="form-control @error('apellido_paterno') is-invalid @enderror" 
+               id="apellido_paterno" 
+               name="apellido_paterno" 
+               value="{{ old('apellido_paterno', $administrativo->apellido_paterno) }}" 
+               required>
+    </div>
 
-                        <div class="col-md-4 mb-3">
-                            <label for="apellido_materno" class="form-label">
-                                <i class="fas fa-user"></i>
-                                Apellido Materno
-                            </label>
-                            <input type="text" 
-                                   class="form-control @error('apellido_materno') is-invalid @enderror" 
-                                   id="apellido_materno" 
-                                   name="apellido_materno" 
-                                   value="{{ old('apellido_materno', $administrativo->apellido_materno) }}">
-                            @error('apellido_materno')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
+    <div class="col-md-4 mb-3">
+        <label for="apellido_materno" class="form-label">
+            <i class="fas fa-user"></i>
+            Apellido Materno
+        </label>
+        <input type="text" 
+               class="form-control @error('apellido_materno') is-invalid @enderror" 
+               id="apellido_materno" 
+               name="apellido_materno" 
+               value="{{ old('apellido_materno', $administrativo->apellido_materno) }}">
+    </div>
+</div>
 
                     <div class="row">
                         <div class="col-md-4 mb-3">
                             <label for="fecha_nacimiento" class="form-label">
                                 <i class="fas fa-calendar-alt"></i>
-                                Fecha de Nacimiento <span class="text-danger">*</span>
+                                Fecha de Nacimiento <span class="required-star">*</span>
                             </label>
                             <input type="date" 
                                    class="form-control @error('fecha_nacimiento') is-invalid @enderror" 
@@ -655,59 +645,122 @@
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <label for="curp" class="form-label">
-                                <i class="fas fa-id-card"></i>
-                                CURP <span class="text-danger">*</span>
+                            <label for="edad" class="form-label">
+                                <i class="fas fa-cake-candles"></i>
+                                Edad <span class="required-star">*</span>
                             </label>
-                            <input type="text" 
-                                   class="form-control @error('curp') is-invalid @enderror" 
-                                   id="curp" 
-                                   name="curp" 
-                                   value="{{ old('curp', $administrativo->curp) }}" 
-                                   required
-                                   maxlength="18"
-                                   pattern="[A-Z0-9]{18}"
-                                   title="La CURP debe tener 18 caracteres (letras mayúsculas y números)">
-                            @error('curp')
+                            <input type="number" 
+                                   class="form-control @error('edad') is-invalid @enderror" 
+                                   id="edad" 
+                                   name="edad" 
+                                   value="{{ old('edad', $administrativo->edad) }}" 
+                                   required 
+                                   min="18" 
+                                   max="100">
+                            @error('edad')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <div class="form-text">18 caracteres, solo mayúsculas y números</div>
                         </div>
 
                         <div class="col-md-4 mb-3">
-                            <label for="rfc" class="form-label">
-                                <i class="fas fa-id-card"></i>
-                                RFC <span class="text-danger">*</span>
+                            <label for="genero" class="form-label">
+                                <i class="fas fa-venus-mars"></i>
+                                Género <span class="required-star">*</span>
                             </label>
-                            <input type="text" 
-                                   class="form-control @error('rfc') is-invalid @enderror" 
-                                   id="rfc" 
-                                   name="rfc" 
-                                   value="{{ old('rfc', $administrativo->rfc) }}" 
-                                   required
-                                   maxlength="13"
-                                   pattern="[A-Z0-9]{13}"
-                                   title="El RFC debe tener 13 caracteres (letras mayúsculas y números)">
-                            @error('rfc')
+                            <select class="form-select @error('genero') is-invalid @enderror" id="genero" name="genero" required>
+                                <option value="">Seleccione...</option>
+                                <option value="M" {{ old('genero', $administrativo->genero) == 'M' ? 'selected' : '' }}>Masculino</option>
+                                <option value="F" {{ old('genero', $administrativo->genero) == 'F' ? 'selected' : '' }}>Femenino</option>
+                                <option value="OTRO" {{ old('genero', $administrativo->genero) == 'OTRO' ? 'selected' : '' }}>Otro</option>
+                            </select>
+                            @error('genero')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
-                            <div class="form-text">13 caracteres, solo mayúsculas y números</div>
                         </div>
                     </div>
 
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <label for="telefono" class="form-label">
-                                <i class="fas fa-phone"></i>
-                                Teléfono <span class="text-danger">*</span>
+                            <label for="nacionalidad" class="form-label">
+                                <i class="fas fa-flag"></i>
+                                Nacionalidad <span class="required-star">*</span>
                             </label>
                             <input type="text" 
-                                   class="form-control @error('telefono') is-invalid @enderror" 
-                                   id="telefono" 
-                                   name="telefono" 
-                                   value="{{ old('telefono', $administrativo->telefono) }}" 
+                                   class="form-control @error('nacionalidad') is-invalid @enderror" 
+                                   id="nacionalidad" 
+                                   name="nacionalidad" 
+                                   value="{{ old('nacionalidad', $administrativo->nacionalidad) }}" 
                                    required>
-                            @error('telefono')
+                            @error('nacionalidad')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="estado_civil" class="form-label">
+                                <i class="fas fa-heart"></i>
+                                Estado Civil <span class="required-star">*</span>
+                            </label>
+                            <select class="form-select @error('estado_civil') is-invalid @enderror" id="estado_civil" name="estado_civil" required>
+                                <option value="">Seleccione...</option>
+                                <option value="SOLTERO(A)" {{ old('estado_civil', $administrativo->estado_civil) == 'SOLTERO(A)' ? 'selected' : '' }}>Soltero(a)</option>
+                                <option value="CASADO(A)" {{ old('estado_civil', $administrativo->estado_civil) == 'CASADO(A)' ? 'selected' : '' }}>Casado(a)</option>
+                                <option value="DIVORCIADO(A)" {{ old('estado_civil', $administrativo->estado_civil) == 'DIVORCIADO(A)' ? 'selected' : '' }}>Divorciado(a)</option>
+                                <option value="VIUDO(A)" {{ old('estado_civil', $administrativo->estado_civil) == 'VIUDO(A)' ? 'selected' : '' }}>Viudo(a)</option>
+                                <option value="UNION LIBRE" {{ old('estado_civil', $administrativo->estado_civil) == 'UNION LIBRE' ? 'selected' : '' }}>Unión Libre</option>
+                            </select>
+                            @error('estado_civil')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="lugar_nacimiento" class="form-label">
+                                <i class="fas fa-map-marker-alt"></i>
+                                Lugar de Nacimiento <span class="required-star">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control @error('lugar_nacimiento') is-invalid @enderror" 
+                                   id="lugar_nacimiento" 
+                                   name="lugar_nacimiento" 
+                                   value="{{ old('lugar_nacimiento', $administrativo->lugar_nacimiento) }}" 
+                                   required>
+                            @error('lugar_nacimiento')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-6 mb-3">
+                            <label for="telefono_celular" class="form-label">
+                                <i class="fas fa-phone-alt"></i>
+                                Teléfono Celular <span class="required-star">*</span>
+                            </label>
+                            <input type="tel" 
+                                   class="form-control @error('telefono_celular') is-invalid @enderror" 
+                                   id="telefono_celular" 
+                                   name="telefono_celular" 
+                                   value="{{ old('telefono_celular', $administrativo->telefono_celular) }}" 
+                                   required>
+                            @error('telefono_celular')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label for="telefono_fijo" class="form-label">
+                                <i class="fas fa-phone"></i>
+                                Teléfono Fijo
+                            </label>
+                            <input type="tel" 
+                                   class="form-control @error('telefono_fijo') is-invalid @enderror" 
+                                   id="telefono_fijo" 
+                                   name="telefono_fijo" 
+                                   value="{{ old('telefono_fijo', $administrativo->telefono_fijo) }}">
+                            @error('telefono_fijo')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -715,7 +768,7 @@
                         <div class="col-md-6 mb-3">
                             <label for="email_personal" class="form-label">
                                 <i class="fas fa-envelope"></i>
-                                Email Personal <span class="text-danger">*</span>
+                                Email Personal <span class="required-star">*</span>
                             </label>
                             <input type="email" 
                                    class="form-control @error('email_personal') is-invalid @enderror" 
@@ -730,17 +783,87 @@
                     </div>
 
                     <div class="row">
-                        <div class="col-12 mb-3">
-                            <label for="direccion" class="form-label">
-                                <i class="fas fa-map-marker-alt"></i>
-                                Dirección <span class="text-danger">*</span>
+                        <div class="col-md-12 mb-3">
+                            <label for="domicilio" class="form-label">
+                                <i class="fas fa-home"></i>
+                                Domicilio <span class="required-star">*</span>
                             </label>
-                            <textarea class="form-control @error('direccion') is-invalid @enderror" 
-                                      id="direccion" 
-                                      name="direccion" 
-                                      rows="2" 
-                                      required>{{ old('direccion', $administrativo->direccion) }}</textarea>
-                            @error('direccion')
+                            <input type="text" 
+                                   class="form-control @error('domicilio') is-invalid @enderror" 
+                                   id="domicilio" 
+                                   name="domicilio" 
+                                   value="{{ old('domicilio', $administrativo->domicilio) }}" 
+                                   required>
+                            @error('domicilio')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <label for="colonia" class="form-label">
+                                <i class="fas fa-location-dot"></i>
+                                Colonia <span class="required-star">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control @error('colonia') is-invalid @enderror" 
+                                   id="colonia" 
+                                   name="colonia" 
+                                   value="{{ old('colonia', $administrativo->colonia) }}" 
+                                   required>
+                            @error('colonia')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="codigo_postal" class="form-label">
+                                <i class="fas fa-mail-bulk"></i>
+                                Código Postal <span class="required-star">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control @error('codigo_postal') is-invalid @enderror" 
+                                   id="codigo_postal" 
+                                   name="codigo_postal" 
+                                   value="{{ old('codigo_postal', $administrativo->codigo_postal) }}" 
+                                   required
+                                   maxlength="5">
+                            @error('codigo_postal')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+                            <label for="municipio" class="form-label">
+                                <i class="fas fa-city"></i>
+                                Municipio <span class="required-star">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control @error('municipio') is-invalid @enderror" 
+                                   id="municipio" 
+                                   name="municipio" 
+                                   value="{{ old('municipio', $administrativo->municipio) }}" 
+                                   required>
+                            @error('municipio')
+                                <div class="invalid-feedback">{{ $message }}</div>
+                            @enderror
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-12 mb-3">
+                            <label for="ciudad_poblacion" class="form-label">
+                                <i class="fas fa-building"></i>
+                                Ciudad o Población <span class="required-star">*</span>
+                            </label>
+                            <input type="text" 
+                                   class="form-control @error('ciudad_poblacion') is-invalid @enderror" 
+                                   id="ciudad_poblacion" 
+                                   name="ciudad_poblacion" 
+                                   value="{{ old('ciudad_poblacion', $administrativo->ciudad_poblacion) }}" 
+                                   required>
+                            @error('ciudad_poblacion')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
@@ -753,10 +876,10 @@
                     </h3>
 
                     <div class="row">
-                        <div class="col-md-4 mb-3">
+                        <div class="col-md-12 mb-3">
                             <label for="puesto" class="form-label">
                                 <i class="fas fa-user-tie"></i>
-                                Puesto <span class="text-danger">*</span>
+                                Puesto <span class="required-star">*</span>
                             </label>
                             <input type="text" 
                                    class="form-control @error('puesto') is-invalid @enderror" 
@@ -765,90 +888,6 @@
                                    value="{{ old('puesto', $administrativo->puesto) }}" 
                                    required>
                             @error('puesto')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="area_adscripcion" class="form-label">
-                                <i class="fas fa-building"></i>
-                                Área de Adscripción <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" 
-                                   class="form-control @error('area_adscripcion') is-invalid @enderror" 
-                                   id="area_adscripcion" 
-                                   name="area_adscripcion" 
-                                   value="{{ old('area_adscripcion', $administrativo->area_adscripcion) }}" 
-                                   required>
-                            @error('area_adscripcion')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="fecha_ingreso" class="form-label">
-                                <i class="fas fa-calendar-check"></i>
-                                Fecha de Ingreso <span class="text-danger">*</span>
-                            </label>
-                            <input type="date" 
-                                   class="form-control @error('fecha_ingreso') is-invalid @enderror" 
-                                   id="fecha_ingreso" 
-                                   name="fecha_ingreso" 
-                                   value="{{ old('fecha_ingreso', $administrativo->fecha_ingreso instanceof \Carbon\Carbon ? $administrativo->fecha_ingreso->format('Y-m-d') : $administrativo->fecha_ingreso) }}" 
-                                   required>
-                            @error('fecha_ingreso')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="col-md-4 mb-3">
-                            <label for="numero_empleado" class="form-label">
-                                <i class="fas fa-hashtag"></i>
-                                Número de Empleado <span class="text-danger">*</span>
-                            </label>
-                            <input type="text" 
-                                   class="form-control @error('numero_empleado') is-invalid @enderror" 
-                                   id="numero_empleado" 
-                                   name="numero_empleado" 
-                                   value="{{ old('numero_empleado', $administrativo->numero_empleado) }}" 
-                                   required>
-                            @error('numero_empleado')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="maximo_grado_estudios" class="form-label">
-                                <i class="fas fa-graduation-cap"></i>
-                                Máximo Grado de Estudios
-                            </label>
-                            <select class="form-select @error('maximo_grado_estudios') is-invalid @enderror" 
-                                    id="maximo_grado_estudios" 
-                                    name="maximo_grado_estudios">
-                                <option value="">Seleccione...</option>
-                                <option value="Licenciatura" {{ old('maximo_grado_estudios', $administrativo->maximo_grado_estudios) == 'Licenciatura' ? 'selected' : '' }}>Licenciatura</option>
-                                <option value="Especialidad" {{ old('maximo_grado_estudios', $administrativo->maximo_grado_estudios) == 'Especialidad' ? 'selected' : '' }}>Especialidad</option>
-                                <option value="Maestría" {{ old('maximo_grado_estudios', $administrativo->maximo_grado_estudios) == 'Maestría' ? 'selected' : '' }}>Maestría</option>
-                                <option value="Doctorado" {{ old('maximo_grado_estudios', $administrativo->maximo_grado_estudios) == 'Doctorado' ? 'selected' : '' }}>Doctorado</option>
-                            </select>
-                            @error('maximo_grado_estudios')
-                                <div class="invalid-feedback">{{ $message }}</div>
-                            @enderror
-                        </div>
-
-                        <div class="col-md-4 mb-3">
-                            <label for="escolaridad" class="form-label">
-                                <i class="fas fa-school"></i>
-                                Escolaridad
-                            </label>
-                            <input type="text" 
-                                   class="form-control @error('escolaridad') is-invalid @enderror" 
-                                   id="escolaridad" 
-                                   name="escolaridad" 
-                                   value="{{ old('escolaridad', $administrativo->escolaridad) }}">
-                            @error('escolaridad')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>

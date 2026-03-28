@@ -631,12 +631,10 @@
                         <div class="profile-info">
                             <h4>{{ $administrativo->nombre_completo }}</h4>
                             <p><i class="fas fa-envelope"></i> {{ $administrativo->user->email }}</p>
-                            <p><i class="fas fa-phone"></i> {{ $administrativo->telefono }}</p>
-                            <p><i class="fas fa-map-marker-alt"></i> {{ $administrativo->direccion }}</p>
-                            <div class="profile-badge">
-                                <strong>N° Empleado:</strong> {{ $administrativo->numero_empleado }} | 
-                                <strong>Puesto:</strong> {{ $administrativo->puesto }} | 
-                                <strong>Área:</strong> {{ $administrativo->area_adscripcion }}
+                            <p><i class="fas fa-phone"></i> {{ $administrativo->telefono_celular }}</p>
+                            <p><i class="fas fa-map-marker-alt"></i> {{ $administrativo->domicilio }}</p>
+                            <div class="profile-badge"> 
+                                <strong>Puesto:</strong> {{ $administrativo->puesto }} 
                             </div>
                         </div>
                     </div>
@@ -662,37 +660,87 @@
                     </div>
 
                     <!-- Información Personal Detallada -->
-                    <h3><i class="fas fa-id-card"></i> Información Personal</h3>
-                    <div class="info-grid">
-                        <div class="info-item">
-                            <div class="info-label">CURP</div>
-                            <div class="info-value">{{ $administrativo->curp }}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">RFC</div>
-                            <div class="info-value">{{ $administrativo->rfc }}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Fecha Nacimiento</div>
-                            <div class="info-value">{{ $administrativo->fecha_nacimiento->format('d/m/Y') }}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Email Personal</div>
-                            <div class="info-value">{{ $administrativo->email_personal }}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Fecha Ingreso</div>
-                            <div class="info-value">{{ $administrativo->fecha_ingreso->format('d/m/Y') }}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Grado Máximo</div>
-                            <div class="info-value">{{ $administrativo->maximo_grado_estudios ?? 'No especificado' }}</div>
-                        </div>
-                        <div class="info-item">
-                            <div class="info-label">Escolaridad</div>
-                            <div class="info-value">{{ $administrativo->escolaridad ?? 'No especificada' }}</div>
-                        </div>
-                    </div>
+                   <!-- Información Personal Detallada -->
+<h3><i class="fas fa-id-card"></i> Información Personal</h3>
+<div class="info-grid">
+    <div class="info-item">
+        <div class="info-label">Nombres</div>
+        <div class="info-value">{{ $administrativo->nombres }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Apellido Paterno</div>
+        <div class="info-value">{{ $administrativo->apellido_paterno }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Apellido Materno</div>
+        <div class="info-value">{{ $administrativo->apellido_materno ?? 'No registrado' }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Fecha Nacimiento</div>
+        <div class="info-value">{{ $administrativo->fecha_nacimiento->format('d/m/Y') }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Edad</div>
+        <div class="info-value">{{ $administrativo->edad }} años</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Género</div>
+        <div class="info-value">
+            @if($administrativo->genero == 'M') Masculino
+            @elseif($administrativo->genero == 'F') Femenino
+            @else Otro
+            @endif
+        </div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Nacionalidad</div>
+        <div class="info-value">{{ $administrativo->nacionalidad }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Estado Civil</div>
+        <div class="info-value">{{ $administrativo->estado_civil }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Teléfono Celular</div>
+        <div class="info-value">{{ $administrativo->telefono_celular }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Teléfono Fijo</div>
+        <div class="info-value">{{ $administrativo->telefono_fijo ?? 'No registrado' }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Email Personal</div>
+        <div class="info-value">{{ $administrativo->email_personal }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Domicilio</div>
+        <div class="info-value">{{ $administrativo->domicilio }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Colonia</div>
+        <div class="info-value">{{ $administrativo->colonia }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Código Postal</div>
+        <div class="info-value">{{ $administrativo->codigo_postal }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Municipio</div>
+        <div class="info-value">{{ $administrativo->municipio }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Ciudad/Población</div>
+        <div class="info-value">{{ $administrativo->ciudad_poblacion }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Lugar de Nacimiento</div>
+        <div class="info-value">{{ $administrativo->lugar_nacimiento }}</div>
+    </div>
+    <div class="info-item">
+        <div class="info-label">Puesto</div>
+        <div class="info-value">{{ $administrativo->puesto }}</div>
+    </div>
+</div>
 
                     <!-- Documentos -->
                     <div class="documents-section">

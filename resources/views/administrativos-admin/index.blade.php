@@ -551,18 +551,18 @@
                                 </div>
                                 
                                 <div class="col-md-3">
-                                    <label for="area" class="form-label-filter">
-                                        <i class="fas fa-building me-1"></i>Área
-                                    </label>
-                                    <select class="form-select" id="area" name="area">
-                                        <option value="">Todas las áreas</option>
-                                        @foreach($areas as $area)
-                                            <option value="{{ $area }}" {{ request('area') == $area ? 'selected' : '' }}>
-                                                {{ $area }}
-                                            </option>
-                                        @endforeach
-                                    </select>
-                                </div>
+    <label for="puesto" class="form-label-filter">
+        <i class="fas fa-briefcase me-1"></i>Puesto
+    </label>
+    <select class="form-select" id="puesto" name="puesto">
+        <option value="">Todos los puestos</option>
+        @foreach($puestos as $puesto)
+            <option value="{{ $puesto }}" {{ request('puesto') == $puesto ? 'selected' : '' }}>
+                {{ $puesto }}
+            </option>
+        @endforeach
+    </select>
+</div>
                                 
                                 <div class="col-md-3">
                                     <label for="estado" class="form-label-filter">
@@ -600,87 +600,84 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>N° Empleado</th>
                                     <th>Nombre Completo</th>
-                                    <th>Puesto</th>
-                                    <th>Área</th>
-                                    <th>Documentos</th>
-                                    <th>Progreso</th>
-                                    <th>Acciones</th>
+            <th>Puesto</th>
+            <th>Documentos</th>
+            <th>Progreso</th>
+            <th>Acciones</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 @forelse($administrativos as $admin)
                                     @php
                                         $documentos = $admin->documentosAdmin;
-                                        $totalDocs = $documentos->count();
-                                        $aprobados = $documentos->where('estado', 'aprobado')->count();
-                                        $pendientes = $documentos->where('estado', 'pendiente')->count();
-                                        $rechazados = $documentos->where('estado', 'rechazado')->count();
-                                        $porcentaje = $totalDocs > 0 ? round(($aprobados / 4) * 100) : 0;
+                $totalDocs = $documentos->count();
+                $aprobados = $documentos->where('estado', 'aprobado')->count();
+                $pendientes = $documentos->where('estado', 'pendiente')->count();
+                $rechazados = $documentos->where('estado', 'rechazado')->count();
+                $totalRequeridos = count(\App\Models\Administrativo::TIPOS_DOCUMENTOS);
+                $porcentaje = $totalDocs > 0 ? round(($aprobados / $totalRequeridos) * 100) : 0;
                                     @endphp
                                     <tr>
-                                        <td><strong>{{ $admin->numero_empleado }}</strong></td>
-                                        <td>{{ $admin->nombre_completo }}</td>
-                                        <td>{{ $admin->puesto }}</td>
-                                        <td>{{ $admin->area_adscripcion }}</td>
-                                        <td>
-                                            <div class="d-flex gap-1 flex-wrap">
-                                                @if($aprobados > 0)
-                                                    <span class="badge badge-success" title="Aprobados">
-                                                        <i class="fas fa-check-circle"></i> {{ $aprobados }}
-                                                    </span>
-                                                @endif
-                                                @if($pendientes > 0)
-                                                    <span class="badge badge-warning" title="Pendientes">
-                                                        <i class="fas fa-clock"></i> {{ $pendientes }}
-                                                    </span>
-                                                @endif
-                                                @if($rechazados > 0)
-                                                    <span class="badge badge-danger" title="Rechazados">
-                                                        <i class="fas fa-times-circle"></i> {{ $rechazados }}
-                                                    </span>
-                                                @endif
-                                                @if($totalDocs == 0)
-                                                    <span class="badge bg-secondary">Sin documentos</span>
-                                                @endif
-                                            </div>
-                                        </td>
-                                        <td style="min-width: 120px;">
-                                            <div class="progress" title="{{ $aprobados }}/4 documentos aprobados">
-                                                <div class="progress-bar" role="progressbar" 
-                                                     style="width: {{ $porcentaje }}%;" 
-                                                     aria-valuenow="{{ $porcentaje }}" 
-                                                     aria-valuemin="0" 
-                                                     aria-valuemax="100">
-                                                </div>
-                                            </div>
-                                            <small class="text-muted">{{ $aprobados }}/4 aprobados</small>
-                                        </td>
-                                        <td>
-                                            <div class="d-flex gap-2">
-                                                <a href="{{ route('admin.administrativos.show', $admin->id) }}" class="action-btn view-btn" title="Ver detalles">
-                                                    <i class="fas fa-eye"></i>
-                                                </a>
-                                                <a href="{{ route('admin.administrativos.documentos', $admin->id) }}" class="action-btn view-btn" title="Ver documentos">
-                                                    <i class="fas fa-file-pdf"></i>
-                                                </a>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @empty
-                                    <tr>
-                                        <td colspan="7" class="text-center py-4">
-                                            <div class="empty-state">
-                                                <i class="fas fa-users fa-3x mb-3"></i>
-                                                <h4>No hay administrativos registrados</h4>
-                                                <p class="text-muted">Los administrativos aparecerán aquí cuando completen su perfil.</p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                @endforelse
-                            </tbody>
-                        </table>
+                <td><strong>{{ $admin->nombre_completo }}</strong></td>
+                <td>{{ $admin->puesto }}</td>
+                <td>
+                    <div class="d-flex gap-1 flex-wrap">
+                        @if($aprobados > 0)
+                            <span class="badge badge-success" title="Aprobados">
+                                <i class="fas fa-check-circle"></i> {{ $aprobados }}
+                            </span>
+                        @endif
+                        @if($pendientes > 0)
+                            <span class="badge badge-warning" title="Pendientes">
+                                <i class="fas fa-clock"></i> {{ $pendientes }}
+                            </span>
+                        @endif
+                        @if($rechazados > 0)
+                            <span class="badge badge-danger" title="Rechazados">
+                                <i class="fas fa-times-circle"></i> {{ $rechazados }}
+                            </span>
+                        @endif
+                        @if($totalDocs == 0)
+                            <span class="badge bg-secondary">Sin documentos</span>
+                        @endif
+                    </div>
+                </td>
+                <td style="min-width: 120px;">
+                    <div class="progress" title="{{ $aprobados }}/{{ $totalRequeridos }} documentos aprobados">
+                        <div class="progress-bar" role="progressbar" 
+                             style="width: {{ $porcentaje }}%;" 
+                             aria-valuenow="{{ $porcentaje }}" 
+                             aria-valuemin="0" 
+                             aria-valuemax="100">
+                        </div>
+                    </div>
+                    <small class="text-muted">{{ $aprobados }}/{{ $totalRequeridos }} aprobados</small>
+                </td>
+                <td>
+                    <div class="d-flex gap-2">
+                        <a href="{{ route('admin.administrativos.show', $admin->id) }}" class="action-btn view-btn" title="Ver detalles">
+                            <i class="fas fa-eye"></i>
+                        </a>
+                        <a href="{{ route('admin.administrativos.documentos', $admin->id) }}" class="action-btn view-btn" title="Ver documentos">
+                            <i class="fas fa-file-pdf"></i>
+                        </a>
+                    </div>
+                </td>
+            </tr>
+        @empty
+            <tr>
+                <td colspan="5" class="text-center py-4">
+                    <div class="empty-state">
+                        <i class="fas fa-users fa-3x mb-3"></i>
+                        <h4>No hay administrativos registrados</h4>
+                        <p class="text-muted">Los administrativos aparecerán aquí cuando completen su perfil.</p>
+                    </div>
+                </td>
+            </tr>
+        @endforelse
+    </tbody>
+</table>
                     </div>
 
                     <!-- Paginación inferior -->

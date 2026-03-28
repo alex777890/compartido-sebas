@@ -38,11 +38,6 @@
         box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
     }
 
-    .navbar-top.scrolled {
-        padding: 0.6rem 0;
-        box-shadow: 0 5px 20px rgba(15, 126, 230, 0.15);
-    }
-
     .navbar-brand { 
         color: var(--primary) !important; 
         font-weight: 600; 
@@ -305,6 +300,7 @@
         gap: 5px;
         transition: var(--transition);
         font-size: 0.85rem;
+        cursor: pointer;
     }
 
     .view-btn {
@@ -329,6 +325,28 @@
         color: #212529;
     }
 
+    .approve-btn {
+        background: rgba(40, 167, 69, 0.1);
+        color: #28a745;
+        border: 1px solid rgba(40, 167, 69, 0.3);
+    }
+
+    .approve-btn:hover {
+        background: #28a745;
+        color: white;
+    }
+
+    .reject-btn {
+        background: rgba(220, 53, 69, 0.1);
+        color: #dc3545;
+        border: 1px solid rgba(220, 53, 69, 0.3);
+    }
+
+    .reject-btn:hover {
+        background: #dc3545;
+        color: white;
+    }
+
     .observaciones {
         font-size: 0.8rem;
         color: #dc3545;
@@ -348,6 +366,47 @@
         font-size: 3rem;
         margin-bottom: 1rem;
         color: var(--border-color);
+    }
+
+    .alert {
+        padding: 0.8rem 1rem;
+        border-radius: 8px;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+    }
+
+    .alert-success {
+        background: #d1fae5;
+        color: #065f46;
+        border: 1px solid #a7f3d0;
+    }
+
+    .alert-danger {
+        background: #fee2e2;
+        color: #991b1b;
+        border: 1px solid #fecaca;
+    }
+
+    .alert-warning {
+        background: #fef3c7;
+        color: #92400e;
+        border: 1px solid #fde68a;
+    }
+
+    .modal-content {
+        border-radius: 12px;
+    }
+
+    .modal-header {
+        background: var(--primary);
+        color: white;
+        border-radius: 12px 12px 0 0;
+    }
+
+    .modal-header .btn-close {
+        filter: brightness(0) invert(1);
     }
 
     @media (max-width: 768px) {
@@ -383,7 +442,7 @@
                     <li class="nav-item"><a class="nav-link" href="{{ route('maestros.index') }}">Maestros</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('contracts.index') }}">Contratos</a></li>
                     <li class="nav-item"><a class="nav-link" href="{{ route('users.index') }}">Accesos</a></li>
-                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.administrativos.*') ? 'active' : '' }}"href="{{ route('admin.administrativos.index') }}">Administrativos</a></ul>
+                    <li class="nav-item"><a class="nav-link {{ request()->routeIs('admin.administrativos.*') ? 'active' : '' }}" href="{{ route('admin.administrativos.index') }}">Administrativos</a></li>
                 </ul>
                 
                 <div class="user-info-container">
@@ -424,10 +483,23 @@
                     </div>
 
                     @if(session('success'))
-                        <div class="alert alert-success alert-dismissible fade show">
-                            <i class="fas fa-check-circle me-2"></i>
+                        <div class="alert alert-success">
+                            <i class="fas fa-check-circle"></i>
                             {{ session('success') }}
-                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+
+                    @if(session('error'))
+                        <div class="alert alert-danger">
+                            <i class="fas fa-exclamation-circle"></i>
+                            {{ session('error') }}
+                        </div>
+                    @endif
+
+                    @if(session('warning'))
+                        <div class="alert alert-warning">
+                            <i class="fas fa-exclamation-triangle"></i>
+                            {{ session('warning') }}
                         </div>
                     @endif
 
@@ -437,8 +509,7 @@
                         </div>
                         <div class="info-details">
                             <h4>{{ $administrativo->nombre_completo }}</h4>
-                            <p><i class="fas fa-id-badge"></i> {{ $administrativo->numero_empleado }}</p>
-                            <p><i class="fas fa-briefcase"></i> {{ $administrativo->puesto }} - {{ $administrativo->area_adscripcion }}</p>
+                            <p><i class="fas fa-briefcase"></i> {{ $administrativo->puesto }}</p>
                             <p><i class="fas fa-envelope"></i> {{ $administrativo->user->email }}</p>
                         </div>
                     </div>
@@ -467,17 +538,12 @@
                                         @foreach($documentos as $doc)
                                             <tr>
                                                 <td>
-                                                    @if($doc->tipo == 'identificacion_oficial')
-                                                        <i class="fas fa-id-card"></i> Identificación
-                                                    @elseif($doc->tipo == 'comprobante_domicilio')
-                                                        <i class="fas fa-home"></i> Comprobante
-                                                    @elseif($doc->tipo == 'curriculum')
-                                                        <i class="fas fa-file-alt"></i> Currículum
-                                                    @elseif($doc->tipo == 'acta_nacimiento')
-                                                        <i class="fas fa-file"></i> Acta
-                                                    @else
-                                                        {{ $doc->tipo }}
-                                                    @endif
+                                                    @php
+                                                        $tiposDoc = \App\Models\Administrativo::TIPOS_DOCUMENTOS;
+                                                        $nombreDoc = $tiposDoc[$doc->tipo]['nombre'] ?? $doc->tipo;
+                                                        $iconoDoc = $tiposDoc[$doc->tipo]['icono'] ?? 'file';
+                                                    @endphp
+                                                    <i class="fas fa-{{ $iconoDoc }}"></i> {{ $nombreDoc }}
                                                 </td>
                                                 <td>{{ $doc->nombre_archivo }}</td>
                                                 <td>{{ $doc->created_at->format('d/m/Y H:i') }}</td>
@@ -522,6 +588,16 @@
                                                         <a href="{{ route('admin.documentos.descargar', $doc->id) }}" class="action-btn download-btn" title="Descargar">
                                                             <i class="fas fa-download"></i>
                                                         </a>
+                                                        @if($doc->estado != 'aprobado')
+                                                            <button onclick="abrirModalAprobar({{ $doc->id }})" class="action-btn approve-btn" title="Aprobar">
+                                                                <i class="fas fa-check"></i>
+                                                            </button>
+                                                        @endif
+                                                        @if($doc->estado != 'rechazado')
+                                                            <button onclick="abrirModalRechazar({{ $doc->id }})" class="action-btn reject-btn" title="Rechazar">
+                                                                <i class="fas fa-times"></i>
+                                                            </button>
+                                                        @endif
                                                     </div>
                                                 </td>
                                             </tr>
@@ -542,8 +618,91 @@
         </div>
     </div>
 
+    <!-- Modal Aprobar -->
+    <div class="modal fade" id="modalAprobar" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-check-circle me-2"></i>
+                        Aprobar Documento
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="" id="formAprobar">
+                    @csrf
+                    <div class="modal-body">
+                        <p>¿Está seguro de aprobar este documento?</p>
+                        <p class="text-muted">Una vez aprobado, el documento aparecerá como válido para el administrativo.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-success">
+                            <i class="fas fa-check"></i> Aprobar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Rechazar -->
+    <div class="modal fade" id="modalRechazar" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">
+                        <i class="fas fa-times-circle me-2"></i>
+                        Rechazar Documento
+                    </h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <form method="POST" action="" id="formRechazar">
+                    @csrf
+                    <div class="modal-body">
+                        <div class="mb-3">
+                            <label for="observaciones" class="form-label">
+                                Observaciones <span class="text-danger">*</span>
+                            </label>
+                            <textarea class="form-control" 
+                                      id="observaciones" 
+                                      name="observaciones" 
+                                      rows="3" 
+                                      required
+                                      placeholder="Indique el motivo del rechazo..."></textarea>
+                            <div class="form-text">Esta observación será visible para el administrativo.</div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <button type="submit" class="btn btn-danger">
+                            <i class="fas fa-times"></i> Rechazar
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script>
+        function abrirModalAprobar(documentoId) {
+            const form = document.getElementById('formAprobar');
+            form.action = `{{ url('admin/documentos') }}/${documentoId}/aprobar`;
+            
+            const modal = new bootstrap.Modal(document.getElementById('modalAprobar'));
+            modal.show();
+        }
+
+        function abrirModalRechazar(documentoId) {
+            const form = document.getElementById('formRechazar');
+            form.action = `{{ url('admin/documentos') }}/${documentoId}/rechazar`;
+            
+            const modal = new bootstrap.Modal(document.getElementById('modalRechazar'));
+            modal.show();
+        }
+
+        // Cerrar alertas automáticamente después de 5 segundos
         setTimeout(() => {
             document.querySelectorAll('.alert').forEach(alert => {
                 const bsAlert = new bootstrap.Alert(alert);

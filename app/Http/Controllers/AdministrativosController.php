@@ -40,28 +40,59 @@ class AdministrativosController extends Controller
             $periodoActivo = Periodo::getPeriodoSubidaHabilitada();
             
             // Tipos de documentos requeridos
-            $tiposDocumentos = [
-                'identificacion_oficial' => [
-                    'nombre' => 'Identificación Oficial',
-                    'icono' => 'id-card',
-                    'descripcion' => 'INE, Pasaporte o Cédula Profesional vigente'
-                ],
-                'comprobante_domicilio' => [
-                    'nombre' => 'Comprobante de Domicilio',
-                    'icono' => 'home',
-                    'descripcion' => 'Recibo de luz, agua, teléfono o predial (últimos 3 meses)'
-                ],
-                'curriculum' => [
-                    'nombre' => 'Currículum Vitae',
-                    'icono' => 'file-alt',
-                    'descripcion' => 'Hoja de vida actualizada con fotografía'
-                ],
-                'acta_nacimiento' => [
-                    'nombre' => 'Acta de Nacimiento',
-                    'icono' => 'file',
-                    'descripcion' => 'Acta de nacimiento certificada'
-                ]
-            ];
+            // Tipos de documentos requeridos - 10 documentos
+$tiposDocumentos = [
+    'solicitud_empleo' => [
+        'nombre' => 'Solicitud de Empleo',
+        'icono' => 'file-alt',
+        'descripcion' => 'Formato de solicitud de empleo'
+    ],
+    'curriculum_vitae' => [
+        'nombre' => 'Curriculum Vitae',
+        'icono' => 'file-alt',
+        'descripcion' => 'Hoja de vida actualizada'
+    ],
+    'acta_nacimiento' => [
+        'nombre' => 'Acta de Nacimiento',
+        'icono' => 'file',
+        'descripcion' => 'Acta de nacimiento certificada'
+    ],
+    'curp_documento' => [
+        'nombre' => 'CURP',
+        'icono' => 'id-card',
+        'descripcion' => 'CURP (Formato página RENAPO)'
+    ],
+    'constancia_fiscal' => [
+        'nombre' => 'Constancia de Situación Fiscal',
+        'icono' => 'file-invoice',
+        'descripcion' => 'Constancia de situación fiscal (SAT)'
+    ],
+    'nss' => [
+        'nombre' => 'Número de Seguridad Social',
+        'icono' => 'heartbeat',
+        'descripcion' => 'NSS (Formato página IMSS)'
+    ],
+    'ine' => [
+        'nombre' => 'INE',
+        'icono' => 'id-card',
+        'descripcion' => 'Identificación oficial vigente'
+    ],
+    'comprobante_domicilio' => [
+        'nombre' => 'Comprobante de Domicilio',
+        'icono' => 'home',
+        'descripcion' => 'Comprobante de domicilio reciente'
+    ],
+    'comprobante_estudios' => [
+        'nombre' => 'Comprobante de Estudios',
+        'icono' => 'graduation-cap',
+        'descripcion' => 'Último grado de estudios'
+    ],
+    'certificado_medico' => [
+        'nombre' => 'Certificado Médico',
+        'icono' => 'file-medical',
+        'descripcion' => 'Certificado médico vigente'
+    ]
+];
 
             // Cargar documentos del período activo si existe
             $documentosDelPeriodo = collect();
@@ -180,140 +211,133 @@ class AdministrativosController extends Controller
     /**
      * Guardar el perfil del administrativo (cuestionario inicial)
      */
-    public function guardarPerfil(Request $request)
-    {
-        try {
-            Log::info('=== GUARDAR PERFIL ADMINISTRATIVO ===');
-            
-            $user = Auth::user();
+    /**
+ * Guardar el perfil del administrativo (cuestionario inicial)
+ */
+/**
+ * Guardar el perfil del administrativo
+ */
+public function guardarPerfil(Request $request)
+{
+    try {
+        Log::info('=== GUARDAR PERFIL ADMINISTRATIVO ===');
+        
+        $user = Auth::user();
 
-            // Verificar si ya existe perfil
-            $perfilExistente = Administrativo::where('user_id', $user->id)->first();
+        $perfilExistente = Administrativo::where('user_id', $user->id)->first();
 
-            if ($perfilExistente) {
-                return redirect()->route('administrativos.dashboard')
-                    ->with('info', 'Ya tienes un perfil registrado.');
-            }
-
-            // Validación
-            $validated = $request->validate([
-                // Información Personal
-                'nombres' => 'required|string|max:100',
-                'apellido_paterno' => 'required|string|max:50',
-                'apellido_materno' => 'nullable|string|max:50',
-                'fecha_nacimiento' => 'required|date|before:today',
-                'curp' => 'required|string|size:18|unique:administrativos,curp|regex:/^[A-Z0-9]{18}$/',
-                'rfc' => 'required|string|size:13|unique:administrativos,rfc|regex:/^[A-Z0-9]{13}$/',
-                'telefono' => 'required|string|max:20',
-                'email_personal' => 'required|email|max:100',
-                'direccion' => 'required|string',
-                
-                // Información Laboral
-                'puesto' => 'required|string|max:100',
-                'fecha_ingreso' => 'required|date',
-                'numero_empleado' => 'required|string|max:50|unique:administrativos,numero_empleado',
-                'area_adscripcion' => 'required|string|max:100',
-                'maximo_grado_estudios' => 'nullable|string|max:100',
-                'escolaridad' => 'nullable|string|max:100',
-                
-                // Documentos (subida opcional en este paso)
-                'identificacion_oficial' => 'nullable|file|mimes:pdf|max:5120',
-                'comprobante_domicilio' => 'nullable|file|mimes:pdf|max:5120',
-                'curriculum' => 'nullable|file|mimes:pdf|max:5120',
-                'acta_nacimiento' => 'nullable|file|mimes:pdf|max:5120',
-            ], [
-                'curp.size' => 'La CURP debe tener exactamente 18 caracteres.',
-                'curp.regex' => 'La CURP solo puede contener letras mayúsculas y números.',
-                'rfc.size' => 'El RFC debe tener exactamente 13 caracteres.',
-                'rfc.regex' => 'El RFC solo puede contener letras mayúsculas y números.',
-                'fecha_nacimiento.before' => 'La fecha de nacimiento no puede ser futura.',
-                'identificacion_oficial.max' => 'El archivo no debe ser mayor a 5MB',
-                'comprobante_domicilio.max' => 'El archivo no debe ser mayor a 5MB',
-                'curriculum.max' => 'El archivo no debe ser mayor a 5MB',
-                'acta_nacimiento.max' => 'El archivo no debe ser mayor a 5MB',
-            ]);
-
-            Log::info('Validación pasada correctamente');
-
-            // Crear el registro del administrativo
-            $administrativo = Administrativo::create([
-                'user_id' => $user->id,
-                'nombres' => $validated['nombres'],
-                'apellido_paterno' => $validated['apellido_paterno'],
-                'apellido_materno' => $validated['apellido_materno'] ?? null,
-                'fecha_nacimiento' => $validated['fecha_nacimiento'],
-                'curp' => $validated['curp'],
-                'rfc' => $validated['rfc'],
-                'telefono' => $validated['telefono'],
-                'email_personal' => $validated['email_personal'],
-                'direccion' => $validated['direccion'],
-                'puesto' => $validated['puesto'],
-                'fecha_ingreso' => $validated['fecha_ingreso'],
-                'numero_empleado' => $validated['numero_empleado'],
-                'area_adscripcion' => $validated['area_adscripcion'],
-                'maximo_grado_estudios' => $validated['maximo_grado_estudios'] ?? null,
-                'escolaridad' => $validated['escolaridad'] ?? null,
-            ]);
-
-            Log::info('Perfil administrativo creado. ID: ' . $administrativo->id);
-
-            // Procesar documentos si se subieron
-            $documentosSubidos = [];
-            $tiposDocumentos = ['identificacion_oficial', 'comprobante_domicilio', 'curriculum', 'acta_nacimiento'];
-            
-            foreach ($tiposDocumentos as $tipo) {
-                if ($request->hasFile($tipo)) {
-                    $archivo = $request->file($tipo);
-                    
-                    // Crear directorio si no existe
-                    $directorio = "documentos_administrativos/{$administrativo->id}";
-                    if (!Storage::disk('public')->exists($directorio)) {
-                        Storage::disk('public')->makeDirectory($directorio);
-                    }
-                    
-                    // Generar nombre único
-                    $extension = $archivo->getClientOriginalExtension();
-                    $nombreArchivo = $tipo . '_' . time() . '_' . uniqid() . '.' . $extension;
-                    $ruta = $archivo->storeAs($directorio, $nombreArchivo, 'public');
-                    
-                    // Guardar en la tabla documentos_administrativos
-                    DocumentoAdministrativo::create([
-                        'administrativo_id' => $administrativo->id,
-                        'tipo' => $tipo,
-                        'nombre_archivo' => $archivo->getClientOriginalName(),
-                        'ruta_archivo' => $ruta,
-                        'mime_type' => $archivo->getMimeType(),
-                        'tamanio' => $archivo->getSize(),
-                        'estado' => 'pendiente',
-                    ]);
-                    
-                    $documentosSubidos[] = $tipo;
-                    Log::info("Documento {$tipo} subido correctamente");
-                }
-            }
-
-            $mensaje = 'Perfil completado exitosamente.';
-            if (count($documentosSubidos) > 0) {
-                $mensaje .= ' Se subieron ' . count($documentosSubidos) . ' documento(s).';
-            }
-
+        if ($perfilExistente) {
             return redirect()->route('administrativos.dashboard')
-                ->with('success', $mensaje);
-
-        } catch (\Illuminate\Validation\ValidationException $e) {
-            Log::error('Error de validación: ' . json_encode($e->errors()));
-            return back()
-                ->withErrors($e->errors())
-                ->withInput()
-                ->with('error', 'Por favor corrige los errores en el formulario.');
-                
-        } catch (\Exception $e) {
-            Log::error('ERROR en guardarPerfil: ' . $e->getMessage());
-            return back()
-                ->withInput()
-                ->with('error', 'Error al guardar el perfil: ' . $e->getMessage());
+                ->with('info', 'Ya tienes un perfil registrado.');
         }
+
+        $validated = $request->validate([
+            'nombres' => 'required|string|max:100',
+            'apellido_paterno' => 'required|string|max:50',
+            'apellido_materno' => 'nullable|string|max:50',
+            'fecha_nacimiento' => 'required|date|before:today',
+            'edad' => 'required|integer|min:18|max:100',
+            'genero' => 'required|in:M,F,OTRO',
+            'nacionalidad' => 'required|string|max:100',
+            'estado_civil' => 'required|string|max:50',
+            'telefono_celular' => 'required|string|max:20',
+            'telefono_fijo' => 'nullable|string|max:20',
+            'email_personal' => 'required|email|max:100',
+            'domicilio' => 'required|string',
+            'colonia' => 'required|string|max:100',
+            'codigo_postal' => 'required|string|max:10',
+            'municipio' => 'required|string|max:100',
+            'ciudad_poblacion' => 'required|string|max:100',
+            'lugar_nacimiento' => 'required|string|max:200',
+            'puesto' => 'required|string|max:100',
+            
+            // Documentos
+            'solicitud_empleo' => 'nullable|file|mimes:pdf|max:4096',
+            'curriculum_vitae' => 'nullable|file|mimes:pdf|max:4096',
+            'acta_nacimiento' => 'nullable|file|mimes:pdf|max:4096',
+            'curp_documento' => 'nullable|file|mimes:pdf|max:4096',
+            'constancia_fiscal' => 'nullable|file|mimes:pdf|max:4096',
+            'nss' => 'nullable|file|mimes:pdf|max:4096',
+            'ine' => 'nullable|file|mimes:pdf|max:4096',
+            'comprobante_domicilio' => 'nullable|file|mimes:pdf|max:4096',
+            'comprobante_estudios' => 'nullable|file|mimes:pdf|max:4096',
+            'certificado_medico' => 'nullable|file|mimes:pdf|max:4096',
+        ], [
+            'fecha_nacimiento.before' => 'La fecha de nacimiento no puede ser futura.',
+            'edad.min' => 'Debes ser mayor de 18 años.',
+            '*.max' => 'El archivo no debe ser mayor a 4MB',
+            '*.mimes' => 'El archivo debe ser formato PDF',
+        ]);
+
+        $edad = \Carbon\Carbon::parse($validated['fecha_nacimiento'])->age;
+
+        $administrativo = Administrativo::create([
+            'user_id' => $user->id,
+            'nombres' => $validated['nombres'],
+            'apellido_paterno' => $validated['apellido_paterno'],
+            'apellido_materno' => $validated['apellido_materno'] ?? null,
+            'fecha_nacimiento' => $validated['fecha_nacimiento'],
+            'edad' => $edad,
+            'genero' => $validated['genero'],
+            'nacionalidad' => $validated['nacionalidad'],
+            'estado_civil' => $validated['estado_civil'],
+            'telefono_celular' => $validated['telefono_celular'],
+            'telefono_fijo' => $validated['telefono_fijo'] ?? null,
+            'email_personal' => $validated['email_personal'],
+            'domicilio' => $validated['domicilio'],
+            'colonia' => $validated['colonia'],
+            'codigo_postal' => $validated['codigo_postal'],
+            'municipio' => $validated['municipio'],
+            'ciudad_poblacion' => $validated['ciudad_poblacion'],
+            'lugar_nacimiento' => $validated['lugar_nacimiento'],
+            'puesto' => $validated['puesto'],
+        ]);
+
+        // Procesar documentos (igual que antes)
+        $documentosSubidos = 0;
+        $tiposDocumentos = [
+            'solicitud_empleo', 'curriculum_vitae', 'acta_nacimiento', 
+            'curp_documento', 'constancia_fiscal', 'nss', 'ine', 
+            'comprobante_domicilio', 'comprobante_estudios', 'certificado_medico'
+        ];
+        
+        foreach ($tiposDocumentos as $tipo) {
+            if ($request->hasFile($tipo)) {
+                $archivo = $request->file($tipo);
+                
+                $directorio = "documentos_administrativos/{$administrativo->id}";
+                if (!Storage::disk('public')->exists($directorio)) {
+                    Storage::disk('public')->makeDirectory($directorio);
+                }
+                
+                $extension = $archivo->getClientOriginalExtension();
+                $nombreArchivo = $tipo . '_' . time() . '_' . uniqid() . '.' . $extension;
+                $ruta = $archivo->storeAs($directorio, $nombreArchivo, 'public');
+                
+                DocumentoAdministrativo::create([
+                    'administrativo_id' => $administrativo->id,
+                    'tipo' => $tipo,
+                    'nombre_archivo' => $archivo->getClientOriginalName(),
+                    'ruta_archivo' => $ruta,
+                    'mime_type' => $archivo->getMimeType(),
+                    'tamanio' => $archivo->getSize(),
+                    'estado' => 'pendiente',
+                ]);
+                
+                $documentosSubidos++;
+            }
+        }
+
+        return redirect()->route('administrativos.dashboard')
+            ->with('success', 'Perfil completado exitosamente.');
+
+    } catch (\Exception $e) {
+        Log::error('ERROR en guardarPerfil: ' . $e->getMessage());
+        return back()
+            ->withInput()
+            ->with('error', 'Error al guardar el perfil: ' . $e->getMessage());
     }
+}
 
     /**
      * Vista de documentos del administrativo
@@ -338,29 +362,59 @@ class AdministrativosController extends Controller
             $periodoActivo = Periodo::getPeriodoSubidaHabilitada();
 
             // Tipos de documentos requeridos
-            $tiposDocumentos = [
-                'identificacion_oficial' => [
-                    'nombre' => 'Identificación Oficial',
-                    'icono' => 'id-card',
-                    'descripcion' => 'INE, Pasaporte o Cédula Profesional vigente'
-                ],
-                'comprobante_domicilio' => [
-                    'nombre' => 'Comprobante de Domicilio',
-                    'icono' => 'home',
-                    'descripcion' => 'Recibo de luz, agua, teléfono o predial (últimos 3 meses)'
-                ],
-                'curriculum' => [
-                    'nombre' => 'Currículum Vitae',
-                    'icono' => 'file-alt',
-                    'descripcion' => 'Hoja de vida actualizada con fotografía'
-                ],
-                'acta_nacimiento' => [
-                    'nombre' => 'Acta de Nacimiento',
-                    'icono' => 'file',
-                    'descripcion' => 'Acta de nacimiento certificada'
-                ]
-            ];
-
+            // Tipos de documentos requeridos - 10 documentos
+$tiposDocumentos = [
+    'solicitud_empleo' => [
+        'nombre' => 'Solicitud de Empleo',
+        'icono' => 'file-alt',
+        'descripcion' => 'Formato de solicitud de empleo'
+    ],
+    'curriculum_vitae' => [
+        'nombre' => 'Curriculum Vitae',
+        'icono' => 'file-alt',
+        'descripcion' => 'Hoja de vida actualizada'
+    ],
+    'acta_nacimiento' => [
+        'nombre' => 'Acta de Nacimiento',
+        'icono' => 'file',
+        'descripcion' => 'Acta de nacimiento certificada'
+    ],
+    'curp_documento' => [
+        'nombre' => 'CURP',
+        'icono' => 'id-card',
+        'descripcion' => 'CURP (Formato página RENAPO)'
+    ],
+    'constancia_fiscal' => [
+        'nombre' => 'Constancia de Situación Fiscal',
+        'icono' => 'file-invoice',
+        'descripcion' => 'Constancia de situación fiscal (SAT)'
+    ],
+    'nss' => [
+        'nombre' => 'Número de Seguridad Social',
+        'icono' => 'heartbeat',
+        'descripcion' => 'NSS (Formato página IMSS)'
+    ],
+    'ine' => [
+        'nombre' => 'INE',
+        'icono' => 'id-card',
+        'descripcion' => 'Identificación oficial vigente'
+    ],
+    'comprobante_domicilio' => [
+        'nombre' => 'Comprobante de Domicilio',
+        'icono' => 'home',
+        'descripcion' => 'Comprobante de domicilio reciente'
+    ],
+    'comprobante_estudios' => [
+        'nombre' => 'Comprobante de Estudios',
+        'icono' => 'graduation-cap',
+        'descripcion' => 'Último grado de estudios'
+    ],
+    'certificado_medico' => [
+        'nombre' => 'Certificado Médico',
+        'icono' => 'file-medical',
+        'descripcion' => 'Certificado médico vigente'
+    ]
+];
             // Cargar documentos
             $documentos = $periodoActivo 
                 ? $administrativo->documentosAdmin()->where('periodo_id', $periodoActivo->id)->with('revisadoPor')->get()
@@ -440,142 +494,155 @@ class AdministrativosController extends Controller
     /**
      * Subir documentos
      */
-    public function subirDocumentos(Request $request)
-    {
+    /**
+ * Subir documentos
+ */
+public function subirDocumentos(Request $request)
+{
+    try {
+        Log::info('=== SUBIR DOCUMENTOS ADMINISTRATIVO ===');
+        
+        $user = Auth::user();
+        
+        $administrativo = Administrativo::where('user_id', $user->id)->first();
+
+        if (!$administrativo) {
+            return redirect()->route('administrativos.completar-perfil')
+                ->with('error', 'No tienes un perfil de administrativo asociado.');
+        }
+
+        // Validación con límite de 4MB
+        $validator = Validator::make($request->all(), [
+            'solicitud_empleo' => 'nullable|file|mimes:pdf|max:4096',
+            'curriculum_vitae' => 'nullable|file|mimes:pdf|max:4096',
+            'acta_nacimiento' => 'nullable|file|mimes:pdf|max:4096',
+            'curp_documento' => 'nullable|file|mimes:pdf|max:4096',
+            'constancia_fiscal' => 'nullable|file|mimes:pdf|max:4096',
+            'nss' => 'nullable|file|mimes:pdf|max:4096',
+            'ine' => 'nullable|file|mimes:pdf|max:4096',
+            'comprobante_domicilio' => 'nullable|file|mimes:pdf|max:4096',
+            'comprobante_estudios' => 'nullable|file|mimes:pdf|max:4096',
+            'certificado_medico' => 'nullable|file|mimes:pdf|max:4096',
+        ], [
+            '*.max' => 'El archivo no debe ser mayor a 4MB',
+            '*.mimes' => 'El archivo debe ser formato PDF',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()
+                ->withErrors($validator)
+                ->withInput()
+                ->with('error', 'Error en la validación de archivos');
+        }
+
+        // Obtener período activo
+        $periodoActivo = Periodo::getPeriodoSubidaHabilitada();
+
+        $documentosSubidos = 0;
+        $documentosActualizados = 0;
+        $tiposDocumentos = [
+            'solicitud_empleo', 'curriculum_vitae', 'acta_nacimiento', 
+            'curp_documento', 'constancia_fiscal', 'nss', 'ine', 
+            'comprobante_domicilio', 'comprobante_estudios', 'certificado_medico'
+        ];
+
+        DB::beginTransaction();
+
         try {
-            Log::info('=== SUBIR DOCUMENTOS ADMINISTRATIVO ===');
-            
-            $user = Auth::user();
-            
-            $administrativo = Administrativo::where('user_id', $user->id)->first();
+            foreach ($tiposDocumentos as $tipo) {
+                if ($request->hasFile($tipo)) {
+                    $archivo = $request->file($tipo);
+                    
+                    Log::info("Procesando: {$tipo}");
+                    
+                    // Verificar si ya existe este tipo
+                    $query = DocumentoAdministrativo::where('administrativo_id', $administrativo->id)
+                        ->where('tipo', $tipo);
+                    
+                    if ($periodoActivo) {
+                        $query->where('periodo_id', $periodoActivo->id);
+                    }
+                    
+                    $documentoExistente = $query->first();
 
-            if (!$administrativo) {
-                return redirect()->route('administrativos.completar-perfil')
-                    ->with('error', 'No tienes un perfil de administrativo asociado.');
-            }
+                    // Crear directorio
+                    $directorio = "documentos_administrativos/{$administrativo->id}";
+                    if (!Storage::disk('public')->exists($directorio)) {
+                        Storage::disk('public')->makeDirectory($directorio);
+                    }
 
-            // Validación
-            $validator = Validator::make($request->all(), [
-                'identificacion_oficial' => 'nullable|file|mimes:pdf|max:5120',
-                'comprobante_domicilio' => 'nullable|file|mimes:pdf|max:5120',
-                'curriculum' => 'nullable|file|mimes:pdf|max:5120',
-                'acta_nacimiento' => 'nullable|file|mimes:pdf|max:5120',
-            ], [
-                '*.max' => 'El archivo no debe ser mayor a 5MB',
-                '*.mimes' => 'El archivo debe ser formato PDF',
-            ]);
+                    // Generar nombre único
+                    $extension = $archivo->getClientOriginalExtension();
+                    $nombreArchivo = $tipo . '_' . time() . '_' . uniqid() . '.' . $extension;
+                    $ruta = $archivo->storeAs($directorio, $nombreArchivo, 'public');
 
-            if ($validator->fails()) {
-                return redirect()->back()
-                    ->withErrors($validator)
-                    ->withInput()
-                    ->with('error', 'Error en la validación de archivos');
-            }
-
-            // Obtener período activo (opcional)
-            $periodoActivo = Periodo::getPeriodoSubidaHabilitada();
-
-            $documentosSubidos = 0;
-            $documentosActualizados = 0;
-            $tiposDocumentos = ['identificacion_oficial', 'comprobante_domicilio', 'curriculum', 'acta_nacimiento'];
-
-            DB::beginTransaction();
-
-            try {
-                foreach ($tiposDocumentos as $tipo) {
-                    if ($request->hasFile($tipo)) {
-                        $archivo = $request->file($tipo);
-                        
-                        Log::info("Procesando: {$tipo}");
-                        
-                        // Verificar si ya existe este tipo
-                        $query = DocumentoAdministrativo::where('administrativo_id', $administrativo->id)
-                            ->where('tipo', $tipo);
-                        
-                        if ($periodoActivo) {
-                            $query->where('periodo_id', $periodoActivo->id);
-                        }
-                        
-                        $documentoExistente = $query->first();
-
-                        // Crear directorio
-                        $directorio = "documentos_administrativos/{$administrativo->id}";
-                        if (!Storage::disk('public')->exists($directorio)) {
-                            Storage::disk('public')->makeDirectory($directorio);
+                    if ($documentoExistente) {
+                        // Eliminar archivo anterior
+                        if ($documentoExistente->ruta_archivo && Storage::disk('public')->exists($documentoExistente->ruta_archivo)) {
+                            Storage::disk('public')->delete($documentoExistente->ruta_archivo);
                         }
 
-                        // Generar nombre único
-                        $extension = $archivo->getClientOriginalExtension();
-                        $nombreArchivo = $tipo . '_' . time() . '_' . uniqid() . '.' . $extension;
-                        $ruta = $archivo->storeAs($directorio, $nombreArchivo, 'public');
+                        // Actualizar documento existente
+                        $documentoExistente->update([
+                            'nombre_archivo' => $archivo->getClientOriginalName(),
+                            'ruta_archivo' => $ruta,
+                            'mime_type' => $archivo->getMimeType(),
+                            'tamanio' => $archivo->getSize(),
+                            'estado' => 'pendiente',
+                            'observaciones_admin' => null,
+                            'revisado_por' => null,
+                            'fecha_revision' => null,
+                        ]);
 
-                        if ($documentoExistente) {
-                            // Eliminar archivo anterior
-                            if ($documentoExistente->ruta_archivo && Storage::disk('public')->exists($documentoExistente->ruta_archivo)) {
-                                Storage::disk('public')->delete($documentoExistente->ruta_archivo);
-                            }
+                        $documentosActualizados++;
+                        Log::info("Documento {$tipo} ACTUALIZADO");
+                    } else {
+                        // Crear nuevo documento
+                        DocumentoAdministrativo::create([
+                            'administrativo_id' => $administrativo->id,
+                            'periodo_id' => $periodoActivo ? $periodoActivo->id : null,
+                            'tipo' => $tipo,
+                            'nombre_archivo' => $archivo->getClientOriginalName(),
+                            'ruta_archivo' => $ruta,
+                            'mime_type' => $archivo->getMimeType(),
+                            'tamanio' => $archivo->getSize(),
+                            'estado' => 'pendiente',
+                        ]);
 
-                            // Actualizar documento existente
-                            $documentoExistente->update([
-                                'nombre_archivo' => $archivo->getClientOriginalName(),
-                                'ruta_archivo' => $ruta,
-                                'mime_type' => $archivo->getMimeType(),
-                                'tamanio' => $archivo->getSize(),
-                                'estado' => 'pendiente',
-                                'observaciones_admin' => null,
-                                'revisado_por' => null,
-                                'fecha_revision' => null,
-                            ]);
-
-                            $documentosActualizados++;
-                            Log::info("Documento {$tipo} ACTUALIZADO");
-                        } else {
-                            // Crear nuevo documento
-                            DocumentoAdministrativo::create([
-                                'administrativo_id' => $administrativo->id,
-                                'periodo_id' => $periodoActivo ? $periodoActivo->id : null,
-                                'tipo' => $tipo,
-                                'nombre_archivo' => $archivo->getClientOriginalName(),
-                                'ruta_archivo' => $ruta,
-                                'mime_type' => $archivo->getMimeType(),
-                                'tamanio' => $archivo->getSize(),
-                                'estado' => 'pendiente',
-                            ]);
-
-                            $documentosSubidos++;
-                            Log::info("Documento {$tipo} CREADO");
-                        }
+                        $documentosSubidos++;
+                        Log::info("Documento {$tipo} CREADO");
                     }
                 }
-
-                DB::commit();
-
-                $mensaje = '';
-                if ($documentosSubidos > 0 && $documentosActualizados > 0) {
-                    $mensaje = "✅ Se subieron {$documentosSubidos} documento(s) nuevo(s) y se actualizaron {$documentosActualizados} documento(s).";
-                } elseif ($documentosSubidos > 0) {
-                    $mensaje = "✅ Se subieron {$documentosSubidos} documento(s) correctamente.";
-                } elseif ($documentosActualizados > 0) {
-                    $mensaje = "✅ Se actualizaron {$documentosActualizados} documento(s) correctamente.";
-                } else {
-                    $mensaje = "ℹ️ No se seleccionaron documentos para subir.";
-                }
-
-                return redirect()->route('administrativos.documentos')
-                    ->with('success', $mensaje);
-
-            } catch (\Exception $e) {
-                DB::rollBack();
-                throw $e;
             }
 
+            DB::commit();
+
+            $mensaje = '';
+            if ($documentosSubidos > 0 && $documentosActualizados > 0) {
+                $mensaje = "✅ Se subieron {$documentosSubidos} documento(s) nuevo(s) y se actualizaron {$documentosActualizados} documento(s).";
+            } elseif ($documentosSubidos > 0) {
+                $mensaje = "✅ Se subieron {$documentosSubidos} documento(s) correctamente.";
+            } elseif ($documentosActualizados > 0) {
+                $mensaje = "✅ Se actualizaron {$documentosActualizados} documento(s) correctamente.";
+            } else {
+                $mensaje = "ℹ️ No se seleccionaron documentos para subir.";
+            }
+
+            return redirect()->route('administrativos.documentos')
+                ->with('success', $mensaje);
+
         } catch (\Exception $e) {
-            Log::error('ERROR en subirDocumentos: ' . $e->getMessage());
-            return redirect()->back()
-                ->with('error', 'Error al subir documentos: ' . $e->getMessage())
-                ->withInput();
+            DB::rollBack();
+            throw $e;
         }
+
+    } catch (\Exception $e) {
+        Log::error('ERROR en subirDocumentos: ' . $e->getMessage());
+        return redirect()->back()
+            ->with('error', 'Error al subir documentos: ' . $e->getMessage())
+            ->withInput();
     }
+}
 
     /**
      * Editar perfil del administrativo
@@ -603,44 +670,75 @@ class AdministrativosController extends Controller
     /**
      * Actualizar perfil del administrativo
      */
-    public function actualizarPerfil(Request $request)
-    {
-        try {
-            $user = Auth::user();
-            $administrativo = Administrativo::where('user_id', $user->id)->first();
+    /**
+ * Actualizar perfil del administrativo
+ */
+/**
+ * Actualizar perfil del administrativo
+ */
+public function actualizarPerfil(Request $request)
+{
+    try {
+        $user = Auth::user();
+        $administrativo = Administrativo::where('user_id', $user->id)->first();
 
-            if (!$administrativo) {
-                return redirect()->route('administrativos.completar-perfil')
-                    ->with('error', 'No tienes un perfil registrado.');
-            }
-
-            $validated = $request->validate([
-                'nombres' => 'required|string|max:100',
-                'apellido_paterno' => 'required|string|max:50',
-                'apellido_materno' => 'nullable|string|max:50',
-                'fecha_nacimiento' => 'required|date|before:today',
-                'telefono' => 'required|string|max:20',
-                'email_personal' => 'required|email|max:100',
-                'direccion' => 'required|string',
-                'puesto' => 'required|string|max:100',
-                'area_adscripcion' => 'required|string|max:100',
-                'maximo_grado_estudios' => 'nullable|string|max:100',
-                'escolaridad' => 'nullable|string|max:100',
-            ]);
-
-            $administrativo->update($validated);
-
-            return redirect()->route('administrativos.dashboard')
-                ->with('success', 'Perfil actualizado correctamente.');
-
-        } catch (\Exception $e) {
-            Log::error('Error en actualizarPerfil: ' . $e->getMessage());
-            return back()
-                ->withInput()
-                ->with('error', 'Error al actualizar el perfil: ' . $e->getMessage());
+        if (!$administrativo) {
+            return redirect()->route('administrativos.completar-perfil')
+                ->with('error', 'No tienes un perfil registrado.');
         }
-    }
 
+        $validated = $request->validate([
+            'nombres' => 'required|string|max:100',
+            'apellido_paterno' => 'required|string|max:50',
+            'apellido_materno' => 'nullable|string|max:50',
+            'fecha_nacimiento' => 'required|date|before:today',
+            'edad' => 'required|integer|min:18|max:100',
+            'genero' => 'required|in:M,F,OTRO',
+            'nacionalidad' => 'required|string|max:100',
+            'estado_civil' => 'required|string|max:50',
+            'telefono_celular' => 'required|string|max:20',
+            'telefono_fijo' => 'nullable|string|max:20',
+            'email_personal' => 'required|email|max:100',
+            'domicilio' => 'required|string',
+            'colonia' => 'required|string|max:100',
+            'codigo_postal' => 'required|string|max:10',
+            'municipio' => 'required|string|max:100',
+            'ciudad_poblacion' => 'required|string|max:100',
+            'lugar_nacimiento' => 'required|string|max:200',
+            'puesto' => 'required|string|max:100',
+        ]);
+
+        $administrativo->update([
+            'nombres' => $validated['nombres'],
+            'apellido_paterno' => $validated['apellido_paterno'],
+            'apellido_materno' => $validated['apellido_materno'],
+            'fecha_nacimiento' => $validated['fecha_nacimiento'],
+            'edad' => $validated['edad'],
+            'genero' => $validated['genero'],
+            'nacionalidad' => $validated['nacionalidad'],
+            'estado_civil' => $validated['estado_civil'],
+            'telefono_celular' => $validated['telefono_celular'],
+            'telefono_fijo' => $validated['telefono_fijo'],
+            'email_personal' => $validated['email_personal'],
+            'domicilio' => $validated['domicilio'],
+            'colonia' => $validated['colonia'],
+            'codigo_postal' => $validated['codigo_postal'],
+            'municipio' => $validated['municipio'],
+            'ciudad_poblacion' => $validated['ciudad_poblacion'],
+            'lugar_nacimiento' => $validated['lugar_nacimiento'],
+            'puesto' => $validated['puesto'],
+        ]);
+
+        return redirect()->route('administrativos.dashboard')
+            ->with('success', 'Perfil actualizado correctamente.');
+
+    } catch (\Exception $e) {
+        Log::error('Error en actualizarPerfil: ' . $e->getMessage());
+        return back()
+            ->withInput()
+            ->with('error', 'Error al actualizar el perfil: ' . $e->getMessage());
+    }
+}
     /**
      * Obtener actividades recientes
      */
@@ -682,16 +780,22 @@ class AdministrativosController extends Controller
     }
 
     private function obtenerNombreDocumento($tipo)
-    {
-        $nombres = [
-            'identificacion_oficial' => 'Identificación Oficial',
-            'comprobante_domicilio' => 'Comprobante de Domicilio',
-            'curriculum' => 'Currículum Vitae',
-            'acta_nacimiento' => 'Acta de Nacimiento'
-        ];
-        
-        return $nombres[$tipo] ?? 'Documento';
-    }
+{
+    $nombres = [
+        'solicitud_empleo' => 'Solicitud de Empleo',
+        'curriculum_vitae' => 'Curriculum Vitae',
+        'acta_nacimiento' => 'Acta de Nacimiento',
+        'curp_documento' => 'CURP',
+        'constancia_fiscal' => 'Constancia de Situación Fiscal',
+        'nss' => 'Número de Seguridad Social',
+        'ine' => 'INE',
+        'comprobante_domicilio' => 'Comprobante de Domicilio',
+        'comprobante_estudios' => 'Comprobante de Estudios',
+        'certificado_medico' => 'Certificado Médico'
+    ];
+    
+    return $nombres[$tipo] ?? 'Documento';
+}
 
     private function obtenerDescripcionActividad($documento)
     {

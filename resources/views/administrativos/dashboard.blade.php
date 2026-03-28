@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        /* Todos tus estilos se mantienen igual */
         :root {
             --primary: #0744b6ff;
             --primary-light: #3a6bd3;
@@ -95,7 +96,6 @@
             box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
-        /* Contenedor de usuario - alineado a la derecha */
         .user-info-container {
             display: flex;
             align-items: center;
@@ -188,7 +188,6 @@
             border-radius: 2px;
         }
 
-        /* Tarjetas y secciones */
         .welcome-section {
             background: white;
             border-radius: 16px;
@@ -218,7 +217,6 @@
             margin-top: 0.8rem;
         }
 
-        /* Grid de estadísticas */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
@@ -272,7 +270,6 @@
             line-height: 1.2;
         }
 
-        /* Tarjeta de perfil */
         .profile-card {
             background: white;
             border-radius: 16px;
@@ -348,7 +345,6 @@
             word-break: break-word;
         }
 
-        /* Sección de documentos */
         .documents-section {
             background: white;
             border-radius: 16px;
@@ -396,7 +392,6 @@
             transform: translateY(-2px);
         }
 
-        /* Tabla responsiva */
         .documents-table-container {
             overflow-x: auto;
             -webkit-overflow-scrolling: touch;
@@ -489,7 +484,6 @@
             transform: scale(1.1);
         }
 
-        /* Alertas */
         .alert {
             padding: 1rem;
             border-radius: 12px;
@@ -519,7 +513,6 @@
             color: #92400e;
         }
 
-        /* Actividades recientes */
         .activities-section {
             background: white;
             border-radius: 16px;
@@ -601,26 +594,13 @@
             gap: 0.5rem;
         }
 
-        /* ===== MEDIA QUERIES RESPONSIVAS ===== */
-        
-        /* Tablets */
+        /* Responsive */
         @media (max-width: 992px) {
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-            
-            .info-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 1rem;
-            }
-            
-            .navbar-menu {
-                top: 57px;
-            }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .info-grid { grid-template-columns: repeat(2, 1fr); }
+            .navbar-menu { top: 57px; }
         }
 
-        /* Móviles */
         @media (max-width: 768px) {
             :root {
                 --font-size-base: 0.95rem;
@@ -629,165 +609,40 @@
                 --font-size-h3: 1.2rem;
                 --font-size-h4: 1rem;
             }
-            
-            .navbar-top {
-                padding: 0.5rem 0;
-            }
-            
-            .logo-img {
-                height: 40px;
-            }
-            
-            .navbar-brand {
-                font-size: 1rem;
-            }
-            
-            .navbar-menu {
-                top: 53px;
-            }
-            
-            .user-info-container {
-                justify-content: center;
-                width: 100%;
-                flex-direction: column;
-                align-items: stretch;
-            }
-            
-            .user-info {
-                justify-content: center;
-                width: 100%;
-            }
-            
-            .logout-btn {
-                justify-content: center;
-                width: 100%;
-            }
-            
-            .main-content {
-                padding: 15px 12px;
-            }
-            
-            .stats-grid {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
-            }
-            
-            .info-grid {
-                grid-template-columns: 1fr;
-                gap: 0.8rem;
-            }
-            
-            .stats-card {
-                padding: 1rem;
-            }
-            
-            .stats-icon {
-                width: 45px;
-                height: 45px;
-                font-size: 1.2rem;
-            }
-            
-            .stats-number {
-                font-size: 1.4rem;
-            }
-            
-            .welcome-section {
-                padding: 1.2rem;
-                text-align: center;
-            }
-            
-            .welcome-section .row {
-                flex-direction: column;
-            }
-            
-            .welcome-section .col-md-8, 
-            .welcome-section .col-md-4 {
-                text-align: center;
-            }
-            
-            .profile-card, .documents-section, .activities-section {
-                padding: 1.2rem;
-            }
-            
-            .card-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            
-            .activity-item {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 0.5rem;
-            }
-            
-            .activity-time {
-                align-self: flex-start;
-            }
-            
-            .date-badge {
-                font-size: 0.75rem;
-                padding: 0.4rem 0.8rem;
-            }
-            
-            .d-flex.justify-content-between {
-                flex-direction: column;
-                gap: 0.8rem;
-                align-items: flex-start;
-            }
-            
-            .profile-badge {
-                justify-content: center;
-            }
+            .navbar-top { padding: 0.5rem 0; }
+            .logo-img { height: 40px; }
+            .navbar-brand { font-size: 1rem; }
+            .navbar-menu { top: 53px; }
+            .user-info-container { justify-content: center; width: 100%; flex-direction: column; align-items: stretch; }
+            .user-info { justify-content: center; width: 100%; }
+            .logout-btn { justify-content: center; width: 100%; }
+            .main-content { padding: 15px 12px; }
+            .stats-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+            .info-grid { grid-template-columns: 1fr; gap: 0.8rem; }
+            .stats-card { padding: 1rem; }
+            .stats-icon { width: 45px; height: 45px; font-size: 1.2rem; }
+            .stats-number { font-size: 1.4rem; }
+            .welcome-section { padding: 1.2rem; text-align: center; }
+            .welcome-section .row { flex-direction: column; }
+            .profile-card, .documents-section, .activities-section { padding: 1.2rem; }
+            .card-header, .section-header { flex-direction: column; align-items: flex-start; }
+            .activity-item { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+            .activity-time { align-self: flex-start; }
+            .date-badge { font-size: 0.75rem; padding: 0.4rem 0.8rem; }
+            .d-flex.justify-content-between { flex-direction: column; gap: 0.8rem; align-items: flex-start; }
+            .profile-badge { justify-content: center; }
         }
 
-        /* Móviles pequeños */
         @media (max-width: 480px) {
-            .logo-img {
-                height: 35px;
-            }
-            
-            .navbar-brand {
-                font-size: 0.9rem;
-            }
-            
-            .stats-icon {
-                width: 40px;
-                height: 40px;
-                font-size: 1rem;
-            }
-            
-            .stats-number {
-                font-size: 1.2rem;
-            }
-            
-            .stats-content h4 {
-                font-size: 0.65rem;
-            }
-            
-            .badge {
-                font-size: 0.7rem;
-                padding: 0.25rem 0.6rem;
-            }
-            
-            .edit-btn, .btn-outline {
-                padding: 0.3rem 0.8rem;
-                font-size: 0.75rem;
-            }
-            
-            .document-name i {
-                width: 28px;
-                height: 28px;
-                font-size: 0.8rem;
-            }
-            
-            .document-name span {
-                font-size: 0.85rem;
-            }
+            .logo-img { height: 35px; }
+            .navbar-brand { font-size: 0.9rem; }
+            .stats-icon { width: 40px; height: 40px; font-size: 1rem; }
+            .stats-number { font-size: 1.2rem; }
+            .stats-content h4 { font-size: 0.65rem; }
+            .badge { font-size: 0.7rem; padding: 0.25rem 0.6rem; }
+            .edit-btn, .btn-outline { padding: 0.3rem 0.8rem; font-size: 0.75rem; }
+            .document-name i { width: 28px; height: 28px; font-size: 0.8rem; }
+            .document-name span { font-size: 0.85rem; }
         }
     </style>
 </head>
@@ -862,14 +717,10 @@
             <div class="welcome-section">
                 <div class="row align-items-center">
                     <div class="col-md-8">
-                        <h1 class="welcome-title">¡Bienvenido, {{ $administrativo->nombres ?? 'Administrador' }}!</h1>
+                        <h1 class="welcome-title">¡Bienvenido, {{ $administrativo->nombre_completo ?? 'Administrador' }}!</h1>
                         <p class="mb-2" style="color: var(--text-muted);">
-                            {{ $administrativo->puesto ?? 'Puesto no especificado' }} • {{ $administrativo->area_adscripcion ?? 'Área no especificada' }}
+                            {{ $administrativo->puesto ?? 'Puesto no especificado' }}
                         </p>
-                        <span class="profile-badge">
-                            <i class="fas fa-id-card"></i>
-                            N° Empleado: {{ $administrativo->numero_empleado ?? 'N/A' }}
-                        </span>
                     </div>
                     <div class="col-md-4 text-center mt-3 mt-md-0">
                         <i class="fas fa-user-tie" style="font-size: 4rem; color: var(--primary); opacity: 0.7;"></i>
@@ -938,36 +789,70 @@
                         <span class="info-value">{{ $administrativo->nombre_completo ?? 'No registrado' }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">CURP</span>
-                        <span class="info-value">{{ $administrativo->curp ?? 'No registrado' }}</span>
-                    </div>
-                    <div class="info-item">
-                        <span class="info-label">RFC</span>
-                        <span class="info-value">{{ $administrativo->rfc ?? 'No registrado' }}</span>
-                    </div>
-                    <div class="info-item">
                         <span class="info-label">Fecha Nacimiento</span>
                         <span class="info-value">{{ isset($administrativo->fecha_nacimiento) ? \Carbon\Carbon::parse($administrativo->fecha_nacimiento)->format('d/m/Y') : 'No registrado' }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Teléfono</span>
-                        <span class="info-value">{{ $administrativo->telefono ?? 'No registrado' }}</span>
+                        <span class="info-label">Edad</span>
+                        <span class="info-value">{{ $administrativo->edad ?? 'No registrada' }} años</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Género</span>
+                        <span class="info-value">
+                            @if($administrativo->genero == 'M') Masculino
+                            @elseif($administrativo->genero == 'F') Femenino
+                            @elseif($administrativo->genero == 'OTRO') Otro
+                            @else No registrado
+                            @endif
+                        </span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Nacionalidad</span>
+                        <span class="info-value">{{ $administrativo->nacionalidad ?? 'No registrada' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Estado Civil</span>
+                        <span class="info-value">{{ $administrativo->estado_civil ?? 'No registrado' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Teléfono Celular</span>
+                        <span class="info-value">{{ $administrativo->telefono_celular ?? 'No registrado' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Teléfono Fijo</span>
+                        <span class="info-value">{{ $administrativo->telefono_fijo ?? 'No registrado' }}</span>
                     </div>
                     <div class="info-item">
                         <span class="info-label">Email Personal</span>
                         <span class="info-value">{{ $administrativo->email_personal ?? 'No registrado' }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Dirección</span>
-                        <span class="info-value">{{ $administrativo->direccion ?? 'No registrada' }}</span>
+                        <span class="info-label">Domicilio</span>
+                        <span class="info-value">{{ $administrativo->domicilio ?? 'No registrado' }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Fecha Ingreso</span>
-                        <span class="info-value">{{ isset($administrativo->fecha_ingreso) ? \Carbon\Carbon::parse($administrativo->fecha_ingreso)->format('d/m/Y') : 'No registrado' }}</span>
+                        <span class="info-label">Colonia</span>
+                        <span class="info-value">{{ $administrativo->colonia ?? 'No registrado' }}</span>
                     </div>
                     <div class="info-item">
-                        <span class="info-label">Grado Máximo</span>
-                        <span class="info-value">{{ $administrativo->maximo_grado_estudios ?? 'No especificado' }}</span>
+                        <span class="info-label">Código Postal</span>
+                        <span class="info-value">{{ $administrativo->codigo_postal ?? 'No registrado' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Municipio</span>
+                        <span class="info-value">{{ $administrativo->municipio ?? 'No registrado' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Ciudad/Población</span>
+                        <span class="info-value">{{ $administrativo->ciudad_poblacion ?? 'No registrado' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Lugar de Nacimiento</span>
+                        <span class="info-value">{{ $administrativo->lugar_nacimiento ?? 'No registrado' }}</span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Puesto</span>
+                        <span class="info-value">{{ $administrativo->puesto ?? 'No registrado' }}</span>
                     </div>
                 </div>
             </div>
@@ -999,7 +884,7 @@
                         </thead>
                         <tbody>
                             @foreach(array_slice($documentosParaVista ?? [], 0, 3) as $documento)
-                               
+                                <tr>
                                     <td>
                                         <div class="document-name">
                                             <i class="fas fa-{{ $documento['icono'] ?? 'file' }}"></i>

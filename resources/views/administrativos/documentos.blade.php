@@ -796,12 +796,12 @@
             @endif
 
             <!-- Nota informativa si faltan documentos -->
-            @if(isset($estadisticas['faltantes']) && $estadisticas['faltantes'] > 0)
-                <div class="info-note">
-                    <i class="fas fa-info-circle"></i>
-                    Te faltan <strong>{{ $estadisticas['faltantes'] }}</strong> documento(s) por subir. Los documentos deben ser en formato PDF (máx. 5MB).
-                </div>
-            @endif
+@if(isset($estadisticas['faltantes']) && $estadisticas['faltantes'] > 0)
+    <div class="info-note">
+        <i class="fas fa-info-circle"></i>
+        Te faltan <strong>{{ $estadisticas['faltantes'] }}</strong> documento(s) por subir. Los documentos deben ser en formato <strong>PDF</strong> (máx. 4MB).
+    </div>
+@endif
 
             <!-- Estadísticas de documentos -->
             <div class="stats-grid">

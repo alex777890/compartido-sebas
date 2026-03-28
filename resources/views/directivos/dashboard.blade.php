@@ -4,24 +4,74 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Panel Directivo - GEPROC</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* (Mantén todos los estilos anteriores que ya tienes) */
+        :root {
+            --primary: #0744b6ff;
+            --primary-light: #3a6bd3;
+            --primary-soft: #e8f0fe;
+            --secondary: #33CAE6;
+            --accent: #28a745;
+            --light-bg: #F8F9FA;
+            --dark-bg: #1a1a2e;
+            --sidebar-bg: #ffffff;
+            --border-color: #E9ECEF;
+            --text-muted: #6C757D;
+            --text-dark: #000000;
+            --card-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+            --card-shadow-hover: 0 10px 30px rgba(0, 0, 0, 0.12);
+            --transition: all 0.3s ease;
+            --success-color: #10b981;
+            --success-light: #d1fae5;
+            --warning-color: #f59e0b;
+            --warning-light: #fef3c7;
+            --danger-color: #ef4444;
+            --danger-light: #fee2e2;
+            --info-color: #3b82f6;
+            --info-light: #dbeafe;
+            --purple-color: #8b5cf6;
+            --purple-light: #ede9fe;
+            --cyan-color: #06b6d4;
+            --cyan-light: #cffafe;
+            --border-radius: 12px;
+            --gradient-primary: linear-gradient(135deg, #0744b6ff 0%, #3a6bd3 100%);
+            
+            /* Colores para coordinaciones - Paleta fija */
+            --coor-1: #3b82f6;
+            --coor-1-light: #dbeafe;
+            --coor-2: #8b5cf6;
+            --coor-2-light: #ede9fe;
+            --coor-3: #10b981;
+            --coor-3-light: #d1fae5;
+            --coor-4: #f59e0b;
+            --coor-4-light: #fef3c7;
+            --coor-5: #ef4444;
+            --coor-5-light: #fee2e2;
+            --coor-6: #06b6d4;
+            --coor-6-light: #cffafe;
+            --coor-7: #ec489a;
+            --coor-7-light: #fce7f3;
+            --coor-8: #84cc16;
+            --coor-8-light: #ecfccb;
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
         }
 
         body {
-            font-family: 'Inter', sans-serif;
-            background: #f8fafc;
-            color: #0f172a;
-            line-height: 1.5;
+            background: linear-gradient(135deg, #f5f7fb 0%, #f0f4f8 100%);
+            color: #2d3748;
+            line-height: 1.6;
+            min-height: 100vh;
+            font-size: 15px;
         }
 
-        /* Header mejorado */
+        /* ===== HEADER ===== */
         .header {
             background: white;
             padding: 0.75rem 2rem;
@@ -34,7 +84,7 @@
             left: 0;
             right: 0;
             z-index: 100;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 4px solid var(--primary);
         }
 
         .logo-area {
@@ -44,19 +94,21 @@
         }
 
         .logo-img {
-            height: 45px;
+            height: 55px;
             width: auto;
+            max-width: 180px;
+            object-fit: contain;
         }
 
         .logo-area h1 {
-            font-size: 1.35rem;
+            font-size: 1.4rem;
             font-weight: 600;
-            color: #0f172a;
+            color: var(--primary);
             letter-spacing: -0.025em;
         }
 
         .logo-area span {
-            color: #3b82f6;
+            color: var(--primary-light);
             font-weight: 700;
         }
 
@@ -70,16 +122,22 @@
             display: flex;
             align-items: center;
             gap: 0.75rem;
-            background: #f8fafc;
+            background: var(--light-bg);
             padding: 0.5rem 1rem;
             border-radius: 40px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .user-info:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--card-shadow);
         }
 
         .user-avatar {
-            width: 36px;
-            height: 36px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            width: 40px;
+            height: 40px;
+            background: var(--gradient-primary);
             color: white;
             border-radius: 50%;
             display: flex;
@@ -87,7 +145,7 @@
             justify-content: center;
             font-weight: 600;
             font-size: 1rem;
-            box-shadow: 0 2px 4px rgba(59,130,246,0.3);
+            box-shadow: 0 2px 4px rgba(7,68,182,0.3);
         }
 
         .user-details {
@@ -97,12 +155,12 @@
         .user-name {
             font-weight: 600;
             font-size: 0.9rem;
-            color: #0f172a;
+            color: #000000;
         }
 
         .user-role {
             font-size: 0.75rem;
-            color: #64748b;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 0.25rem;
@@ -110,19 +168,19 @@
 
         .user-role i {
             font-size: 0.7rem;
-            color: #3b82f6;
+            color: var(--primary);
         }
 
         .logout-btn {
             background: none;
-            border: 1px solid #e2e8f0;
-            color: #64748b;
+            border: 1px solid var(--border-color);
+            color: var(--text-muted);
             padding: 0.5rem 1.25rem;
             border-radius: 40px;
             cursor: pointer;
             font-size: 0.85rem;
             font-weight: 500;
-            transition: all 0.2s;
+            transition: var(--transition);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
@@ -130,19 +188,20 @@
         }
 
         .logout-btn:hover {
-            background: #fef2f2;
-            border-color: #ef4444;
-            color: #ef4444;
+            background: var(--danger-light);
+            border-color: var(--danger-color);
+            color: var(--danger-color);
+            transform: translateY(-2px);
         }
 
         /* Contenido principal */
         .main-content {
-            margin-top: 80px;
+            margin-top: 85px;
             padding: 2rem 2rem 3rem;
         }
 
         .container {
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
         }
 
@@ -155,40 +214,40 @@
         }
 
         .page-header h2 {
-            font-size: 1.8rem;
+            font-size: 28px;
             font-weight: 700;
-            color: #0f172a;
+            color: #000000;
             letter-spacing: -0.025em;
-            margin-bottom: 0.25rem;
+            position: relative;
+            display: inline-block;
         }
 
-        .page-header p {
-            color: #64748b;
-            font-size: 0.95rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .page-header p i {
-            color: #3b82f6;
-            font-size: 0.9rem;
+        .page-header h2::after {
+            content: '';
+            position: absolute;
+            bottom: -8px;
+            left: 0;
+            width: 60px;
+            height: 3px;
+            background: var(--gradient-primary);
+            border-radius: 2px;
         }
 
         .date-badge {
             background: white;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             border-radius: 40px;
             padding: 0.5rem 1.25rem;
             font-size: 0.85rem;
-            color: #64748b;
+            color: var(--text-muted);
             display: flex;
             align-items: center;
             gap: 0.5rem;
+            box-shadow: var(--card-shadow);
         }
 
         .date-badge i {
-            color: #3b82f6;
+            color: var(--primary);
         }
 
         /* Tarjetas de estadísticas */
@@ -203,42 +262,53 @@
             background: white;
             border-radius: 20px;
             padding: 1.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
+            box-shadow: var(--card-shadow);
             display: flex;
             align-items: center;
             gap: 1.25rem;
-            transition: all 0.2s;
-            border: 1px solid #e2e8f0;
+            transition: var(--transition);
+            border: 2px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
         }
 
         .stat-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 20px 25px -5px rgba(0,0,0,0.05), 0 10px 10px -5px rgba(0,0,0,0.02);
-            border-color: #cbd5e1;
+            transform: translateY(-4px);
+            box-shadow: var(--card-shadow-hover);
         }
 
         .stat-icon {
             width: 70px;
             height: 70px;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
+            background: var(--gradient-primary);
             border-radius: 18px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: white;
             font-size: 2rem;
-            box-shadow: 0 10px 15px -3px rgba(59,130,246,0.2);
+            box-shadow: 0 10px 15px -3px rgba(7,68,182,0.2);
         }
 
         .stat-icon.coordinaciones {
-            background: linear-gradient(135deg, #8b5cf6 0%, #7c3aed 100%);
-            box-shadow: 0 10px 15px -3px rgba(139,92,246,0.2);
+            background: linear-gradient(135deg, #6c5ce7 0%, #8b5cf6 100%);
+            box-shadow: 0 10px 15px -3px rgba(107,70,193,0.2);
         }
 
         .stat-content h3 {
             font-size: 0.85rem;
             font-weight: 600;
-            color: #64748b;
+            color: var(--text-muted);
             text-transform: uppercase;
             letter-spacing: 0.05em;
             margin-bottom: 0.25rem;
@@ -246,8 +316,8 @@
 
         .stat-content .number {
             font-size: 2.5rem;
-            font-weight: 700;
-            color: #0f172a;
+            font-weight: 800;
+            color: #000000;
             line-height: 1.2;
         }
 
@@ -257,14 +327,31 @@
             margin-top: 0.25rem;
         }
 
-        /* Sección de coordinaciones mejorada */
+        /* Sección de coordinaciones */
         .coordinaciones-section {
             background: white;
             border-radius: 20px;
             padding: 1.75rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--border-color);
+            transition: var(--transition);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .coordinaciones-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--gradient-primary);
+        }
+
+        .coordinaciones-section:hover {
+            box-shadow: var(--card-shadow-hover);
         }
 
         .section-header {
@@ -278,24 +365,24 @@
 
         .section-title {
             font-size: 1.2rem;
-            font-weight: 600;
-            color: #0f172a;
+            font-weight: 700;
+            color: #000000;
             display: flex;
             align-items: center;
             gap: 0.5rem;
         }
 
         .section-title i {
-            color: #3b82f6;
+            color: var(--primary);
             font-size: 1.1rem;
         }
 
         .info-note {
-            background: #eff6ff;
+            background: var(--info-light);
             border-radius: 40px;
             padding: 0.5rem 1.25rem;
             font-size: 0.85rem;
-            color: #1e40af;
+            color: var(--info-color);
             display: flex;
             align-items: center;
             gap: 0.5rem;
@@ -312,31 +399,22 @@
             gap: 1rem;
         }
 
+        /* Estilos para coordinaciones */
         .coordinacion-item {
-            background: #f8fafc;
+            background: var(--light-bg);
             border-radius: 16px;
             padding: 1.25rem;
-            border: 1px solid #e2e8f0;
-            transition: all 0.2s;
+            border: 1px solid var(--border-color);
+            transition: var(--transition);
             position: relative;
             overflow: hidden;
+            border-left: 4px solid;
         }
 
         .coordinacion-item:hover {
             background: white;
-            border-color: #cbd5e1;
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.05);
-        }
-
-        .coordinacion-item::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 4px;
-            height: 100%;
-            background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-            border-radius: 4px 0 0 4px;
+            transform: translateY(-3px);
+            box-shadow: var(--card-shadow);
         }
 
         .coordinacion-header {
@@ -347,8 +425,8 @@
         }
 
         .coordinacion-nombre {
-            font-weight: 600;
-            color: #0f172a;
+            font-weight: 700;
+            color: #000000;
             font-size: 1rem;
             display: flex;
             align-items: center;
@@ -356,15 +434,7 @@
         }
 
         .coordinacion-nombre i {
-            color: #3b82f6;
             font-size: 0.9rem;
-        }
-
-        .coordinacion-stats {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 0.75rem;
         }
 
         .stat-badge {
@@ -375,12 +445,20 @@
             padding: 0.4rem 0.75rem;
             border-radius: 40px;
             font-size: 0.85rem;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
+            font-weight: 600;
+            color: #000000;
         }
 
         .stat-badge i {
-            color: #3b82f6;
             font-size: 0.8rem;
+        }
+
+        .coordinacion-stats {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 0.75rem;
         }
 
         .percentage-bar {
@@ -393,19 +471,23 @@
 
         .percentage-fill {
             height: 100%;
-            background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
             border-radius: 3px;
             transition: width 0.3s;
         }
 
-        /* Filtros mejorados */
+        /* Filtros */
         .filters-section {
             background: white;
             border-radius: 20px;
             padding: 1.75rem;
             margin-bottom: 2rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .filters-section:hover {
+            box-shadow: var(--card-shadow-hover);
         }
 
         .filters-grid {
@@ -422,35 +504,34 @@
         }
 
         .filter-group label {
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.85rem;
-            color: #64748b;
+            color: #000000;
             display: flex;
             align-items: center;
             gap: 0.4rem;
         }
 
         .filter-group label i {
-            color: #3b82f6;
+            color: var(--primary);
             font-size: 0.8rem;
         }
 
         .filter-group input,
         .filter-group select {
-            padding: 0.7rem 1rem;
-            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1rem;
+            border: 2px solid var(--border-color);
             border-radius: 12px;
             font-size: 0.9rem;
-            transition: all 0.2s;
-            background: #f8fafc;
+            transition: var(--transition);
+            background: white;
         }
 
         .filter-group input:focus,
         .filter-group select:focus {
             outline: none;
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 4px rgba(59,130,246,0.1);
-            background: white;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(7,68,182,0.08);
         }
 
         .filter-actions {
@@ -460,38 +541,37 @@
         }
 
         .btn-filter {
-            padding: 0.7rem 1.75rem;
-            background: #3b82f6;
+            padding: 0.75rem 1.75rem;
+            background: var(--gradient-primary);
             color: white;
             border: none;
             border-radius: 12px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.9rem;
-            transition: all 0.2s;
+            transition: var(--transition);
             display: inline-flex;
             align-items: center;
             gap: 0.5rem;
             white-space: nowrap;
-            box-shadow: 0 4px 6px -1px rgba(59,130,246,0.2);
+            box-shadow: 0 4px 12px rgba(7,68,182,0.2);
         }
 
         .btn-filter:hover {
-            background: #2563eb;
-            transform: translateY(-1px);
-            box-shadow: 0 10px 15px -3px rgba(59,130,246,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(7,68,182,0.3);
         }
 
         .btn-clear {
-            padding: 0.7rem 1.5rem;
-            background: #f8fafc;
-            color: #64748b;
-            border: 1px solid #e2e8f0;
+            padding: 0.75rem 1.5rem;
+            background: white;
+            color: var(--text-muted);
+            border: 2px solid var(--border-color);
             border-radius: 12px;
             cursor: pointer;
-            font-weight: 500;
+            font-weight: 600;
             font-size: 0.9rem;
-            transition: all 0.2s;
+            transition: var(--transition);
             text-decoration: none;
             display: inline-flex;
             align-items: center;
@@ -500,12 +580,13 @@
         }
 
         .btn-clear:hover {
-            background: #f1f5f9;
-            color: #0f172a;
-            border-color: #cbd5e1;
+            background: var(--light-bg);
+            color: var(--primary);
+            border-color: var(--primary);
+            transform: translateY(-2px);
         }
 
-        /* Loader para filtros AJAX */
+        /* Loader */
         .filter-loader {
             display: none;
             position: fixed;
@@ -513,11 +594,11 @@
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(255,255,255,0.7);
+            background: rgba(255,255,255,0.8);
             z-index: 9999;
             justify-content: center;
             align-items: center;
-            backdrop-filter: blur(2px);
+            backdrop-filter: blur(3px);
         }
 
         .filter-loader.active {
@@ -527,8 +608,8 @@
         .spinner {
             width: 50px;
             height: 50px;
-            border: 4px solid #e2e8f0;
-            border-top-color: #3b82f6;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary);
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
@@ -537,13 +618,18 @@
             to { transform: rotate(360deg); }
         }
 
-        /* Tabla simplificada */
+        /* Tabla */
         .table-section {
             background: white;
             border-radius: 20px;
             padding: 1.75rem;
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.03);
-            border: 1px solid #e2e8f0;
+            box-shadow: var(--card-shadow);
+            border: 2px solid var(--border-color);
+            transition: var(--transition);
+        }
+
+        .table-section:hover {
+            box-shadow: var(--card-shadow-hover);
         }
 
         .table-header {
@@ -556,47 +642,52 @@
         }
 
         .results-info {
-            color: #64748b;
+            color: var(--text-muted);
             font-size: 0.9rem;
-            background: #f8fafc;
+            background: var(--light-bg);
             padding: 0.5rem 1rem;
             border-radius: 40px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
 
         .results-info strong {
-            color: #0f172a;
-            font-weight: 600;
+            color: #000000;
+            font-weight: 700;
         }
 
         .table-responsive {
             overflow-x: auto;
             border-radius: 16px;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
         }
 
         table {
             width: 100%;
             border-collapse: collapse;
-            min-width: 900px; /* Aumentado para más columnas */
+            min-width: 900px;
         }
 
         th {
             text-align: left;
             padding: 1rem 1.25rem;
-            background: #f8fafc;
-            color: #64748b;
-            font-weight: 600;
+            background: var(--light-bg);
+            color: #000000;
+            font-weight: 700;
             font-size: 0.8rem;
             text-transform: uppercase;
             letter-spacing: 0.05em;
-            border-bottom: 1px solid #e2e8f0;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        th i {
+            margin-right: 6px;
+            color: var(--primary);
         }
 
         td {
             padding: 1.25rem;
-            border-bottom: 1px solid #e2e8f0;
-            color: #0f172a;
+            border-bottom: 1px solid var(--border-color);
+            color: #2d3748;
             font-size: 0.95rem;
         }
 
@@ -605,37 +696,32 @@
         }
 
         tr:hover td {
-            background: #f8fafc;
+            background: var(--light-bg);
         }
 
         .nombre-maestro {
             font-weight: 600;
-            color: #0f172a;
+            color: #000000;
             display: flex;
             align-items: center;
             gap: 0.75rem;
         }
 
         .nombre-maestro i {
-            color: #94a3b8;
+            color: var(--primary);
             font-size: 1rem;
         }
 
+        /* Badges de coordinación */
         .badge-coordinacion {
-            background: #eff6ff;
-            color: #1e40af;
             padding: 0.4rem 1rem;
             border-radius: 40px;
             font-size: 0.8rem;
-            font-weight: 500;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 0.4rem;
-            border: 1px solid #bfdbfe;
-        }
-
-        .badge-coordinacion i {
-            font-size: 0.7rem;
+            border: 1px solid;
         }
 
         .badge-sin-asignar {
@@ -651,7 +737,6 @@
             border: 1px solid #e2e8f0;
         }
 
-        /* NUEVOS ESTILOS PARA ANTIGÜEDAD */
         .badge-anio {
             background: #f1f5f9;
             color: #334155;
@@ -666,17 +751,17 @@
         }
 
         .badge-anio i {
-            color: #3b82f6;
+            color: var(--primary);
             font-size: 0.7rem;
         }
 
         .badge-antiguedad {
-            background: #e6f7e6;
+            background: var(--success-light);
             color: #0e5814;
             padding: 0.4rem 0.8rem;
             border-radius: 30px;
             font-size: 0.85rem;
-            font-weight: 500;
+            font-weight: 600;
             display: inline-flex;
             align-items: center;
             gap: 0.3rem;
@@ -684,7 +769,7 @@
         }
 
         .badge-antiguedad i {
-            color: #28a745;
+            color: var(--success-color);
             font-size: 0.7rem;
         }
 
@@ -701,30 +786,34 @@
             border: 1px solid #e2e8f0;
         }
 
-        .badge-sin-calculo i {
-            color: #94a3b8;
-        }
-
         .periodo-actual {
             font-size: 0.9rem;
             font-weight: 500;
-            color: #1e40af;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .periodo-actual i {
+            font-size: 0.8rem;
         }
 
         .empty-state {
             text-align: center;
             padding: 4rem 2rem;
-            color: #94a3b8;
+            color: var(--text-muted);
         }
 
         .empty-state i {
             font-size: 3rem;
             margin-bottom: 1rem;
-            color: #cbd5e1;
+            color: var(--primary);
+            opacity: 0.5;
         }
 
         .empty-state h3 {
-            color: #64748b;
+            color: #000000;
             font-weight: 500;
             margin-bottom: 0.5rem;
         }
@@ -747,26 +836,48 @@
 
         .pagination .page-link {
             padding: 0.5rem 0.9rem;
-            border: 1px solid #e2e8f0;
+            border: 1px solid var(--border-color);
             border-radius: 10px;
-            color: #64748b;
+            color: var(--text-muted);
             text-decoration: none;
-            transition: all 0.2s;
+            transition: var(--transition);
             font-size: 0.9rem;
             background: white;
             cursor: pointer;
         }
 
         .pagination .page-link:hover {
-            background: #f8fafc;
-            border-color: #cbd5e1;
-            color: #0f172a;
+            background: var(--light-bg);
+            border-color: var(--primary);
+            color: var(--primary);
         }
 
         .pagination .page-link.active {
-            background: #3b82f6;
+            background: var(--gradient-primary);
             color: white;
-            border-color: #3b82f6;
+            border-color: var(--primary);
+        }
+
+        /* Alertas */
+        .alert {
+            padding: 1rem 1.25rem;
+            border-radius: 12px;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 0.75rem;
+            border-left: 6px solid transparent;
+            font-size: 0.9rem;
+        }
+
+        .alert-info {
+            background: var(--info-light);
+            border-color: var(--info-color);
+            color: #1e40af;
+        }
+
+        .alert-info i {
+            color: var(--info-color);
         }
 
         /* Responsive */
@@ -795,7 +906,7 @@
 
             .main-content {
                 padding: 1rem;
-                margin-top: 120px;
+                margin-top: 130px;
             }
 
             .page-header {
@@ -836,6 +947,25 @@
                 width: 100%;
             }
         }
+
+        @media (max-width: 480px) {
+            .stat-card {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .stat-icon {
+                margin: 0 auto;
+            }
+            
+            .stat-content h3 {
+                text-align: center;
+            }
+            
+            .stat-content .number {
+                text-align: center;
+            }
+        }
     </style>
 </head>
 <body>
@@ -844,7 +974,7 @@
         <div class="spinner"></div>
     </div>
 
-    <!-- Header mejorado -->
+    <!-- Header -->
     <header class="header">
         <div class="logo-area">
             <img src="{{ asset('img/logo_iufim.png') }}" alt="Logo IUFIM" class="logo-img">
@@ -880,8 +1010,8 @@
         <div class="container">
             <!-- Alerta informativa -->
             @if(session('info'))
-                <div class="alert alert-info" style="background: #eff6ff; border: 1px solid #bfdbfe; color: #1e40af; border-radius: 12px; padding: 1rem; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
-                    <i class="fas fa-info-circle" style="color: #3b82f6;"></i>
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
                     {{ session('info') }}
                 </div>
             @endif
@@ -891,9 +1021,13 @@
                 <div>
                     <h2>Panel General De Maestros</h2>
                 </div>
+                <div class="date-badge">
+                    <i class="fas fa-calendar-alt"></i>
+                    {{ now()->format('d/m/Y') }}
+                </div>
             </div>
 
-            <!-- Tarjetas de estadísticas (solo 2) -->
+            <!-- Tarjetas de estadísticas -->
             <div class="stats-grid" id="statsContainer">
                 <div class="stat-card">
                     <div class="stat-icon">
@@ -918,7 +1052,7 @@
                 </div>
             </div>
 
-            <!-- Resumen por Coordinaciones con nota informativa -->
+            <!-- Resumen por Coordinaciones - EN ORDEN ALFABÉTICO -->
             <div class="coordinaciones-section" id="coordinacionesContainer">
                 <div class="section-header">
                     <h3 class="section-title">
@@ -932,34 +1066,62 @@
                 </div>
 
                 <div class="coordinaciones-grid" id="coordinacionesGrid">
-                    @forelse($maestrosPorCoordinacion as $coordinacion)
-                        <div class="coordinacion-item" data-coordinacion-id="{{ $coordinacion->id }}">
+                    @php
+                        // Definir colores fijos para coordinaciones (por nombre, no por ID)
+                        $paletaColores = [
+                            '#3b82f6', // Azul
+                            '#8b5cf6', // Morado
+                            '#10b981', // Verde
+                            '#f59e0b', // Naranja
+                            '#ef4444', // Rojo
+                            '#06b6d4', // Cyan
+                            '#ec489a', // Rosa
+                            '#84cc16', // Verde lima
+                        ];
+                        
+                        $fondosColores = [
+                            '#dbeafe', '#ede9fe', '#d1fae5', '#fef3c7',
+                            '#fee2e2', '#cffafe', '#fce7f3', '#ecfccb'
+                        ];
+                        
+                        // Ordenar coordinaciones alfabéticamente por nombre
+                        $coordinacionesOrdenadas = $maestrosPorCoordinacion->sortBy('nombre');
+                        $colorIndex = 0;
+                    @endphp
+                    
+                    @forelse($coordinacionesOrdenadas as $coordinacion)
+                        @php
+                            $colorActual = $paletaColores[$colorIndex % count($paletaColores)];
+                            $fondoActual = $fondosColores[$colorIndex % count($fondosColores)];
+                            $colorIndex++;
+                        @endphp
+                        <div class="coordinacion-item" style="border-left-color: {{ $colorActual }};" data-coordinacion-id="{{ $coordinacion->id }}" data-coordinacion-nombre="{{ $coordinacion->nombre }}" data-color="{{ $colorActual }}" data-fondo="{{ $fondoActual }}">
                             <div class="coordinacion-header">
                                 <span class="coordinacion-nombre">
-                                    <i class="fas fa-university"></i>
+                                    <i class="fas fa-university" style="color: {{ $colorActual }};"></i>
                                     {{ $coordinacion->nombre }}
                                 </span>
                                 <span class="stat-badge">
-                                    <i class="fas fa-user"></i>
+                                    <i class="fas fa-user" style="color: {{ $colorActual }};"></i>
                                     <span class="maestros-count">{{ $coordinacion->maestros_count }}</span> maestros
                                 </span>
                             </div>
                             <div class="coordinacion-stats">
-                                <span style="color: #64748b; font-size: 0.85rem;">
+                                <span style="color: var(--text-muted); font-size: 0.85rem;">
                                     <span class="porcentaje">{{ $totalMaestros > 0 ? round(($coordinacion->maestros_count / $totalMaestros) * 100) : 0 }}</span>% del total
                                 </span>
                             </div>
                             <div class="percentage-bar">
-                                <div class="percentage-fill" style="width: {{ $totalMaestros > 0 ? ($coordinacion->maestros_count / $totalMaestros) * 100 : 0 }}%"></div>
+                                <div class="percentage-fill" style="width: {{ $totalMaestros > 0 ? ($coordinacion->maestros_count / $totalMaestros) * 100 : 0 }}%; background: {{ $colorActual }};"></div>
                             </div>
                         </div>
                     @empty
-                        <p style="color: #94a3b8; text-align: center; padding: 2rem;">No hay coordinaciones registradas</p>
+                        <p style="color: var(--text-muted); text-align: center; padding: 2rem;">No hay coordinaciones registradas</p>
                     @endforelse
                 </div>
             </div>
 
-            <!-- Filtros de búsqueda mejorados - CON AJAX -->
+            <!-- Filtros de búsqueda -->
             <div class="filters-section">
                 <h3 class="section-title" style="margin-bottom: 1.5rem;">
                     <i class="fas fa-filter"></i>
@@ -973,7 +1135,7 @@
                         </label>
                         <select name="coordinacion" id="coordinacion">
                             <option value="">Todas las coordinaciones</option>
-                            @foreach($maestrosPorCoordinacion as $coordinacion)
+                            @foreach($maestrosPorCoordinacion->sortBy('nombre') as $coordinacion)
                                 <option value="{{ $coordinacion->id }}" 
                                     {{ request('coordinacion') == $coordinacion->id ? 'selected' : '' }}>
                                     {{ $coordinacion->nombre }}
@@ -1005,11 +1167,11 @@
                 </div>
             </div>
 
-            <!-- Tabla simplificada - CON COLUMNAS DE ANTIGÜEDAD AGREGADAS -->
+            <!-- Tabla de maestros -->
             <div class="table-section" id="tablaContainer">
                 <div class="table-header">
                     <div class="results-info" id="resultsInfo">
-                        <i class="fas fa-list-ul" style="margin-right: 0.5rem; color: #3b82f6;"></i>
+                        <i class="fas fa-list-ul" style="margin-right: 0.5rem;"></i>
                         Mostrando <strong id="fromItem">{{ $maestros->firstItem() ?? 0 }}</strong> - 
                         <strong id="toItem">{{ $maestros->lastItem() ?? 0 }}</strong> de 
                         <strong id="totalItems">{{ $maestros->total() }}</strong> maestros
@@ -1020,14 +1182,28 @@
                     <table id="maestrosTable">
                         <thead>
                             <tr>
-                                <th>Nombre Completo</th>
-                                <th>Coordinación</th>
-                                <th>Año de Ingreso (Al IUFIM)</th>
-                                <th>Periodo Actual</th>
-                                <th>Antigüedad</th>
+                                <th><i class="fas fa-user-circle"></i> Nombre Completo</th>
+                                <th><i class="fas fa-building"></i> Coordinación</th>
+                                <th><i class="fas fa-calendar-alt"></i> Año de Ingreso</th>
+                                <th><i class="fas fa-clock"></i> Periodo Actual</th>
+                                <th><i class="fas fa-chart-line"></i> Antigüedad</th>
                             </tr>
                         </thead>
                         <tbody id="tableBody">
+                            @php
+                                // Crear un mapa de colores por nombre de coordinación para la tabla
+                                $mapaColores = [];
+                                $coordinacionesOrdenadasMap = $maestrosPorCoordinacion->sortBy('nombre');
+                                $colorIdx = 0;
+                                foreach($coordinacionesOrdenadasMap as $coord) {
+                                    $mapaColores[$coord->nombre] = [
+                                        'color' => $paletaColores[$colorIdx % count($paletaColores)],
+                                        'fondo' => $fondosColores[$colorIdx % count($fondosColores)]
+                                    ];
+                                    $colorIdx++;
+                                }
+                            @endphp
+                            
                             @forelse($maestros as $maestro)
                                 @php
                                     // Calcular antigüedad
@@ -1049,8 +1225,12 @@
                                             return $p->pivot->created_at;
                                         })->first();
                                     }
+                                    
+                                    // Obtener colores para la coordinación del maestro
+                                    $nombreCoordinacion = $maestro->coordinacion ? $maestro->coordinacion->nombre : null;
+                                    $colorCoor = $mapaColores[$nombreCoordinacion] ?? ['color' => '#64748b', 'fondo' => '#f1f5f9'];
                                 @endphp
-                                <tr>
+                                70
                                     <td>
                                         <div class="nombre-maestro">
                                             <i class="fas fa-user-circle"></i>
@@ -1059,7 +1239,7 @@
                                     </td>
                                     <td>
                                         @if($maestro->coordinacion)
-                                            <span class="badge-coordinacion">
+                                            <span class="badge-coordinacion" style="background: {{ $colorCoor['fondo'] }}; color: {{ $colorCoor['color'] }}; border-color: {{ $colorCoor['color'] }};">
                                                 <i class="fas fa-university"></i>
                                                 {{ $maestro->coordinacion->nombre }}
                                             </span>
@@ -1100,7 +1280,7 @@
                                         @if($totalMeses > 0)
                                             <span class="badge-antiguedad">
                                                 <i class="fas fa-star"></i>
-                                                {{ $anios }} años ,      {{ $meses }} meses
+                                                {{ $anios }} años, {{ $meses }} meses
                                             </span>
                                         @else
                                             <span class="badge-sin-calculo">
@@ -1143,16 +1323,40 @@
             const coordinacionSelect = document.getElementById('coordinacion');
             const nombreInput = document.getElementById('nombre');
 
+            // Guardar los colores de las coordinaciones para mantener consistencia después del filtro AJAX
+            const coloresCoordinaciones = {};
+            document.querySelectorAll('.coordinacion-item').forEach(item => {
+                const nombre = item.dataset.coordinacionNombre;
+                const color = item.dataset.color;
+                const fondo = item.dataset.fondo;
+                if (nombre && color && fondo) {
+                    coloresCoordinaciones[nombre] = { color, fondo };
+                }
+            });
+
+            // Función para aplicar colores consistentes a los badges de la tabla
+            function aplicarColoresTabla() {
+                document.querySelectorAll('#tableBody tr').forEach(row => {
+                    const celdaCoordinacion = row.querySelector('td:nth-child(2) .badge-coordinacion');
+                    if (celdaCoordinacion) {
+                        const nombreCoordinacion = celdaCoordinacion.textContent.trim();
+                        if (coloresCoordinaciones[nombreCoordinacion]) {
+                            const { color, fondo } = coloresCoordinaciones[nombreCoordinacion];
+                            celdaCoordinacion.style.background = fondo;
+                            celdaCoordinacion.style.color = color;
+                            celdaCoordinacion.style.borderColor = color;
+                        }
+                    }
+                });
+            }
+
             // Función para cargar datos con AJAX
             async function cargarDatosFiltrados() {
-                // Mostrar loader
                 filterLoader.classList.add('active');
 
-                // Obtener valores de los filtros
                 const coordinacion = coordinacionSelect.value;
                 const nombre = nombreInput.value.trim();
 
-                // Construir URL con parámetros
                 let url = new URL(window.location.href);
                 url.searchParams.delete('coordinacion');
                 url.searchParams.delete('nombre');
@@ -1166,7 +1370,6 @@
                 }
 
                 try {
-                    // Hacer petición AJAX
                     const response = await fetch(url.toString(), {
                         headers: {
                             'X-Requested-With': 'XMLHttpRequest'
@@ -1174,12 +1377,10 @@
                     });
                     
                     const html = await response.text();
-                    
-                    // Crear un elemento temporal para parsear el HTML
                     const temp = document.createElement('div');
                     temp.innerHTML = html;
 
-                    // 1. Actualizar estadísticas
+                    // Actualizar estadísticas
                     const newTotalMaestros = temp.querySelector('#totalMaestros');
                     const newTotalCoordinaciones = temp.querySelector('#totalCoordinaciones');
                     if (newTotalMaestros) {
@@ -1189,25 +1390,35 @@
                         document.getElementById('totalCoordinaciones').textContent = newTotalCoordinaciones.textContent;
                     }
 
-                    // 2. Actualizar grid de coordinaciones
+                    // Actualizar grid de coordinaciones
                     const newCoordinacionesGrid = temp.querySelector('#coordinacionesGrid');
                     if (newCoordinacionesGrid) {
                         document.getElementById('coordinacionesGrid').innerHTML = newCoordinacionesGrid.innerHTML;
+                        // Recolectar colores nuevamente
+                        document.querySelectorAll('.coordinacion-item').forEach(item => {
+                            const nombre = item.querySelector('.coordinacion-nombre')?.textContent.trim();
+                            const color = item.style.borderLeftColor;
+                            const fondo = item.querySelector('.badge-coordinacion')?.style.background;
+                            if (nombre && color) {
+                                coloresCoordinaciones[nombre] = { color, fondo: fondo || '#f0f0f0' };
+                            }
+                        });
                     }
 
-                    // 3. Actualizar tabla de maestros
+                    // Actualizar tabla de maestros
                     const newTableBody = temp.querySelector('#tableBody');
                     if (newTableBody) {
                         document.getElementById('tableBody').innerHTML = newTableBody.innerHTML;
+                        aplicarColoresTabla();
                     }
 
-                    // 4. Actualizar información de resultados
+                    // Actualizar información de resultados
                     const newResultsInfo = temp.querySelector('#resultsInfo');
                     if (newResultsInfo) {
                         document.getElementById('resultsInfo').innerHTML = newResultsInfo.innerHTML;
                     }
 
-                    // 5. Actualizar paginación
+                    // Actualizar paginación
                     const newPagination = temp.querySelector('#paginationContainer');
                     const oldPagination = document.getElementById('paginationContainer');
                     if (newPagination && oldPagination) {
@@ -1220,7 +1431,6 @@
                         oldPagination.remove();
                     }
 
-                    // Actualizar URL sin recargar la página
                     window.history.pushState({}, '', url.toString());
 
                 } catch (error) {
@@ -1253,6 +1463,9 @@
                     cargarDatosFiltrados();
                 }
             });
+
+            // Aplicar colores iniciales
+            aplicarColoresTabla();
         });
     </script>
 </body>

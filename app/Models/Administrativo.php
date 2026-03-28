@@ -19,24 +19,80 @@ class Administrativo extends Model
         'apellido_paterno',
         'apellido_materno',
         'fecha_nacimiento',
-        'curp',
-        'rfc',
-        'telefono',
+        'edad',
+        'genero',
+        'nacionalidad',
+        'estado_civil',
+        'telefono_celular',
+        'telefono_fijo',
         'email_personal',
-        'direccion',
+        'domicilio',
+        'colonia',
+        'codigo_postal',
+        'municipio',
+        'ciudad_poblacion',
+        'lugar_nacimiento',
         'puesto',
-        'fecha_ingreso',
-        'numero_empleado',
-        'area_adscripcion',
-        'maximo_grado_estudios',
-        'escolaridad',
         'documentos',
     ];
 
     protected $casts = [
         'fecha_nacimiento' => 'date',
-        'fecha_ingreso' => 'date',
         'documentos' => 'array',
+    ];
+
+    // Tipos de documentos requeridos
+    const TIPOS_DOCUMENTOS = [
+        'solicitud_empleo' => [
+            'nombre' => 'Solicitud de Empleo',
+            'icono' => 'file-alt',
+            'descripcion' => 'Formato de solicitud de empleo'
+        ],
+        'curriculum_vitae' => [
+            'nombre' => 'Curriculum Vitae',
+            'icono' => 'file-alt',
+            'descripcion' => 'Hoja de vida actualizada'
+        ],
+        'acta_nacimiento' => [
+            'nombre' => 'Acta de Nacimiento',
+            'icono' => 'file',
+            'descripcion' => 'Acta de nacimiento certificada'
+        ],
+        'curp_documento' => [
+            'nombre' => 'CURP',
+            'icono' => 'id-card',
+            'descripcion' => 'CURP (Formato página RENAPO)'
+        ],
+        'constancia_fiscal' => [
+            'nombre' => 'Constancia de Situación Fiscal',
+            'icono' => 'file-invoice',
+            'descripcion' => 'Constancia de situación fiscal (SAT)'
+        ],
+        'nss' => [
+            'nombre' => 'Número de Seguridad Social',
+            'icono' => 'heartbeat',
+            'descripcion' => 'NSS (Formato página IMSS)'
+        ],
+        'ine' => [
+            'nombre' => 'INE',
+            'icono' => 'id-card',
+            'descripcion' => 'Identificación oficial vigente'
+        ],
+        'comprobante_domicilio' => [
+            'nombre' => 'Comprobante de Domicilio',
+            'icono' => 'home',
+            'descripcion' => 'Comprobante de domicilio reciente'
+        ],
+        'comprobante_estudios' => [
+            'nombre' => 'Comprobante de Estudios',
+            'icono' => 'graduation-cap',
+            'descripcion' => 'Último grado de estudios'
+        ],
+        'certificado_medico' => [
+            'nombre' => 'Certificado Médico',
+            'icono' => 'file-medical',
+            'descripcion' => 'Certificado médico vigente'
+        ]
     ];
 
     /**
@@ -64,12 +120,23 @@ class Administrativo extends Model
     }
 
     /**
-     * Obtener la URL de un documento específico del JSON
+     * Calcular edad automáticamente
+     */
+    public function setFechaNacimientoAttribute($value)
+    {
+        $this->attributes['fecha_nacimiento'] = $value;
+        if ($value) {
+            $this->attributes['edad'] = \Carbon\Carbon::parse($value)->age;
+        }
+    }
+
+    /**
+     * Obtener la URL de un documento específico
      */
     public function getDocumentoUrl($tipo): ?string
     {
-        $documentos = $this->documentos ?? [];
-        return isset($documentos[$tipo]) ? asset('storage/' . $documentos[$tipo]) : null;
+        $documento = $this->documentosAdmin()->where('tipo', $tipo)->first();
+        return $documento ? asset('storage/' . $documento->ruta_archivo) : null;
     }
 
     /**
@@ -77,12 +144,7 @@ class Administrativo extends Model
      */
     public function getDocumentosCompletosAttribute()
     {
-        $tiposRequeridos = [
-            'identificacion_oficial',
-            'comprobante_domicilio',
-            'curriculum',
-            'acta_nacimiento'
-        ];
+        $tiposRequeridos = array_keys(self::TIPOS_DOCUMENTOS);
         
         $documentosSubidos = $this->documentosAdmin()
             ->whereIn('tipo', $tiposRequeridos)
@@ -97,12 +159,7 @@ class Administrativo extends Model
      */
     public function getProgresoDocumentosAttribute()
     {
-        $tiposRequeridos = [
-            'identificacion_oficial',
-            'comprobante_domicilio',
-            'curriculum',
-            'acta_nacimiento'
-        ];
+        $tiposRequeridos = array_keys(self::TIPOS_DOCUMENTOS);
         
         $documentosSubidos = $this->documentosAdmin()
             ->whereIn('tipo', $tiposRequeridos)
@@ -122,19 +179,5 @@ class Administrativo extends Model
             'porcentaje' => $totalRequeridos > 0 ? round(($documentosSubidos / $totalRequeridos) * 100) : 0,
             'faltantes' => $totalRequeridos - $documentosSubidos
         ];
-    }
-
-    /**
-     * Documentos por estado
-     */
-    public function documentosPorEstado($estado = null)
-    {
-        $query = $this->documentosAdmin();
-        
-        if ($estado) {
-            $query->where('estado', $estado);
-        }
-        
-        return $query->get();
     }
 }
