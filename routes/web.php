@@ -74,7 +74,7 @@ Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('
 
 // Documentos públicos (ver y descargar)
 Route::get('/documentos/{id}/ver', [DocumentoMaestroController::class, 'verDocumento'])
-    ->name('documentos.ver');
+    ->name('documentos.maestros.ver');
 Route::get('/documentos/{id}/descargar', [DocumentoMaestroController::class, 'descargar'])
     ->name('documentos.descargar');
 
@@ -271,8 +271,8 @@ Route::get('maestros/{maestroId}/historial-documentos',
         ->name('documentos.eliminar')
         ->middleware('admin');
     
-    Route::get('/documentos/{documento}/ver', [DocumentoMaestroController::class, 'verDocumento'])
-        ->name('documentos.ver');
+   Route::get('/documentos/{id}/ver', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'verDocumento'])
+    ->name('documentos.administrativos.ver');
     
     Route::get('/documentos/{documento}/descargar', [DocumentoMaestroController::class, 'descargarDocumento'])
         ->name('documentos.descargar');
