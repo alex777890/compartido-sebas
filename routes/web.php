@@ -34,15 +34,12 @@ Route::get('/diagnostico-coordinacion', function() {
 
 // Rutas para profesor (ver y subir documentos)
 Route::middleware(['auth'])->prefix('profesor')->name('profesor.')->group(function () {
-    // Ruta para ver documentos (unificada)
     Route::get('/mis-documentos', [MaestroController::class, 'verDocumentosUnificado'])
         ->name('mis-documentos');
     
-    // Ruta para subir documentos de NUEVO INGRESO (13 documentos)
     Route::post('/subir-documentos-ingreso', [MaestroController::class, 'subirDocumentosIngreso'])
         ->name('subir-documentos-ingreso');
     
-    // Ruta para subir documentos PERIÓDICOS (6 documentos)
     Route::post('/subir-documentos', [MaestroController::class, 'subirDocumentos'])
         ->name('subir-documentos');
 });
@@ -74,9 +71,9 @@ Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('
 
 // Documentos públicos (ver y descargar)
 Route::get('/documentos/{id}/ver', [DocumentoMaestroController::class, 'verDocumento'])
-    ->name('documentos.ver');
+    ->name('documentos.public.ver');
 Route::get('/documentos/{id}/descargar', [DocumentoMaestroController::class, 'descargar'])
-    ->name('documentos.descargar');
+    ->name('documentos.public.descargar');
 
 // Redirección maestros.index
 Route::get('/maestros.index', function () {
@@ -122,23 +119,22 @@ Route::middleware(['auth'])->group(function () {
         return view('dashboard.coordinacion', compact('coordinacion'));
     })->name('dashboard.coordinacion');
 
-    // Gestión de horarios
-    Route::prefix('horarios')->name('horarios.')->group(function () {
+    // Gestión de horarios (Coordinación)
+    Route::prefix('horarios')->name('horarios.coordinacion.')->group(function () {
         Route::get('/', [HorarioCoordinacionController::class, 'index'])->name('index');
         Route::get('/coordinacion/maestro/{maestroId}/asignacion', 
             [HorarioCoordinacionController::class, 'mostrarFormulario'])
-            ->name('coordinacion.asignacion');
+            ->name('asignacion');
         Route::get('foto/{maestroId}/{periodoId}', [HorarioCoordinacionController::class, 'verFotoHorario'])
             ->name('ver-foto');
         Route::post('/save', [HorarioCoordinacionController::class, 'guardarHorario'])->name('save');
         Route::get('/ver/{maestroId}', [HorarioCoordinacionController::class, 'verHorario'])->name('ver');
-        Route::get('/api/horarios', [HorarioCoordinacionController::class, 'getHorariosPorPeriodo'])->name('api.horarios');
+        Route::get('/api/horarios', [HorarioCoordinacionController::class, 'getHorariosPorPeriodo'])->name('api');
     });
 
-    // ===== RUTAS PARA AUTHCONTROLLER =====
+    // ===== RUTAS PARA COORDINACIONCONTROLLER =====
     Route::get('/coordinacion/estatus', [CoordinacionController::class, 'estatus'])->name('coordinaciones.estatus');
     
-    // ===== RUTAS PARA COORDINACIONCONTROLLER =====
     Route::get('/coordinacion/maestro/{maestro}/documentos', 
         [App\Http\Controllers\CoordinacionController::class, 'showDocumentosMaestro'])
         ->name('coordinacion.maestros.documentos');
@@ -154,10 +150,10 @@ Route::middleware(['auth'])->group(function () {
         ->middleware('admin');
     
     Route::get('/documentos/{id}/download', [CoordinacionController::class, 'download'])
-        ->name('documentos.download');
+        ->name('documentos.coordinacion.download');
     
     Route::get('/documentos/{id}/view', [CoordinacionController::class, 'view'])
-        ->name('documentos.view');
+        ->name('documentos.coordinacion.view');
     
     Route::put('/coordinaciones/{coordinacion}/maestros/{maestro}/status', 
         [CoordinacionController::class, 'updateMaestroStatus'])
@@ -182,24 +178,24 @@ Route::middleware(['auth'])->group(function () {
     // ===== RUTAS PARA MAESTROCONTROLLER =====
     Route::prefix('profesor')->group(function () {
         Route::get('/completar-perfil', [MaestroController::class, 'mostrarFormularioPerfil'])
-             ->name('profesor.completar-perfil');
+             ->name('completar-perfil');
         
         Route::post('/guardar-perfil', [MaestroController::class, 'guardarPerfilProfesor'])
-             ->name('profesor.guardar-perfil');
+             ->name('guardar-perfil');
         
         Route::get('/dashboard', [MaestroController::class, 'dashboard'])
-             ->name('profesor.dashboard');
+             ->name('dashboard');
         
         Route::get('/mi-perfil', [MaestroController::class, 'miPerfil'])
-             ->name('profesor.mi-perfil');
+             ->name('mi-perfil');
         
         Route::get('/mi-antiguedad', [MaestroController::class, 'miAntiguedad'])
-             ->name('profesor.mi-antiguedad');
+             ->name('mi-antiguedad');
     });
     
     Route::get('/profesor/mi-perfil', function () {
         return view('profesor.perfil');
-    })->name('profesor.mi-perfil');
+    })->name('profesor.mi-perfil.view');
 
     Route::put('/coordinaciones/{coordinacion}/maestros/{maestro}/plantilla', [App\Http\Controllers\MaestroController::class, 'actualizarPlantilla'])->name('maestros.actualizar-plantilla');
     
@@ -230,29 +226,29 @@ Route::middleware(['auth'])->group(function () {
         ->name('maestros.historial-documentos-desde-maestro');
     
     Route::post('/documentos/{id}/observaciones', [DocumentoMaestroController::class, 'updateObservaciones'])
-        ->name('documentos.update-observaciones');
+        ->name('documentos.maestros.update-observaciones');
     
     Route::post('/documentos/{id}/aprobar', [DocumentoMaestroController::class, 'aprobar'])
-        ->name('documentos.aprobar');
+        ->name('documentos.maestros.aprobar');
     
     Route::post('/documentos/{id}/rechazar', [DocumentoMaestroController::class, 'rechazar'])
-        ->name('documentos.rechazar');
+        ->name('documentos.maestros.rechazar');
     
     Route::post('/documentos/{id}/pendiente', [DocumentoMaestroController::class, 'pendiente'])
-        ->name('documentos.pendiente');
+        ->name('documentos.maestros.pendiente');
     
     Route::post('/documentos/{id}/resubir', [DocumentoMaestroController::class, 'resubirDocumento'])
-        ->name('documentos.resubir');
+        ->name('documentos.maestros.resubir');
     
     Route::delete('/documentos/{documentoId}', [DocumentoMaestroController::class, 'eliminarDocumento'])
-        ->name('documentos.eliminar')
+        ->name('documentos.maestros.eliminar')
         ->middleware('admin');
     
     Route::get('/documentos/{id}/ver', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'verDocumento'])
         ->name('documentos.administrativos.ver');
     
     Route::get('/documentos/{id}/descargar', [DocumentoMaestroController::class, 'descargarDocumento'])
-        ->name('documentos.descargar');
+        ->name('documentos.maestros.descargar');
 
     // ===== RUTAS PARA GRADOACADEMICOCONTROLLER =====
     Route::get('/grados-academicos/create/{maestro_id}', [GradoAcademicoController::class, 'create'])
@@ -290,23 +286,23 @@ Route::middleware(['auth'])->group(function () {
         });
     });
 
-    // ===== RUTAS PARA HORARIO CONTROLLER =====
-    Route::get('/horarios', [HorarioController::class, 'index'])->name('horarios.index');
+    // ===== RUTAS PARA HORARIO CONTROLLER (General) =====
+    Route::get('/horarios', [HorarioController::class, 'index'])->name('horarios.general.index');
     
     Route::get('/horarios/maestro/{maestroId}/formulario', [HorarioController::class, 'mostrarFormulario'])
-        ->name('horarios.formulario');
+        ->name('horarios.general.formulario');
     
     Route::post('/horarios/guardar', [HorarioController::class, 'guardarHorario'])
-        ->name('horarios.guardar');
+        ->name('horarios.general.guardar');
     
     Route::get('/horarios/maestro/{maestroId}/{periodoId?}', [HorarioController::class, 'verHorario'])
-        ->name('horarios.ver');
+        ->name('horarios.general.ver');
     
     Route::get('/horarios/verificar/{maestroId}/{periodoId}', [HorarioController::class, 'verificarHorarios'])
-        ->name('horarios.verificar');
+        ->name('horarios.general.verificar');
     
     Route::post('/horarios/calcular-horas', [HorarioController::class, 'calcularHorasMaestro'])
-        ->name('horarios.calcular-horas');
+        ->name('horarios.general.calcular-horas');
 
     // ===== RUTAS PARA CALCULAR ANTIGUEDAD =====
     Route::get('/maestros/{maestro}/calcular-antiguedad', [MaestroController::class, 'mostrarCalculoAntiguedad'])
@@ -330,23 +326,23 @@ Route::middleware(['auth'])->group(function () {
     Route::resource('maestros', MaestroController::class)->middleware('admin');
 
     // ===== RUTAS PARA PERIODOCONTROLLER =====
-    Route::prefix('periodos')->group(function () {
-        Route::get('/', [PeriodoController::class, 'index'])->name('periodos.index');
+    Route::prefix('periodos')->name('periodos.')->group(function () {
+        Route::get('/', [PeriodoController::class, 'index'])->name('index');
         
         Route::post('/{periodo}/toggle-subida', [PeriodoController::class, 'toggleSubida'])
-             ->name('periodos.toggle-subida');
+             ->name('toggle-subida');
         
         Route::post('/generar-manualmente', [PeriodoController::class, 'generarPeriodosManualmente'])
-             ->name('periodos.generar-manualmente');
+             ->name('generar-manualmente');
         
         Route::get('/{periodo}/documentos', [PeriodoController::class, 'documentos'])
-             ->name('periodos.documentos');
+             ->name('documentos');
         
         Route::post('/{periodo}/finalizar', [PeriodoController::class, 'finalizar'])
-             ->name('periodos.finalizar');
+             ->name('finalizar');
         
         Route::post('/{periodo}/reabrir', [PeriodoController::class, 'reabrir'])
-             ->name('periodos.reabrir');
+             ->name('reabrir');
     });
 
     // ===== RUTAS PARA USERCONTROLLER =====
@@ -389,12 +385,12 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // ==================== RUTAS CON PARÁMETROS (fuera del grupo auth) ====================
-Route::prefix('maestros')->group(function () {
+Route::prefix('maestros')->name('maestros.')->group(function () {
     Route::get('/{maestro}/documentos', [DocumentoMaestroController::class, 'mostrarDocumentos'])
-        ->name('maestros.documentos');
+        ->name('documentos');
     
     Route::get('/{maestroId}/documentos/json', [DocumentoMaestroController::class, 'mostrarDocumentosJson'])
-        ->name('maestros.documentos.json');
+        ->name('documentos.json');
 });
 
 // Rutas para admin (activar documentos)
