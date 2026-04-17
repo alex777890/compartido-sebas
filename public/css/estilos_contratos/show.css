@@ -1,0 +1,713 @@
+/* public/css/estilos_contratos/show.css */
+
+/* Variables de diseño */
+:root {
+    --primary-color: #2c5aa0;
+    --primary-dark: #1e3d72;
+    --secondary-color: #34495e;
+    --accent-color: #3498db;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
+    --info-color: #17a2b8;
+    --light-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --border-color: #e1e8ed;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 8px 15px rgba(0, 0, 0, 0.15);
+    --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+    --gradient-success: linear-gradient(135deg, var(--success-color), #2ecc71);
+    --gradient-view: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+}
+
+/* Reset y estilos base */
+* {
+    box-sizing: border-box;
+}
+
+body {
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 1200px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Tarjeta principal */
+.view-card {
+    background: var(--card-bg);
+    border-radius: 20px;
+    box-shadow: var(--shadow-hover);
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    border: none;
+    position: relative;
+    overflow: hidden;
+    animation: slideInUp 0.6s ease-out;
+}
+
+.view-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 5px;
+    background: var(--gradient-view);
+}
+
+/* Encabezado */
+.view-header {
+    margin-bottom: 2rem;
+    position: relative;
+}
+
+.view-header h2 {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 2.3rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.view-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    width: 80px;
+    height: 4px;
+    background: var(--gradient-view);
+    border-radius: 2px;
+}
+
+.contract-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-top: 0.5rem;
+}
+
+/* Información del contrato */
+.contract-info {
+    background: linear-gradient(135deg, #f8f9ff, #f0f2ff);
+    border: 1px solid #e1e8ff;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1rem;
+}
+
+.info-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem;
+    background: white;
+    border-radius: 10px;
+    border-left: 4px solid var(--accent-color);
+}
+
+.info-item i {
+    width: 20px;
+    color: var(--accent-color);
+    font-size: 1.1rem;
+}
+
+.info-label {
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.9rem;
+}
+
+.info-value {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    margin-top: 0.25rem;
+}
+
+/* Alertas personalizadas */
+.alert {
+    border-radius: 12px;
+    border: none;
+    padding: 1.25rem 1.5rem;
+    margin-bottom: 2rem;
+    position: relative;
+    animation: slideInDown 0.5s ease-out;
+}
+
+.alert-success {
+    background: linear-gradient(135deg, #d4edda, #f0fff4);
+    border-left: 4px solid var(--success-color);
+    color: var(--text-primary);
+}
+
+.alert-danger {
+    background: linear-gradient(135deg, #fee, #fff5f5);
+    border-left: 4px solid var(--danger-color);
+    color: var(--text-primary);
+}
+
+.alert-danger ul {
+    margin: 0.5rem 0 0 0;
+    padding-left: 1.5rem;
+}
+
+.alert-danger li {
+    margin: 0.25rem 0;
+    color: var(--danger-color);
+    font-weight: 500;
+}
+
+/* Sección de descargas */
+.download-section {
+    background: linear-gradient(135deg, #fff3cd, #ffeaa7);
+    border: 1px solid #ffeaa7;
+    border-radius: 15px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border-left: 4px solid var(--warning-color);
+}
+
+.download-header {
+    font-weight: 600;
+    color: var(--text-primary);
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.download-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+}
+
+/* Botones principales */
+.btn {
+    border-radius: 12px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    padding: 1rem 1.5rem;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    cursor: pointer;
+    text-decoration: none;
+    min-width: 180px;
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-secondary {
+    background: var(--light-bg);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+}
+
+.btn-secondary:hover {
+    background: #e9ecef;
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+}
+
+.btn-success {
+    background: var(--gradient-success);
+    color: white;
+}
+
+.btn-success:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+    min-width: auto;
+}
+
+/* SECCIÓN DE VISTA PREVIA - MODIFICADA */
+.preview-section {
+    margin-bottom: 2rem;
+}
+
+.preview-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid var(--border-color);
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.preview-header h3 {
+    color: var(--text-primary);
+    font-weight: 600;
+    margin: 0;
+    /* QUITAMOS LOS ICONOS DEL TÍTULO */
+}
+
+/* QUITAMOS LOS ICONOS DE LAS ACCIONES DE VISTA PREVIA */
+.preview-actions {
+    display: none; /* Ocultamos los botones de zoom */
+}
+
+/* CONTENEDOR DE VISTA PREVIA - MEJORADO */
+.preview-container {
+    background: var(--light-bg);
+    border-radius: 12px;
+    padding: 1.5rem;
+    border: 2px dashed var(--border-color);
+    position: relative;
+    min-height: 400px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* HACEMOS EL CONTENEDOR ESTÁTICO */
+    overflow: hidden;
+    resize: none;
+}
+
+/* IFRAME DE VISTA PREVIA - CORREGIDO */
+.preview-iframe {
+    width: 100%;
+    height: 600px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    background: white;
+    box-shadow: var(--shadow);
+    display: block;
+    /* HACEMOS EL IFRAME ESTÁTICO */
+    position: static;
+    resize: none;
+    overflow: auto;
+}
+
+/* Estados de carga - MEJORADO */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    z-index: 10;
+}
+
+.loading-spinner {
+    width: 40px;
+    height: 40px;
+    border: 3px solid var(--border-color);
+    border-top: 3px solid var(--accent-color);
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-bottom: 1rem;
+}
+
+/* BOTONES FLOTANTES - CENTRADOS Y MEJORADOS */
+.floating-actions {
+    position: fixed;
+    bottom: 2rem;
+    right: 2rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    z-index: 1000;
+}
+
+.floating-btn {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    color: white;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: var(--shadow-hover);
+    transition: all 0.3s ease;
+    text-decoration: none;
+    font-size: 1.2rem;
+    /* CENTRAMOS EL CONTENIDO */
+    text-align: center;
+    line-height: 1;
+}
+
+.floating-btn:hover {
+    transform: translateY(-3px) scale(1.1);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+.floating-btn.secondary {
+    background: var(--light-bg);
+    color: var(--text-primary);
+    border: 2px solid var(--border-color);
+}
+
+/* Aseguramos que los iconos estén centrados */
+.floating-btn i {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 100%;
+}
+
+/* Tooltips personalizados */
+.tooltip-custom {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip-custom .tooltip-text {
+    visibility: hidden;
+    width: 140px;
+    background-color: var(--text-primary);
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 0.5rem;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    opacity: 0;
+    transition: opacity 0.3s;
+    font-size: 0.85rem;
+    pointer-events: none;
+}
+
+.tooltip-custom:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Animaciones */
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translateY(-20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Estados de carga para botones */
+.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-right-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+    .container {
+        max-width: 100%;
+    }
+    
+    .preview-iframe {
+        height: 500px;
+    }
+}
+
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem auto;
+        padding: 0 0.75rem;
+    }
+    
+    .view-card {
+        padding: 2rem;
+        margin-bottom: 1.5rem;
+        border-radius: 16px;
+    }
+    
+    .view-header h2 {
+        font-size: 2rem;
+    }
+    
+    .download-buttons {
+        flex-direction: column;
+    }
+    
+    .download-buttons .btn {
+        width: 100%;
+    }
+    
+    .info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .preview-iframe {
+        height: 400px;
+    }
+    
+    .preview-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .preview-actions {
+        width: 100%;
+        justify-content: center;
+    }
+    
+    .floating-actions {
+        bottom: 1rem;
+        right: 1rem;
+    }
+    
+    .preview-container {
+        padding: 1rem;
+        min-height: 300px;
+    }
+    
+    .floating-btn {
+        width: 50px;
+        height: 50px;
+        font-size: 1rem;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        padding: 0.5rem !important;
+    }
+    
+    .container {
+        padding: 0 0.5rem;
+    }
+    
+    .view-card {
+        padding: 1.5rem;
+        border-radius: 12px;
+    }
+    
+    .view-header h2 {
+        font-size: 1.7rem;
+    }
+    
+    .btn {
+        padding: 0.875rem 1.25rem;
+        font-size: 0.95rem;
+        min-width: auto;
+    }
+    
+    .preview-iframe {
+        height: 300px;
+    }
+    
+    .contract-info,
+    .download-section {
+        padding: 1.25rem;
+    }
+    
+    .floating-actions {
+        bottom: 0.5rem;
+        right: 0.5rem;
+    }
+    
+    .floating-btn {
+        width: 45px;
+        height: 45px;
+        font-size: 0.9rem;
+    }
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible para mejor accesibilidad */
+.btn:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
+
+/* Estilos para cuando el PDF no carga */
+.pdf-error {
+    text-align: center;
+    padding: 2rem;
+    color: var(--text-secondary);
+}
+
+.pdf-error i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--warning-color);
+}
+
+/* Asegurar que el iframe sea visible cuando se carga */
+.preview-iframe.loaded {
+    display: block !important;
+}
+
+.loading-state.hidden {
+    display: none !important;
+}
+
+/* ESTILOS ADICIONALES PARA MEJORAR LA VISUALIZACIÓN DEL CONTRATO */
+.preview-iframe {
+    background: white;
+}
+
+/* Forzar la visualización del contenido del iframe */
+.preview-container iframe {
+    background: white !important;
+}
+
+/* Mensaje de error mejorado */
+.preview-error {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+}
+
+.preview-error i {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    color: var(--danger-color);
+}
+
+/* AGREGAR ESTO AL FINAL DE TU CSS */
+
+/* Asegurar que el iframe sea visible cuando se carga */
+.preview-iframe.loaded {
+    display: block !important;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+}
+
+.loading-state.hidden {
+    display: none !important;
+}
+
+/* Forzar la visualización del contenido del iframe */
+.preview-container iframe {
+    background: white !important;
+}
+
+/* Estados de carga mejorados */
+.loading-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 3rem;
+    color: var(--text-secondary);
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(255, 255, 255, 0.95);
+    border-radius: 8px;
+    z-index: 10;
+}
+
+/* Quitar completamente los botones de zoom */
+.preview-actions {
+    display: none !important;
+}
+
+/* Asegurar que el título no tenga iconos */
+.preview-header h3 i {
+    display: none !important;
+}

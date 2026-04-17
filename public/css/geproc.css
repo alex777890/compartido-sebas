@@ -1,0 +1,219 @@
+/* Estilos generales optimizados */
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Poppins', sans-serif;
+    min-height: 100vh;
+    position: relative;
+    overflow-x: hidden;
+    background-color: white;
+}
+
+/* Fondo diagonal más pronunciado y ajustado */
+body::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    width: 60%;
+    height: 100%;
+    background: linear-gradient(135deg, #4facfe 0%, #00f2fe 50%, #43e97b 100%);
+    z-index: -1;
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+    transform: skewX(-15deg);
+    transform-origin: top right;
+}
+
+/* Contenedor principal - AQUÍ PUEDES AJUSTAR EL ALTO GENERAL */
+.login-container {
+    width: 90%;
+    max-width: 1200px; /* Aumenté el ancho máximo */
+    margin: 0 auto;
+    padding: 30px 0; /* Aumenté el padding vertical */
+    display: flex;
+    min-height: 85vh; /* Ajusta esta altura para los cuadros */
+    align-items: center;
+}
+
+/* Sección de información - AQUÍ PUEDES AJUSTAR EL ANCHO/ALTO */
+.info-section {
+    flex: 1;
+    padding: 40px 50px; /* Aumenté el padding */
+    color: #2c3e50;
+    background-color: white;
+    border-radius: 15px 0 0 15px;
+    box-shadow: 10px 10px 30px rgba(0, 0, 0, 0.1);
+    margin-right: -30px;
+    z-index: 1;
+    max-height: 75vh; /* Ajusta esta altura */
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Centra el contenido verticalmente */
+}
+
+.info-section h1 {
+    font-size: 2.8rem; /* Aumenté el tamaño */
+    margin-bottom: 20px;
+    font-weight: 700;
+}
+
+.info-section h1 span {
+    color: #3498db;
+}
+
+.info-section p {
+    color: #2c3e50;
+    line-height: 1.6;
+    margin-bottom: 25px;
+    font-size: 1.1rem; /* Aumenté el tamaño */
+    max-width: 550px; /* Aumenté el ancho máximo */
+}
+
+.features {
+    margin-bottom: 35px;
+}
+
+.feature {
+    display: flex;
+    align-items: center;
+    margin-bottom: 15px;
+    font-size: 1.05rem; /* Aumenté el tamaño */
+}
+
+.feature i {
+    background: linear-gradient(135deg, #4facfe, #00f2fe);
+    color: white;
+    width: 36px; /* Aumenté el tamaño */
+    height: 36px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 15px;
+    font-size: 1rem;
+}
+
+.login-section {
+    flex: 1;
+    padding: 60px 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-image: url('../img/fondo.jpeg');
+    background-size: cover;       /* Cubre todo el espacio disponible */
+    background-position: center;  /* Centra la imagen */
+    background-repeat: no-repeat; /* Evita repetición */
+    text-align: center; /* Solo para centrar texto */
+    border-radius: 0 15px 15px 0;
+    color: white;
+    max-height: 75vh;
+}
+
+.logo-container {
+    margin-bottom: 40px;
+    width: 100%;
+}
+
+.logo {
+    width: 90px; /* Aumenté el tamaño */
+    height: 90px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #3498db;
+    font-size: 2.2rem; /* Aumenté el tamaño */
+    font-weight: bold;
+    margin: 0 auto 20px; /* Centrado y margen aumentado */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.login-section h2 {
+    color: white;
+    margin-bottom: 15px;
+    font-size: 2rem; /* Aumenté el tamaño */
+}
+
+.login-section p {
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 30px;
+    font-size: 1.05rem; /* Aumenté el tamaño */
+}
+
+.desktop-menu a {
+    display: inline-block;
+    padding: 15px 45px; /* Aumenté el padding */
+    background: white;
+    color: #3498db;
+    text-decoration: none;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 1.05rem; /* Aumenté el tamaño */
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin: 0 auto; /* Centrado */
+}
+
+.additional-info {
+    width: 100%;
+    margin-top: 30px;
+}
+
+.additional-info p {
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 0.9rem;
+}
+
+/* Responsive design optimizado */
+@media (max-width: 992px) {
+    body::before {
+        width: 100%;
+        height: 40%;
+        clip-path: polygon(0 0, 100% 0, 100% 90%, 0% 100%);
+        transform: skewX(0deg);
+    }
+
+    .login-container {
+        flex-direction: column;
+        padding: 30px 20px;
+        min-height: auto;
+    }
+
+    .info-section, .login-section {
+        width: 100%;
+        padding: 40px 30px;
+        margin: 0 0 30px 0;
+        border-radius: 15px;
+        max-height: none;
+    }
+
+    .info-section {
+        margin-right: 0;
+    }
+}
+
+@media (max-width: 576px) {
+    body::before {
+        height: 35%;
+    }
+
+    .info-section h1 {
+        font-size: 2.2rem;
+    }
+
+    .info-section, .login-section {
+        padding: 30px 20px;
+    }
+
+    .logo {
+        width: 80px;
+        height: 80px;
+        font-size: 2rem;
+    }
+
+    .login-section h2 {
+        font-size: 1.8rem;
+    }
+}

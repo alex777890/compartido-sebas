@@ -1,0 +1,415 @@
+/* public/css/estilos_contratos/create.css */
+
+/* Variables de diseño */
+:root {
+    --primary-color: #2c5aa0;
+    --primary-dark: #1e3d72;
+    --secondary-color: #34495e;
+    --accent-color: #3498db;
+    --success-color: #27ae60;
+    --warning-color: #f39c12;
+    --danger-color: #e74c3c;
+    --light-bg: #f8f9fa;
+    --card-bg: #ffffff;
+    --border-color: #e1e8ed;
+    --text-primary: #2c3e50;
+    --text-secondary: #7f8c8d;
+    --shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --shadow-hover: 0 6px 12px rgba(0, 0, 0, 0.15);
+    --gradient-primary: linear-gradient(135deg, var(--primary-color), var(--accent-color));
+}
+
+/* Estilos generales */
+body {
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    font-family: 'Inter', 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+    min-height: 100vh;
+    padding: 0;
+    margin: 0;
+}
+
+/* Contenedor principal */
+.container {
+    max-width: 800px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+}
+
+/* Tarjeta del formulario */
+.form-card {
+    background: var(--card-bg);
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    padding: 2.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid var(--border-color);
+    animation: fadeInUp 0.6s ease-out;
+}
+
+/* Encabezado */
+.page-header {
+    text-align: center;
+    margin-bottom: 2.5rem;
+    position: relative;
+}
+
+.page-header h2 {
+    color: var(--text-primary);
+    font-weight: 700;
+    font-size: 2.2rem;
+    margin-bottom: 0.5rem;
+    position: relative;
+    display: inline-block;
+}
+
+.page-header h2::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 80px;
+    height: 4px;
+    background: var(--gradient-primary);
+    border-radius: 2px;
+}
+
+.page-subtitle {
+    color: var(--text-secondary);
+    font-size: 1.1rem;
+    margin-top: 1rem;
+}
+
+/* Formulario */
+.contract-form {
+    max-width: 100%;
+}
+
+/* Grupos de formulario */
+.form-group {
+    margin-bottom: 1.75rem;
+    position: relative;
+}
+
+.form-group label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    font-size: 0.95rem;
+    transition: color 0.3s ease;
+}
+
+.form-control {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.form-control:focus {
+    border-color: var(--accent-color);
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+    outline: none;
+    transform: translateY(-2px);
+}
+
+.form-control:hover {
+    border-color: #c8d6e5;
+}
+
+/* Select personalizado */
+.form-select {
+    appearance: none;
+    background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='m6 8 4 4 4-4'/%3e%3c/svg%3e");
+    background-position: right 0.75rem center;
+    background-repeat: no-repeat;
+    background-size: 16px 12px;
+    padding-right: 2.5rem;
+}
+
+/* Campos de entrada con iconos */
+.input-with-icon {
+    position: relative;
+}
+
+.input-with-icon i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-secondary);
+    z-index: 2;
+}
+
+.input-with-icon .form-control {
+    padding-left: 3rem;
+}
+
+/* Botones */
+.btn {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    padding: 0.75rem 1.5rem;
+    font-size: 1rem;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--gradient-primary);
+    color: white;
+    box-shadow: var(--shadow);
+    position: relative;
+    overflow: hidden;
+}
+
+.btn-primary::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+    transition: left 0.5s;
+}
+
+.btn-primary:hover::before {
+    left: 100%;
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-hover);
+}
+
+.btn-block {
+    width: 100%;
+    margin-top: 1rem;
+}
+
+/* Indicador de campos requeridos */
+.required::after {
+    content: " *";
+    color: var(--danger-color);
+}
+
+/* Animaciones */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes pulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0.4);
+    }
+    70% {
+        box-shadow: 0 0 0 10px rgba(52, 152, 219, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(52, 152, 219, 0);
+    }
+}
+
+/* Estados de validación */
+.form-control.is-valid {
+    border-color: var(--success-color);
+}
+
+.form-control.is-invalid {
+    border-color: var(--danger-color);
+}
+
+.invalid-feedback {
+    display: block;
+    width: 100%;
+    margin-top: 0.25rem;
+    font-size: 0.875rem;
+    color: var(--danger-color);
+}
+
+/* Contador de campos */
+.field-counter {
+    display: block;
+    text-align: right;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    margin-top: 0.25rem;
+}
+
+/* Header con navegación */
+.form-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+}
+
+.back-button {
+    background: transparent;
+    border: 2px solid var(--border-color);
+    color: var(--text-secondary);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    transition: all 0.3s ease;
+}
+
+.back-button:hover {
+    background: var(--light-bg);
+    color: var(--text-primary);
+    transform: translateX(-5px);
+}
+
+/* Progress bar (opcional para formularios largos) */
+.form-progress {
+    height: 6px;
+    background: var(--border-color);
+    border-radius: 3px;
+    margin-bottom: 2rem;
+    overflow: hidden;
+}
+
+.progress-bar {
+    height: 100%;
+    background: var(--gradient-primary);
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .container {
+        margin: 1rem auto;
+        padding: 0 0.75rem;
+    }
+    
+    .form-card {
+        padding: 1.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .page-header h2 {
+        font-size: 1.8rem;
+    }
+    
+    .form-header {
+        flex-direction: column;
+        gap: 1rem;
+        align-items: flex-start;
+    }
+    
+    .back-button {
+        align-self: flex-start;
+    }
+}
+
+@media (max-width: 576px) {
+    body {
+        padding: 0.5rem !important;
+    }
+    
+    .container {
+        padding: 0 0.5rem;
+    }
+    
+    .form-card {
+        padding: 1.25rem;
+        border-radius: 8px;
+    }
+    
+    .page-header h2 {
+        font-size: 1.6rem;
+    }
+    
+    .form-control {
+        padding: 0.65rem 0.85rem;
+    }
+    
+    .btn {
+        padding: 0.65rem 1.25rem;
+        width: 100%;
+    }
+}
+
+/* Efectos de carga */
+.loading {
+    position: relative;
+    pointer-events: none;
+}
+
+.loading::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin: -10px 0 0 -10px;
+    border: 2px solid #ffffff;
+    border-radius: 50%;
+    border-right-color: transparent;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Personalización del scroll */
+::-webkit-scrollbar {
+    width: 8px;
+}
+
+::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--accent-color);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--primary-color);
+}
+
+/* Mejoras de accesibilidad */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Focus visible para mejor accesibilidad */
+.btn:focus-visible,
+.form-control:focus-visible {
+    outline: 2px solid var(--accent-color);
+    outline-offset: 2px;
+}
