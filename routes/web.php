@@ -34,7 +34,7 @@ Route::get('/diagnostico-coordinacion', function() {
 
 // Rutas para profesor (ver y subir documentos)
 Route::middleware(['auth'])->prefix('profesor')->name('profesor.')->group(function () {
-    // Ruta para ver documentos (unificada) - CORREGIDA (sin /profesor duplicado)
+    // Ruta para ver documentos (unificada)
     Route::get('/mis-documentos', [MaestroController::class, 'verDocumentosUnificado'])
         ->name('mis-documentos');
     
@@ -74,7 +74,7 @@ Route::post('reset-password', [ResetPasswordController::class, 'reset'])->name('
 
 // Documentos públicos (ver y descargar)
 Route::get('/documentos/{id}/ver', [DocumentoMaestroController::class, 'verDocumento'])
-    ->name('documentos.maestros.ver');
+    ->name('documentos.ver');
 Route::get('/documentos/{id}/descargar', [DocumentoMaestroController::class, 'descargar'])
     ->name('documentos.descargar');
 
@@ -121,85 +121,65 @@ Route::middleware(['auth'])->group(function () {
         
         return view('dashboard.coordinacion', compact('coordinacion'));
     })->name('dashboard.coordinacion');
-// En routes/web.php
-
 
     // Gestión de horarios
-Route::prefix('horarios')->name('horarios.')->group(function () {
-    Route::get('/', [HorarioCoordinacionController::class, 'index'])->name('index');
-    Route::get('/coordinacion/maestro/{maestroId}/asignacion', 
-        [HorarioCoordinacionController::class, 'mostrarFormulario'])
-        ->name('coordinacion.asignacion'); // Corregido el typo: "coordinacion" (con 'o')
-    // Ruta para ver/descargar foto del horario
-        // ✅ CORREGIDO: Sin /horarios duplicado
-    Route::get('foto/{maestroId}/{periodoId}', [HorarioCoordinacionController::class, 'verFotoHorario'])
-        ->name('ver-foto');
-
-
-    Route::post('/save', [HorarioCoordinacionController::class, 'guardarHorario'])->name('save');
-    Route::get('/ver/{maestroId}', [HorarioCoordinacionController::class, 'verHorario'])->name('ver');
-    Route::get('/api/horarios', [HorarioCoordinacionController::class, 'getHorariosPorPeriodo'])->name('api.horarios');
-});
-
+    Route::prefix('horarios')->name('horarios.')->group(function () {
+        Route::get('/', [HorarioCoordinacionController::class, 'index'])->name('index');
+        Route::get('/coordinacion/maestro/{maestroId}/asignacion', 
+            [HorarioCoordinacionController::class, 'mostrarFormulario'])
+            ->name('coordinacion.asignacion');
+        Route::get('foto/{maestroId}/{periodoId}', [HorarioCoordinacionController::class, 'verFotoHorario'])
+            ->name('ver-foto');
+        Route::post('/save', [HorarioCoordinacionController::class, 'guardarHorario'])->name('save');
+        Route::get('/ver/{maestroId}', [HorarioCoordinacionController::class, 'verHorario'])->name('ver');
+        Route::get('/api/horarios', [HorarioCoordinacionController::class, 'getHorariosPorPeriodo'])->name('api.horarios');
+    });
 
     // ===== RUTAS PARA AUTHCONTROLLER =====
-    // (Ya definidas en públicas)
-            // ✅ Ruta de estatus - SIN barra al principio (por el prefix)
     Route::get('/coordinacion/estatus', [CoordinacionController::class, 'estatus'])->name('coordinaciones.estatus');
     
     // ===== RUTAS PARA COORDINACIONCONTROLLER =====
-      // ✅ RUTA PARA VER DOCUMENTOS DE MAESTRO (NUEVA)
     Route::get('/coordinacion/maestro/{maestro}/documentos', 
         [App\Http\Controllers\CoordinacionController::class, 'showDocumentosMaestro'])
         ->name('coordinacion.maestros.documentos');
     
-
-    // RUTA PARA EXPEDIENTE COMPLETO DEL MAESTRO
-Route::get('/coordinacion/maestros/{maestroId}/expediente', 
-    [CoordinacionController::class, 'expedienteMaestro'])
-    ->name('coordinaciones.maestros.expediente');
-    // Route::get('/coordinaciones/{id}', [CoordinacionController::class, 'show'])
-    //    ->name('coordinaciones.show')
-    //   ->middleware('admin');
+    Route::get('/coordinacion/maestros/{maestroId}/expediente', 
+        [CoordinacionController::class, 'expedienteMaestro'])
+        ->name('coordinaciones.maestros.expediente');
+    
     Route::resource('coordinaciones', CoordinacionController::class)->middleware('admin');
 
     Route::get('/coordinaciones/{coordinacion}/estadisticas', [CoordinacionController::class, 'estadisticas'])
         ->name('coordinaciones.estadisticas')
         ->middleware('admin');
     
-// Descargar documento - CORREGIDO (agregar la 'n' faltante)
-Route::get('/documentos/{id}/download', [CoordinacionController::class, 'download'])
-    ->name('documentos.download');
-
-// Ver documento en navegador - CORREGIDO
-Route::get('/documentos/{id}/view', [CoordinacionController::class, 'view'])
-    ->name('documentos.view');
+    Route::get('/documentos/{id}/download', [CoordinacionController::class, 'download'])
+        ->name('documentos.download');
+    
+    Route::get('/documentos/{id}/view', [CoordinacionController::class, 'view'])
+        ->name('documentos.view');
     
     Route::put('/coordinaciones/{coordinacion}/maestros/{maestro}/status', 
         [CoordinacionController::class, 'updateMaestroStatus'])
         ->name('coordinaciones.maestros.status')
         ->middleware('admin');
     
-    Route::resource('coordinaciones', CoordinacionController::class)->middleware('admin');
-        // ✅ NUEVA RUTA PARA CAMBIAR ESTADO (AGREGA ESTA LÍNEA)
     Route::post('/maestros/{maestroId}/cambiar-estado', [CoordinacionController::class, 'cambiarEstadoMaestro'])
          ->name('maestros.cambiar-estado');
 
-        ///////////////////// DASHBOARD DE ROL PROFESOR
-Route::get('/profesor/dashboard', [MaestroController::class, 'dashboard'])
-    ->name('profesor.dashboard');
-    // POR ESTA (usa el método unificado):
-Route::get('/documentos', [MaestroController::class, 'verDocumentosUnificado'])->name('profesor.documentos');
+    // DASHBOARD DE ROL PROFESOR
+    Route::get('/profesor/dashboard', [MaestroController::class, 'dashboard'])
+        ->name('profesor.dashboard');
+    
+    Route::get('/documentos', [MaestroController::class, 'verDocumentosUnificado'])->name('profesor.documentos');
 
-        // ✅ NUEVAS RUTAS PARA ACTUALIZAR PERFIL
     Route::get('/mi-perfil/editar', [MaestroController::class, 'editarMiPerfil'])
         ->name('editar-mi-perfil');
-    // Por esto:
-Route::post('/mi-perfil/actualizar', [MaestroController::class, 'actualizarMiPerfil'])
-    ->name('profesor.actualizar-perfil');
+    
+    Route::post('/mi-perfil/actualizar', [MaestroController::class, 'actualizarMiPerfil'])
+        ->name('profesor.actualizar-perfil');
 
-
-        // ===== RUTAS PARA MAESTROCONTROLLER =====
+    // ===== RUTAS PARA MAESTROCONTROLLER =====
     Route::prefix('profesor')->group(function () {
         Route::get('/completar-perfil', [MaestroController::class, 'mostrarFormularioPerfil'])
              ->name('profesor.completar-perfil');
@@ -221,17 +201,15 @@ Route::post('/mi-perfil/actualizar', [MaestroController::class, 'actualizarMiPer
         return view('profesor.perfil');
     })->name('profesor.mi-perfil');
 
-
     Route::put('/coordinaciones/{coordinacion}/maestros/{maestro}/plantilla', [App\Http\Controllers\MaestroController::class, 'actualizarPlantilla'])->name('maestros.actualizar-plantilla');
-// SUBIR DOCUMENTOS (desde el dashboard del profesor)
-Route::post('/profesor/subir-documentos', [MaestroController::class, 'subirDocumentos'])
-    ->name('profesor.subir-documentos');
+    
+    Route::post('/profesor/subir-documentos', [MaestroController::class, 'subirDocumentos'])
+        ->name('profesor.subir-documentos');
     
     // ===== RUTAS PARA DOCUMENTOMAESTROCONTROLLER =====
     Route::get('/mis-documentos', [DocumentoMaestroController::class, 'mostrarDocumentos'])
         ->name('maestro.mis-documentos');
     
-   
     Route::get('/maestro/dashboard', [DocumentoMaestroController::class, 'dashboardMaestro'])
         ->name('maestro.dashboard');
     
@@ -247,10 +225,9 @@ Route::post('/profesor/subir-documentos', [MaestroController::class, 'subirDocum
         ->name('maestros.historial-documentos')
         ->middleware('admin');
 
-    // Ruta 2: Desde maestro individual (NUEVA)
-Route::get('maestros/{maestroId}/historial-documentos', 
-    [DocumentoMaestroController::class, 'historialDocumentosDesdeMaestro'])
-    ->name('maestros.historial-documentos-desde-maestro');
+    Route::get('maestros/{maestroId}/historial-documentos', 
+        [DocumentoMaestroController::class, 'historialDocumentosDesdeMaestro'])
+        ->name('maestros.historial-documentos-desde-maestro');
     
     Route::post('/documentos/{id}/observaciones', [DocumentoMaestroController::class, 'updateObservaciones'])
         ->name('documentos.update-observaciones');
@@ -271,55 +248,47 @@ Route::get('maestros/{maestroId}/historial-documentos',
         ->name('documentos.eliminar')
         ->middleware('admin');
     
-   Route::get('/documentos/{id}/ver', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'verDocumento'])
-    ->name('documentos.administrativos.ver');
+    Route::get('/documentos/{id}/ver', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'verDocumento'])
+        ->name('documentos.administrativos.ver');
     
-    Route::get('/documentos/{documento}/descargar', [DocumentoMaestroController::class, 'descargarDocumento'])
+    Route::get('/documentos/{id}/descargar', [DocumentoMaestroController::class, 'descargarDocumento'])
         ->name('documentos.descargar');
 
-// ===== RUTAS PARA GRADOACADEMICOCONTROLLER =====
-Route::get('/grados-academicos/create/{maestro_id}', [GradoAcademicoController::class, 'create'])
-    ->name('grados-academicos.create');
+    // ===== RUTAS PARA GRADOACADEMICOCONTROLLER =====
+    Route::get('/grados-academicos/create/{maestro_id}', [GradoAcademicoController::class, 'create'])
+        ->name('grados-academicos.create');
 
-Route::post('/grados-academicos/store', [GradoAcademicoController::class, 'store'])
-    ->name('grados-academicos.store');
+    Route::post('/grados-academicos/store', [GradoAcademicoController::class, 'store'])
+        ->name('grados-academicos.store');
 
-Route::get('/grados-academicos/edit/{id}', [GradoAcademicoController::class, 'edit'])
-    ->name('grados-academicos.edit');
+    Route::get('/grados-academicos/edit/{id}', [GradoAcademicoController::class, 'edit'])
+        ->name('grados-academicos.edit');
 
-Route::put('/grados-academicos/update/{id}', [GradoAcademicoController::class, 'update'])
-    ->name('grados-academicos.update');  // Esta ruta estaba faltando
+    Route::put('/grados-academicos/update/{id}', [GradoAcademicoController::class, 'update'])
+        ->name('grados-academicos.update');
 
-Route::delete('/grados-academicos/destroy/{id}', [GradoAcademicoController::class, 'destroy'])
-    ->name('grados-academicos.destroy');
+    Route::delete('/grados-academicos/destroy/{id}', [GradoAcademicoController::class, 'destroy'])
+        ->name('grados-academicos.destroy');
 
-// NUEVAS RUTAS PARA DOCUMENTOS
-Route::get('/grados-academicos/download/{id}', [GradoAcademicoController::class, 'download'])
-    ->name('grados-academicos.download');
+    Route::get('/grados-academicos/download/{id}', [GradoAcademicoController::class, 'download'])
+        ->name('grados-academicos.download');
 
-Route::get('/grados-academicos/show-document/{id}', [GradoAcademicoController::class, 'showDocument'])
-    ->name('grados-academicos.show-document');
+    Route::get('/grados-academicos/show-document/{id}', [GradoAcademicoController::class, 'showDocument'])
+        ->name('grados-academicos.show-document');
     
     // ===== RUTAS PARA GRADOACADEMICOCONTROLLER MAESTROS =====
-Route::middleware(['auth'])->group(function () {
-    // Grupo de rutas para maestros - NOTA: usamos 'maestro' en singular en la URL pero 'maestros.' en el nombre
-    Route::prefix('maestro')->name('maestros.')->group(function () {
-        
-        // Grados académicos
-        Route::get('/grados', [GradoAcademicoController::class, 'indexMaestro'])->name('grados.index');
-        Route::get('/grados/crear', [GradoAcademicoController::class, 'createMaestro'])->name('grados.create');
-        Route::post('/grados', [GradoAcademicoController::class, 'storeMaestro'])->name('grados.store'); // Cambiado a storeMaestro
-        Route::get('/grados/{id}/editar', [GradoAcademicoController::class, 'editMaestro'])->name('grados.edit');
-        Route::put('/grados/{id}', [GradoAcademicoController::class, 'updateMaestro'])->name('grados.update'); // Cambiado a updateMaestro
-        Route::delete('/grados/{id}', [GradoAcademicoController::class, 'destroyMaestro'])->name('grados.destroy');
-        
-        // Rutas adicionales para documentos
-    Route::get('/grados/{id}/ver-documento', [GradoAcademicoController::class, 'showDocumentMaestro'])->name('grados.show-document');
-        Route::get('/grados/{id}/descargar-documento', [GradoAcademicoController::class, 'downloadDocumentMaestro'])->name('grados.download-document');
+    Route::middleware(['auth'])->group(function () {
+        Route::prefix('maestro')->name('maestros.')->group(function () {
+            Route::get('/grados', [GradoAcademicoController::class, 'indexMaestro'])->name('grados.index');
+            Route::get('/grados/crear', [GradoAcademicoController::class, 'createMaestro'])->name('grados.create');
+            Route::post('/grados', [GradoAcademicoController::class, 'storeMaestro'])->name('grados.store');
+            Route::get('/grados/{id}/editar', [GradoAcademicoController::class, 'editMaestro'])->name('grados.edit');
+            Route::put('/grados/{id}', [GradoAcademicoController::class, 'updateMaestro'])->name('grados.update');
+            Route::delete('/grados/{id}', [GradoAcademicoController::class, 'destroyMaestro'])->name('grados.destroy');
+            Route::get('/grados/{id}/ver-documento', [GradoAcademicoController::class, 'showDocumentMaestro'])->name('grados.show-document');
+            Route::get('/grados/{id}/descargar-documento', [GradoAcademicoController::class, 'downloadDocumentMaestro'])->name('grados.download-document');
+        });
     });
-    
-});
-    // ===== =====================================================
 
     // ===== RUTAS PARA HORARIO CONTROLLER =====
     Route::get('/horarios', [HorarioController::class, 'index'])->name('horarios.index');
@@ -338,8 +307,6 @@ Route::middleware(['auth'])->group(function () {
     
     Route::post('/horarios/calcular-horas', [HorarioController::class, 'calcularHorasMaestro'])
         ->name('horarios.calcular-horas');
-    
-            // ===== =====================================================
 
     // ===== RUTAS PARA CALCULAR ANTIGUEDAD =====
     Route::get('/maestros/{maestro}/calcular-antiguedad', [MaestroController::class, 'mostrarCalculoAntiguedad'])
@@ -362,8 +329,6 @@ Route::middleware(['auth'])->group(function () {
     
     Route::resource('maestros', MaestroController::class)->middleware('admin');
 
-
-    
     // ===== RUTAS PARA PERIODOCONTROLLER =====
     Route::prefix('periodos')->group(function () {
         Route::get('/', [PeriodoController::class, 'index'])->name('periodos.index');
@@ -382,12 +347,7 @@ Route::middleware(['auth'])->group(function () {
         
         Route::post('/{periodo}/reabrir', [PeriodoController::class, 'reabrir'])
              ->name('periodos.reabrir');
-        
-        Route::get('/{id}/documentos', [PeriodoController::class, 'documentos'])
-             ->name('periodos.documentos');
     });
-    
-
 
     // ===== RUTAS PARA USERCONTROLLER =====
     Route::prefix('users')->middleware(['admin'])->name('users.')->group(function () {
@@ -400,7 +360,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     // Rutas para Contratos - Análisis (ContratoIAController)
-    Route::get('/contracts/analyze', [ContratoIAController::class, 'analyze'])->name('contracts.analyze'); // Corrección aquí
+    Route::get('/contracts/analyze', [ContratoIAController::class, 'analyze'])->name('contracts.analyze');
     Route::post('/contracts/analyze/process', [ContratoIAController::class, 'process'])->name('contracts.analyze.process');
     Route::post('/templates', [ContratoIAController::class, 'storeTemplate'])->name('templates.store');
 
@@ -421,17 +381,11 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/templates/{id}', [ContractController::class, 'updateTemplate'])->name('templates.update');
     Route::delete('/templates/{template}', [ContractController::class, 'destroyTemplate'])->name('templates.destroy');
 
-    // preview PDF para la vista/iframe (genera PDF desde DOCX si hace falta)
     Route::get('/contracts/{id}/preview/pdf', [App\Http\Controllers\ContractController::class, 'previewPdf'])
-    ->name('contracts.preview.pdf');
+        ->name('contracts.preview.pdf');
 
-    // preview DOCX para que Mammoth lo descargue desde el navegador (same-origin)
     Route::get('/contracts/{id}/preview/docx', [App\Http\Controllers\ContractController::class, 'previewDocx'])
-    ->name('contracts.preview.docx');
-
-
-
-
+        ->name('contracts.preview.docx');
 });
 
 // ==================== RUTAS CON PARÁMETROS (fuera del grupo auth) ====================
@@ -441,7 +395,6 @@ Route::prefix('maestros')->group(function () {
     
     Route::get('/{maestroId}/documentos/json', [DocumentoMaestroController::class, 'mostrarDocumentosJson'])
         ->name('maestros.documentos.json');
-
 });
 
 // Rutas para admin (activar documentos)
@@ -453,70 +406,54 @@ Route::middleware(['auth'])->group(function () {
         ->name('maestros.desactivar-documentos');
 });
 
-
-
 Route::get('/contracts/get-teachers/{coordinacionId}', [App\Http\Controllers\ContractController::class, 'getTeachersByCoordination']);
 Route::get('/contracts/get-teacher-info/{teacherId}', [App\Http\Controllers\ContractController::class, 'getTeacherInfo']);
 
-
 // ==================== RUTAS PARA DIRECTIVOS ====================
 Route::middleware(['auth'])->group(function () {
-    // Dashboard de directivos
     Route::get('/directivos/dashboard', [App\Http\Controllers\DirectivosController::class, 'dashboard'])
         ->name('directivos.dashboard')
-        ->middleware('directivos'); // Crearemos este middleware
+        ->middleware('directivos');
     
-    // Lista de maestros con filtros
     Route::get('/directivos/maestros', [App\Http\Controllers\DirectivosController::class, 'maestros'])
         ->name('directivos.maestros')
         ->middleware('directivos');
     
-    // Ver detalles de un maestro específico
     Route::get('/directivos/maestro/{id}', [App\Http\Controllers\DirectivosController::class, 'verMaestro'])
         ->name('directivos.ver-maestro')
         ->middleware('directivos');
     
-    // Módulo de antigüedad (pendiente)
     Route::get('/directivos/antiguedad', [App\Http\Controllers\DirectivosController::class, 'antiguedad'])
         ->name('directivos.antiguedad')
         ->middleware('directivos');
 });
 
-
-
 // ==================== RUTAS PARA ADMINISTRATIVOS (perfil propio) ====================
 Route::middleware(['auth'])->group(function () {
-    // Dashboard
     Route::get('/administrativos/dashboard', [App\Http\Controllers\AdministrativosController::class, 'dashboard'])
         ->name('administrativos.dashboard')
         ->middleware('administrativos');
     
-    // Completar perfil (cuestionario inicial)
     Route::get('/administrativos/completar-perfil', [App\Http\Controllers\AdministrativosController::class, 'mostrarFormularioPerfil'])
         ->name('administrativos.completar-perfil')
         ->middleware('administrativos');
     
-    // Guardar perfil
     Route::post('/administrativos/guardar-perfil', [App\Http\Controllers\AdministrativosController::class, 'guardarPerfil'])
         ->name('administrativos.guardar-perfil')
         ->middleware('administrativos');
     
-    // Ver documentos propios
     Route::get('/administrativos/documentos', [App\Http\Controllers\AdministrativosController::class, 'documentos'])
         ->name('administrativos.documentos')
         ->middleware('administrativos');
     
-    // Subir documentos
     Route::post('/administrativos/subir-documentos', [App\Http\Controllers\AdministrativosController::class, 'subirDocumentos'])
         ->name('administrativos.subir-documentos')
         ->middleware('administrativos');
     
-    // Editar perfil
     Route::get('/administrativos/editar-perfil', [App\Http\Controllers\AdministrativosController::class, 'editarPerfil'])
         ->name('administrativos.editar-perfil')
         ->middleware('administrativos');
     
-    // Actualizar perfil
     Route::put('/administrativos/actualizar-perfil', [App\Http\Controllers\AdministrativosController::class, 'actualizarPerfil'])
         ->name('administrativos.actualizar-perfil')
         ->middleware('administrativos');
@@ -533,23 +470,18 @@ Route::middleware(['auth'])->group(function () {
 // ==================== RUTAS PARA ADMIN - GESTIÓN DE ADMINISTRATIVOS ====================
 Route::middleware(['auth','admin'])->prefix('admin')->name('admin.')->group(function () {
     
-    // Panel principal de administrativos
     Route::get('/administrativos', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'index'])
         ->name('administrativos.index');
     
-    // Ver detalles de un administrativo
     Route::get('/administrativos/{id}', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'show'])
         ->name('administrativos.show');
     
-    // Ver todos los documentos de un administrativo
     Route::get('/administrativos/{id}/documentos', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'documentos'])
         ->name('administrativos.documentos');
     
-    // Estadísticas
     Route::get('/administrativos-estadisticas', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'estadisticas'])
         ->name('administrativos.estadisticas');
     
-    // Acciones sobre documentos
     Route::post('/documentos/{id}/aprobar', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'aprobarDocumento'])
         ->name('documentos.aprobar');
     
@@ -557,8 +489,8 @@ Route::middleware(['auth','admin'])->prefix('admin')->name('admin.')->group(func
         ->name('documentos.rechazar');
     
     Route::get('/documentos/{id}/ver', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'verDocumento'])
-        ->name('documentos.ver');
+        ->name('documentos.admin.ver');
     
     Route::get('/documentos/{id}/descargar', [App\Http\Controllers\Admin\AdministrativosAdminController::class, 'descargarDocumento'])
-        ->name('documentos.descargar');
+        ->name('documentos.admin.descargar');
 });
