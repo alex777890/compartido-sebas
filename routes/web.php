@@ -158,9 +158,10 @@ Route::prefix('horarios')->name('horarios.')->group(function () {
 Route::get('/coordinacion/maestros/{maestroId}/expediente', 
     [CoordinacionController::class, 'expedienteMaestro'])
     ->name('coordinaciones.maestros.expediente');
-    Route::get('/coordinaciones/{id}', [CoordinacionController::class, 'show'])
-        ->name('coordinaciones.show')
-        ->middleware('admin');
+    // Route::get('/coordinaciones/{id}', [CoordinacionController::class, 'show'])
+    //    ->name('coordinaciones.show')
+    //   ->middleware('admin');
+    Route::resource('coordinaciones', CoordinacionController::class)->middleware('admin');
 
     Route::get('/coordinaciones/{coordinacion}/estadisticas', [CoordinacionController::class, 'estadisticas'])
         ->name('coordinaciones.estadisticas')
